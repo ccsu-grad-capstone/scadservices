@@ -14,7 +14,6 @@ public class UserService {
 		userDto.setEmail("rk@my.ccsu.edu");
 		userDto.setFirstName("Ramesh");
 		userDto.setLastName("Kappera");
-		userDto.setUserName("rkappera");
 		userDto.setId(1l);
 		
 		return userDto;

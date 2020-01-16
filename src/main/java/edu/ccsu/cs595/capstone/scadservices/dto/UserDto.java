@@ -3,7 +3,6 @@ package edu.ccsu.cs595.capstone.scadservices.dto;
 public class UserDto {
 	
 	private Long id;
-	private String userName;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -13,12 +12,6 @@ public class UserDto {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -41,7 +34,7 @@ public class UserDto {
 	
 	@Override
 	public String toString() {
-		return "UserDto [id=" + id + ", userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName
+		return "UserDto [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", email=" + email + "]";
 	}
 
