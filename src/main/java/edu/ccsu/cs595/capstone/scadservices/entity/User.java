@@ -1,49 +1,58 @@
 package edu.ccsu.cs595.capstone.scadservices.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "SCAD_USER", schema = "SCAD")
-public class User extends AuditedEntity {
-	
+public class User {
+
+	private static final long serialVersionUID = 1L;
+
 	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
-	
+
+	@Id
+	@Column(name = "ID", nullable = false)
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
+	@Column(name = "FIRSTNAME", nullable = false)
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	
+
+	@Column(name = "LASTNAME", nullable = false)
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
+	@Column(name = "EMAILADDRESS", nullable = false)
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,7 +63,7 @@ public class User extends AuditedEntity {
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -86,7 +95,7 @@ public class User extends AuditedEntity {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";

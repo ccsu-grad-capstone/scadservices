@@ -45,7 +45,7 @@
 
 		<version.thorntail>2.6.0.Final</version.thorntail>
 		
-		<version.mysql>5.1.38</version.mysql>
+		<version.mysql>5.1.46</version.mysql>
 	</properties>
 	
 	<scm>

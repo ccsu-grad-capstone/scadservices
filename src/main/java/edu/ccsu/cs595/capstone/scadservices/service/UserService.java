@@ -1,22 +1,41 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
-import javax.ejb.Stateless;
+import java.util.Objects;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
+import edu.ccsu.cs595.capstone.scadservices.dao.UserDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
+import edu.ccsu.cs595.capstone.scadservices.entity.User;
 
 @Stateless
 public class UserService {
 	
+	@Inject
+	UserDao userDao;
+	
 	public UserDto getUser(String email) {
 		
-		UserDto userDto = new UserDto();
-		
-		userDto.setEmail("rk@my.ccsu.edu");
-		userDto.setFirstName("Ramesh");
-		userDto.setLastName("Kappera");
-		userDto.setId(1l);
-		
+		UserDto userDto = null;
+		User user = userDao.getUserByEmail(email);
+		if (Objects.nonNull(user)) {
+			userDto = new UserDto();
+			this.entityToDto(user, userDto);
+		}
+
 		return userDto;
+		
+	}
+	
+	private void entityToDto(User user, UserDto userDto) {
+		
+		if (Objects.nonNull(user)) {
+			userDto.setId(user.getId());
+			userDto.setFirstName(user.getFirstName());
+			userDto.setLastName(user.getLastName());
+			userDto.setEmail(user.getEmail());
+		}
 		
 	}
 

@@ -10,6 +10,6 @@ public class EntityManagerProducer {
 	@PersistenceContext(name = "scadSvcPu", unitName = "scadSvcPu")
 	@ScadDatabase
 
-	private EntityManager cpEm;
+	private EntityManager scadEm;
 
 }

@@ -8,6 +8,7 @@ swarm:
     data-sources:
       ScadDS:
         driver-name: com.mysql
-        connection-url: jdbc:mysql://localhost:3306/scad
+        jndi-name: java:/jdbc/ccsu/ScadDS
+        connection-url: jdbc:mysql://localhost:3306/scad?autoReconnect=true&verifyServerCertificate=false&useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
         user-name: root
         password: abcd1234

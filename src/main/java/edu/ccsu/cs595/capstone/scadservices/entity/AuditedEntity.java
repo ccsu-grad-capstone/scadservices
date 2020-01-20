@@ -8,8 +8,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import org.infinispan.security.AuditContext;
-
 /**
  * A JPA Entity that includes automatic audit fields.
  */
@@ -106,8 +104,8 @@ public abstract class AuditedEntity extends BasicEntity {
 	@PrePersist
 	@PreUpdate
 	public void updateAuditFields() {
-		AuditContext sc = null; //AuditContext.ge;
-		String userGuid = null; //sc.getUserGuid();
+		AuditContext sc = AuditContext.getAuditContext();
+		String userGuid = sc.getUserGuid();
 		ZonedDateTime now = ZonedDateTime.now(ZoneId.of("UTC"));
 		if (getCreatedBy() == null) {
 			setCreatedBy(userGuid);

@@ -6,6 +6,6 @@ public class EndpointConstants {
 	public static final String USER = "user";
 
 	public static final String RESOURCE_ID = "The ID of the resource.";
-	public static final String EMAIL = "email address";
+	public static final String EMAIL = "email";
 
 }
