@@ -3,8 +3,8 @@ package edu.ccsu.cs595.capstone.scadservices.rest;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -20,12 +20,11 @@ import io.swagger.annotations.ApiParam;
 public interface UserApi {
    
 	@GET
-	@Path("/{email}")
-    @ApiOperation(value = "Get the User by email address", notes = "Returns the User details by email address", response = UserDto.class)
+    @ApiOperation(value = "Get the User by email", notes = "Returns the User details by email", response = UserDto.class)
     @Produces({ MediaType.APPLICATION_JSON })
     public Response get(
     					@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true)
-    					@PathParam(EndpointConstants.EMAIL) String email
+    					@QueryParam(EndpointConstants.EMAIL) String email
     					);
     
 //    @GET
