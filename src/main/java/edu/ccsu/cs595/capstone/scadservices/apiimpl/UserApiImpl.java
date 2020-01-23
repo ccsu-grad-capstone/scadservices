@@ -1,12 +1,12 @@
-package edu.ccsu.cs595.capstone.scadservices.resource;
+package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
 import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import edu.ccsu.cs595.capstone.scadservices.api.UserApi;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
-import edu.ccsu.cs595.capstone.scadservices.rest.UserApi;
 import edu.ccsu.cs595.capstone.scadservices.service.UserService;
 
 

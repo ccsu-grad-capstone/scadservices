@@ -15,6 +15,8 @@ $ mysql -u root -p < sql/scad-schema.sql
 
 # To run project:
 
+$ mvn clean package
+
 $ java -jar target/scadservices-thorntail.jar -S local
 
 $java -Xdebug -agentlib:jdwp=transport=dt_socket,address=9080,server=y,suspend=n -jar target/scadservices-thorntail.jar -S local

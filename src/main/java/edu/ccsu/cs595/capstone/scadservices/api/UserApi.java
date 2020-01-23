@@ -1,4 +1,4 @@
-package edu.ccsu.cs595.capstone.scadservices.rest;
+package edu.ccsu.cs595.capstone.scadservices.api;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;

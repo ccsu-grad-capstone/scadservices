@@ -9,7 +9,6 @@ public class EntityManagerProducer {
 	@Produces
 	@PersistenceContext(name = "scadSvcPu", unitName = "scadSvcPu")
 	@ScadDatabase
-
 	private EntityManager scadEm;
 
 }
