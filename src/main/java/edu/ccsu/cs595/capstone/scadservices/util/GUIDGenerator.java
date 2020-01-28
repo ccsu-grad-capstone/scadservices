@@ -11,7 +11,7 @@ public class GUIDGenerator {
 		UUID guid = null;
 		
 		if (Objects.nonNull(lastName)) {
-			guid = UUID.fromString(lastName);
+			guid = UUID.nameUUIDFromBytes(lastName.getBytes());
 		} else {
 			guid = UUID.randomUUID();
 		}

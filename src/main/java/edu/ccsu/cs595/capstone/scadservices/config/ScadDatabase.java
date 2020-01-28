@@ -1,4 +1,4 @@
-package edu.ccsu.cs595.capstone.scadservices;
+package edu.ccsu.cs595.capstone.scadservices.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

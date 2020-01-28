@@ -1,4 +1,4 @@
-package edu.ccsu.cs595.capstone.scadservices;
+package edu.ccsu.cs595.capstone.scadservices.config;
 
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;

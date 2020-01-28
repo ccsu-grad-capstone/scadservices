@@ -24,7 +24,7 @@ public abstract class AuditedEntity extends BasicEntity {
 	 *
 	 * @return ZonedDateTime this entity was created.
 	 */
-	@Column(name = "CREATED_TIME")
+	@Column(name = "created_time")
 	public ZonedDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -43,7 +43,7 @@ public abstract class AuditedEntity extends BasicEntity {
 	 *
 	 * @return The user's GUID
 	 */
-	@Column(name = "CREATED_BY")
+	@Column(name = "created_by")
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -62,7 +62,7 @@ public abstract class AuditedEntity extends BasicEntity {
 	 *
 	 * @return ZonedDateTime this entity was modified.
 	 */
-	@Column(name = "MODIFIED_TIME")
+	@Column(name = "modified_time")
 	public ZonedDateTime getModifiedAt() {
 		return modifiedAt;
 	}
@@ -81,7 +81,7 @@ public abstract class AuditedEntity extends BasicEntity {
 	 *
 	 * @return The GUID of the user who last modified this entity.
 	 */
-	@Column(name = "MODIFIED_BY")
+	@Column(name = "modified_by")
 	public String getModifiedBy() {
 		return modifiedBy;
 	}

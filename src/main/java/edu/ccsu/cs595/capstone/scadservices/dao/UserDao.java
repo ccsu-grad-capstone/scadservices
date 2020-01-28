@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-import edu.ccsu.cs595.capstone.scadservices.ScadDatabase;
+import edu.ccsu.cs595.capstone.scadservices.config.ScadDatabase;
 import edu.ccsu.cs595.capstone.scadservices.entity.User;
 
 public class UserDao {

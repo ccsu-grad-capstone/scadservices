@@ -6,6 +6,8 @@ public class UserDto {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String password;
+	private String userGuid;
 	
 	public Long getId() {
 		return id;
@@ -31,11 +33,23 @@ public class UserDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getUserGuid() {
+		return userGuid;
+	}
+	public void setUserGuid(String userGuid) {
+		this.userGuid = userGuid;
+	}
 	
 	@Override
 	public String toString() {
-		return "UserDto [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + "]";
+		return "UserDto [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", password=" + password + ", userGuid=" + userGuid + "]";
 	}
 
 }

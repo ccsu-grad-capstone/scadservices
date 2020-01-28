@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+ 	<changeSet author="rk" id="user-01">
+        <createTable remarks="Entity which defines the user registrations" schemaName="scad_schema" tableName="scad_user">
+            <column name="su_id" autoIncrement="true" remarks="Unique Identifier key" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" remarks="User First Name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="last_name" remarks="User Last Name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>             
+            <column name="email_address" remarks="User email to login scad system" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="su_pwd" remarks="Valid password to login scad system" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="su_guid" remarks="User globally unique identifier" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" remarks="Date And Time When Record was created" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" remarks="User Id of person who created record" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_time" remarks="Date And Time When Record was modified" type="timestamp"/>
+            <column name="modified_by" remarks="User Id of person who modified record" type="char(36)"/>
+            <column defaultValueNumeric="0" name="vsn" remarks="Version Number used by Hibernate" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+  	<changeSet author="rk" id="user-02">
+        <addUniqueConstraint columnNames="email_address" constraintName="uniq_ea_01" schemaName="scad_schema" tableName="scad_user"/>
+    </changeSet>
+    
+    <changeSet author="rk" id="user-03"> 
+    	<sql>
+    		insert into scad_user
+    		(first_name, last_name, email_address, su_pwd, su_guid, created_time, created_by, modified_time, modified_by, vsn)
+    		values('Ramesh', 'Kappera', 'rameshkappera@my.ccsu.edu', 'UGFzczEyMzQ=', 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', null, null, 0);
+    		insert into scad_user
+    		(first_name, last_name, email_address, su_pwd, su_guid, created_time, created_by, modified_time, modified_by, vsn)
+    		values('Ryan', 'Lauzon', 'lauzonryd@my.ccsu.edu', 'UGFzczEyMzQ=', 'c078b25c-0418-3d99-855d-78e1329f1c1a', current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', null, null, 0);
+    		insert into scad_user
+    		(first_name, last_name, email_address, su_pwd, su_guid, created_time, created_by, modified_time, modified_by, vsn)
+    		values('Philip', 'Murray', 'pmurray@my.ccsu.edu', 'UGFzczEyMzQ=', 'd1d89ac2-09ec-39cb-87c5-d5680de051a4', current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', null, null, 0);
+    	</sql>
+    </changeSet>
+     
+</databaseChangeLog>

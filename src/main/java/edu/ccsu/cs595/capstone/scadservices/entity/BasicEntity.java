@@ -60,7 +60,7 @@ public abstract class BasicEntity implements Serializable {
 	 * @return The entity version
 	 */
 	@Version
-	@Column(name = "VSN", nullable = false)
+	@Column(name = "vsn", nullable = false)
 	public Long getVersion() {
 		return version;
 	}

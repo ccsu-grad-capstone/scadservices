@@ -35,6 +35,12 @@ public class UserService {
 			userDto.setFirstName(user.getFirstName());
 			userDto.setLastName(user.getLastName());
 			userDto.setEmail(user.getEmail());
+			userDto.setPassword(user.getPassword());
+			userDto.setUserGuid(user.getUserGuid());
+//			userDto.setCreatedBy(user.getCreatedBy());
+//			userDto.setCreatedAt(user.getCreatedAt());
+//			userDto.setModifiedBy(user.getModifiedBy());
+//			userDto.setModifiedAt(user.getModifiedAt());
 		}
 		
 	}

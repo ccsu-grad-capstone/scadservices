@@ -6,7 +6,7 @@
 
 	<groupId>edu.ccsu.cs595.capstone</groupId>
 	<artifactId>scadservices</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>war</packaging>
 
 	<name>SCAD Services</name>
@@ -44,10 +44,10 @@
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 
 		<version.thorntail>2.6.0.Final</version.thorntail>
-		
+
 		<version.mysql>5.1.46</version.mysql>
 	</properties>
-	
+
 	<scm>
 		<url>https://github.com/ccsu-grad-capstone/scadservices</url>
 		<connection>scm:git:https://github.com/ccsu-grad-capstone/scadservices.git</connection>
@@ -68,6 +68,7 @@
 	</dependencyManagement>
 
 	<build>
+
 		<finalName>${project.artifactId}</finalName>
 		<resources>
 			<resource>
@@ -75,12 +76,39 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
 		<plugins>
+
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>scad</id>
+						<phase>install</phase>
+						<configuration>
+							<skip>${scm.skipdb}</skip>
+							<driver>com.mysql.jdbc.Driver</driver>
+							<url><![CDATA[ jdbc:mysql://localhost:3306/scad_schema?createDatabaseIfNotExist=true&autoReconnect=true&verifyServerCertificate=false&useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true]]></url>
+							<username>root</username>
+							<password>abcd1234</password>
+							<changeLogFile>src/main/resources/scad_dbchangelog.xml</changeLogFile>
+							<verbose>true</verbose>
+							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+							<migrationSqlOutputFile>target/liquibase/00_scad.sql</migrationSqlOutputFile>
+							<logger>finest</logger>
+						</configuration>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>io.thorntail</groupId>
 				<artifactId>thorntail-maven-plugin</artifactId>
 				<version>${version.thorntail}</version>
-
 				<executions>
 					<execution>
 						<goals>
@@ -89,13 +117,15 @@
 					</execution>
 				</executions>
 				<configuration>
-          			<arguments>
-            			<argument>-S</argument>
-            			<argument>local</argument>
-          			</arguments>
-        		</configuration>				
+					<arguments>
+						<argument>-S</argument>
+						<argument>local</argument>
+					</arguments>
+				</configuration>
 			</plugin>
+
 		</plugins>
+
 	</build>
 
 	<dependencies>
@@ -105,10 +135,10 @@
 			<artifactId>datasources</artifactId>
 		</dependency>
 		<dependency>
-      		<groupId>mysql</groupId>
-      		<artifactId>mysql-connector-java</artifactId>
-      		<version>${version.mysql}</version>
-    	</dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${version.mysql}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.thorntail</groupId>
 			<artifactId>jaxrs</artifactId>
@@ -141,6 +171,50 @@
 			<groupId>io.thorntail</groupId>
 			<artifactId>swagger-webapp</artifactId>
 		</dependency>
-		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 	</dependencies>
+
 </project>
