@@ -2,10 +2,7 @@ package edu.ccsu.cs595.capstone.scadservices.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -25,6 +22,8 @@ public class User extends AuditedEntity {
 	private String email;
 	private String password;
 	private String userGuid;
+    private Boolean isEmailVerified;
+    private Boolean isUserDeleted;	
 
 	@Id
 	@Column(name = "su_id", nullable = false)
@@ -80,6 +79,24 @@ public class User extends AuditedEntity {
 	public void setUserGuid(String userGuid) {
 		this.userGuid = userGuid;
 	}
+	
+	@Column(name = "email_verified", nullable = false, columnDefinition = "int default 0")
+	public Boolean getIsEmailVerified() {
+		return isEmailVerified;
+	}
+
+	public void setIsEmailVerified(Boolean isEmailVerified) {
+		this.isEmailVerified = isEmailVerified;
+	}
+
+	@Column(name = "delete_indicator", nullable = false, columnDefinition = "int default 0")
+	public Boolean getIsUserDeleted() {
+		return isUserDeleted;
+	}
+
+	public void setIsUserDeleted(Boolean isUserDeleted) {
+		this.isUserDeleted = isUserDeleted;
+	}
 
 	@Override
 	public int hashCode() {
@@ -88,6 +105,8 @@ public class User extends AuditedEntity {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((isEmailVerified == null) ? 0 : isEmailVerified.hashCode());
+		result = prime * result + ((isUserDeleted == null) ? 0 : isUserDeleted.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((userGuid == null) ? 0 : userGuid.hashCode());
@@ -118,6 +137,16 @@ public class User extends AuditedEntity {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (isEmailVerified == null) {
+			if (other.isEmailVerified != null)
+				return false;
+		} else if (!isEmailVerified.equals(other.isEmailVerified))
+			return false;
+		if (isUserDeleted == null) {
+			if (other.isUserDeleted != null)
+				return false;
+		} else if (!isUserDeleted.equals(other.isUserDeleted))
+			return false;
 		if (lastName == null) {
 			if (other.lastName != null)
 				return false;
@@ -139,7 +168,8 @@ public class User extends AuditedEntity {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", userGuid=" + userGuid + "]";
+				+ ", password=" + password + ", userGuid=" + userGuid + ", isEmailVerified=" + isEmailVerified
+				+ ", isUserDeleted=" + isUserDeleted + "]";
 	}
 
 }
