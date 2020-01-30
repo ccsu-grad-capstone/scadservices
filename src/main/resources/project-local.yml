@@ -1,4 +1,25 @@
 swarm:
+  security:
+       security-domains:
+           scad-basicauth:
+               classic-authentication:
+                   login-modules:
+                       scad-ba-rs:
+                           code: org.jboss.security.auth.spi.UsersRolesLoginModule
+                           flag: required
+                           module-options:
+                               usersProperties: ${env.SCAD_USERS_PATH}
+                               rolesProperties: ${env.SCAD_ROLES_PATH}
+                               hashAlgorithm: SHA-256
+                               hashEncoding: base64
+  logging:
+       loggers:
+           org.hibernate.SQL:
+               level: INFO
+           org.hibernate.type:
+               level: INFO
+           org.jboss.as.security:
+               level: DEBUG
   datasources:
     jdbc-drivers:
       com.mysql:
@@ -11,4 +32,4 @@ swarm:
         jndi-name: java:/jdbc/ccsu/ScadDS
         connection-url: jdbc:mysql://localhost:3306/scad_schema?autoReconnect=true&verifyServerCertificate=false&useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
         user-name: root
-        password: abcd1234
+        password: ${env.SCAD_MYSQL_ROOT_PASS}

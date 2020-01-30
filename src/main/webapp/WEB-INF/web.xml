@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <display-name>SCAD Services</display-name>
+
+    <context-param>
+        <param-name>resteasy.scan</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>resteasy.use.deployment.sensitive.factory</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>HealthCheck</servlet-name>
+        <servlet-class>edu.ccsu.cs595.capstone.scadservices.HealthCheck</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>HealthCheck</servlet-name>
+        <url-pattern>/health</url-pattern>
+    </servlet-mapping>
+
+    <!-- Session Configuration -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>SCAD-API Services</web-resource-name>
+            <url-pattern>/api/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>PUT</http-method>
+            <http-method>POST</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>scad-api-read</role-name>
+            <role-name>scad-api-write</role-name>
+        </auth-constraint>       
+    </security-constraint>
+    <security-role>
+        <description>SCAD-API Read Role</description>
+        <role-name>scad-api-read</role-name>
+    </security-role>
+    <security-role>
+        <description>SCAD-API Write Role</description>
+        <role-name>scad-api-write</role-name>
+    </security-role>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>SCADServices  API</realm-name>
+    </login-config>
+    
+</web-app>
