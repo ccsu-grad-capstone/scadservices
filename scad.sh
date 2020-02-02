@@ -1,5 +1,9 @@
 ## Shall script to run scad
 
+export SCAD_USERS_PATH="src/main/resources/security/users.properties"
+export SCAD_ROLES_PATH="src/main/resources/security/roles.properties"
+export SCAD_MYSQL_ROOT_PASS="abcd1234"
+
 HTTP_PORT=8080
 
 ## Set the debugger HTTP port 1000 higher, so as to remain unique.

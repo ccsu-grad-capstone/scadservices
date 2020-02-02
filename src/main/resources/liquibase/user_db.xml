@@ -23,6 +23,12 @@
             <column name="su_guid" remarks="User globally unique identifier" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
+            <column defaultValueNumeric="0" name="email_verified" remarks="Users email address is verified or not" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="delete_indicator" remarks="Users email address is verified or not" type="int">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_time" remarks="Date And Time When Record was created" type="timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -44,14 +50,14 @@
     <changeSet author="rk" id="user-03"> 
     	<sql>
     		insert into scad_user
-    		(first_name, last_name, email_address, su_pwd, su_guid, created_time, created_by, modified_time, modified_by, vsn)
-    		values('Ramesh', 'Kappera', 'rameshkappera@my.ccsu.edu', 'UGFzczEyMzQ=', 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', null, null, 0);
+    		(first_name, last_name, email_address, su_pwd, su_guid, email_verified, delete_indicator, created_time, created_by, vsn)
+    		values('Ramesh', 'Kappera', 'rameshkappera@my.ccsu.edu', 'UGFzczEyMzQ=', 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', 1, 0, current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', 0);
     		insert into scad_user
-    		(first_name, last_name, email_address, su_pwd, su_guid, created_time, created_by, modified_time, modified_by, vsn)
-    		values('Ryan', 'Lauzon', 'lauzonryd@my.ccsu.edu', 'UGFzczEyMzQ=', 'c078b25c-0418-3d99-855d-78e1329f1c1a', current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', null, null, 0);
+    		(first_name, last_name, email_address, su_pwd, su_guid, email_verified, delete_indicator, created_time, created_by, vsn)
+    		values('Ryan', 'Lauzon', 'lauzonryd@my.ccsu.edu', 'UGFzczEyMzQ=', 'c078b25c-0418-3d99-855d-78e1329f1c1a', 1, 0, current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', 0);
     		insert into scad_user
-    		(first_name, last_name, email_address, su_pwd, su_guid, created_time, created_by, modified_time, modified_by, vsn)
-    		values('Philip', 'Murray', 'pmurray@my.ccsu.edu', 'UGFzczEyMzQ=', 'd1d89ac2-09ec-39cb-87c5-d5680de051a4', current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', null, null, 0);
+    		(first_name, last_name, email_address, su_pwd, su_guid, email_verified, delete_indicator, created_time, created_by, vsn)
+    		values('Philip', 'Murray', 'pmurray@my.ccsu.edu', 'UGFzczEyMzQ=', 'd1d89ac2-09ec-39cb-87c5-d5680de051a4', 1, 0, current_timestamp, 'e06cb5e1-1df9-3721-9ffb-0d3dc3bc6e47', 0);
     	</sql>
     </changeSet>
      

@@ -37,10 +37,12 @@ public class UserService {
 			userDto.setEmail(user.getEmail());
 			userDto.setPassword(user.getPassword());
 			userDto.setUserGuid(user.getUserGuid());
-//			userDto.setCreatedBy(user.getCreatedBy());
-//			userDto.setCreatedAt(user.getCreatedAt());
-//			userDto.setModifiedBy(user.getModifiedBy());
-//			userDto.setModifiedAt(user.getModifiedAt());
+			userDto.setIsEmailVerified(user.getIsEmailVerified());
+			userDto.setIsUserDeleted(user.getIsUserDeleted());
+			userDto.setCreatedBy(user.getCreatedBy());
+			userDto.setCreatedAt(user.getCreatedAt());
+			userDto.setModifiedBy(user.getModifiedBy());
+			userDto.setModifiedAt(user.getModifiedAt());
 		}
 		
 	}

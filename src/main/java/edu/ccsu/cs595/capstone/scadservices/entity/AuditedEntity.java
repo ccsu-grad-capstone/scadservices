@@ -14,6 +14,10 @@ import javax.persistence.PreUpdate;
 @MappedSuperclass
 public abstract class AuditedEntity extends BasicEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ZonedDateTime createdAt;
 	private String createdBy;
 	private ZonedDateTime modifiedAt;
