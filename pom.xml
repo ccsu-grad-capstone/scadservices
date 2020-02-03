@@ -172,6 +172,10 @@
 			<artifactId>swagger-webapp</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.thorntail</groupId>
+			<artifactId>logging</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
@@ -215,11 +219,11 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-        	<groupId>org.jboss.resteasy</groupId>
-        	<artifactId>resteasy-jackson-provider</artifactId>
-        	<version>2.3.1.GA</version>
-    	</dependency> 
-    	
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
+			<version>2.3.1.GA</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

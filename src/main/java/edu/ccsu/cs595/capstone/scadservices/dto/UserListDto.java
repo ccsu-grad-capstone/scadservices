@@ -1,48 +1,24 @@
 package edu.ccsu.cs595.capstone.scadservices.dto;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class UserListDto {
 	
-	private Long id;
-	private String userName;
-	private String firstName;
-	private String lastName;
-	private String email;
+	private List<UserDto> users = new LinkedList<UserDto>();
 	
-	public Long getId() {
-		return id;
+	public List<UserDto> getUsers() {
+		return users;
 	}
-	public void setId(Long id) {
-		this.id = id;
+
+	public void setUsers(List<UserDto> users) {
+		this.users = users;
 	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
+
 	@Override
 	public String toString() {
-		return "UserDto [id=" + id + ", userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + "]";
+		return "UserListDto [users=" + users + "]";
 	}
+	
 
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import edu.ccsu.cs595.capstone.scadservices.EndpointConstants;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserListDto;
+import edu.ccsu.cs595.capstone.scadservices.exception.MissingParameterException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,7 +59,7 @@ public interface UserApi {
     public Response create(
     						@ApiParam(value = EndpointConstants.POSTPROPOSED, required = true)
     						UserDto proposed
-    						);
+    						) throws MissingParameterException, RuntimeException;
 	
 	@PUT
 	@Path("/{id}")
@@ -70,7 +71,7 @@ public interface UserApi {
     						@PathParam(value = EndpointConstants.ID) Long id,
 							@ApiParam(value = EndpointConstants.PUTPROPOSED, required = true)
 							UserDto proposed
-    					);
+    					) throws MissingParameterException, RuntimeException;
 
 	@DELETE
 	@Path("/{id}")
@@ -79,7 +80,16 @@ public interface UserApi {
     public Response delete(
     						@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) 
     						@PathParam(value = EndpointConstants.ID) Long id
-    					);
+    					) throws MissingParameterException, RuntimeException;
+	
+	@GET
+	@Path("/{id_token}")
+    @ApiOperation(value = "Get a User by his yahoo id_token", notes = "Returns a User details by his id_token", response = UserDto.class)
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response getUserDetails(
+    					@ApiParam(value = EndpointConstants.IDTOKEN, required = true)
+    					@PathParam(EndpointConstants.ID_TOKEN) String id_token
+    					) throws RuntimeException;
 	
     
 }

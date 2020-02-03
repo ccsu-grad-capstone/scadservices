@@ -11,6 +11,8 @@ public class EndpointConstants {
 	public static final String PASSWORD = "password";
 	
 	public static final String REGEMAIL = "Registered email address.";
+	public static final String IDTOKEN = "Yahoo id_token.";
+	public static final String ID_TOKEN = "id_token";
 	public static final String PWD = "Login password.";
 	
 	public static final String POSTPROPOSED = "The proposed state of the resource "
