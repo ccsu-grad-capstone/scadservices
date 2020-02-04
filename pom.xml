@@ -96,8 +96,6 @@
 							<changeLogFile>src/main/resources/scad_dbchangelog.xml</changeLogFile>
 							<verbose>true</verbose>
 							<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-							<migrationSqlOutputFile>target/liquibase/00_scad.sql</migrationSqlOutputFile>
-							<logger>finest</logger>
 						</configuration>
 						<goals>
 							<goal>update</goal>
