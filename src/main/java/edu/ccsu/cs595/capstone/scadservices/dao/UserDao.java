@@ -1,5 +1,6 @@
 package edu.ccsu.cs595.capstone.scadservices.dao;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -27,6 +28,37 @@ public class UserDao {
 			try {
 				result = (User) scadEm().createQuery("from User u where u.email = :vEmail")
 						.setParameter("vEmail", email).getSingleResult();
+			} catch (NoResultException e) {
+				result = null;
+			}
+		}
+
+		return result;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<User> getAllUsers() {
+
+		List<User> result = null;
+		try {
+			result = (List<User>) scadEm().createQuery("select u from User u").getResultList();
+		} catch (NoResultException e) {
+			result = null;
+		}
+
+		return result;
+
+	}
+	
+	public User getUserByEmailAndPwd(String email, String password) {
+
+		User result = null;
+
+		if ((Objects.nonNull(email)) && (Objects.nonNull(password))) {
+			try {
+				result = (User) scadEm().createQuery("from User u where u.email = :vEmail and u.password = :vPwd")
+						.setParameter("vEmail", email).setParameter("vPwd", password).getSingleResult();
 			} catch (NoResultException e) {
 				result = null;
 			}
