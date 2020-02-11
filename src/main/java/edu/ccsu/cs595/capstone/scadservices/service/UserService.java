@@ -10,13 +10,22 @@ import javax.inject.Inject;
 import edu.ccsu.cs595.capstone.scadservices.dao.UserDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserListDto;
+import edu.ccsu.cs595.capstone.scadservices.entity.AuditContext;
 import edu.ccsu.cs595.capstone.scadservices.entity.User;
+import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
+import edu.ccsu.cs595.capstone.scadservices.util.GUIDGenerator;
 
 @Stateless
 public class UserService {
 	
 	@Inject
 	UserDao userDao;
+	
+	@Inject
+	SCADSecurityManager	sm;
+	
+	@Inject
+	GUIDGenerator gen;
 	
 	public UserDto getUser(String email) {
 		
@@ -66,6 +75,24 @@ public class UserService {
 		
 		UserDto result = null;
 		return result;
+		
+	}
+	
+	@SuppressWarnings("static-access")
+	public UserDto getUserInfo() {
+		
+		UserDto userDto =  new UserDto();
+		String fName = "Ramesh";
+		String lName = "Kappera";
+		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))){
+			throw new RuntimeException("id_token or access_token are missing");
+		}
+		String userGuid = gen.generateGUID(lName); // Need this change once we get user details from Yahoo.
+		AuditContext sc = new AuditContext(userGuid,lName);
+		userDto.setFirstName(fName);
+		userDto.setLastName(lName);
+		userDto.setId(1L);
+		return userDto;
 		
 	}
 	

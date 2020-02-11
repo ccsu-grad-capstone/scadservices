@@ -17,70 +17,70 @@ public class UserApiImpl implements UserApi {
 	@Inject
 	UserService usrSvc;
 
-	public Response get(String email) {
-
-		UserDto result = usrSvc.getUser(email);
-
-		if (Objects.isNull(result)) {
-
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
-
-		return Response.status(Response.Status.OK).entity(result).build();
-
-	}
-
-	@Override
-	public Response getAll() {
-
-		UserListDto result = usrSvc.getAllUsers();
-
-		if (Objects.isNull(result)) {
-
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
-
-		return Response.status(Response.Status.OK).entity(result).build();
-
-	}
-
-	@Override
-	public Response isValidUser(String email, String password) {
-
-		Boolean result = usrSvc.isValidUser(email, password);
-
-		return Response.status(Response.Status.OK).entity(result).build();
-
-	}
-
-	@Override
-	public Response create(UserDto proposed) throws MissingParameterException, RuntimeException {
-
-		String missingParam = getMissingRequiredParams(proposed);
-		if (Objects.nonNull(missingParam)) {
-			throw new MissingParameterException(missingParam);
-		} else {
-			try {
-		    	UserDto result = usrSvc.createUser(proposed);
-		    	return Response.status(Response.Status.OK).entity(result).build();
-			} catch (Exception e) {
-				return Response.ok(e.getMessage()).build();
-			}
-		}
-		
-	}
-
-	@Override
-	public Response update(Long id, UserDto proposed) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response delete(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public Response get(String email) {
+//
+//		UserDto result = usrSvc.getUser(email);
+//
+//		if (Objects.isNull(result)) {
+//
+//			return Response.status(Response.Status.NOT_FOUND).build();
+//		}
+//
+//		return Response.status(Response.Status.OK).entity(result).build();
+//
+//	}
+//
+//	@Override
+//	public Response getAll() {
+//
+//		UserListDto result = usrSvc.getAllUsers();
+//
+//		if (Objects.isNull(result)) {
+//
+//			return Response.status(Response.Status.NOT_FOUND).build();
+//		}
+//
+//		return Response.status(Response.Status.OK).entity(result).build();
+//
+//	}
+//
+//	@Override
+//	public Response isValidUser(String email, String password) {
+//
+//		Boolean result = usrSvc.isValidUser(email, password);
+//
+//		return Response.status(Response.Status.OK).entity(result).build();
+//
+//	}
+//
+//	@Override
+//	public Response create(UserDto proposed) throws MissingParameterException, RuntimeException {
+//
+//		String missingParam = getMissingRequiredParams(proposed);
+//		if (Objects.nonNull(missingParam)) {
+//			throw new MissingParameterException(missingParam);
+//		} else {
+//			try {
+//		    	UserDto result = usrSvc.createUser(proposed);
+//		    	return Response.status(Response.Status.OK).entity(result).build();
+//			} catch (Exception e) {
+//				return Response.ok(e.getMessage()).build();
+//			}
+//		}
+//		
+//	}
+//
+//	@Override
+//	public Response update(Long id, UserDto proposed) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public Response delete(Long id) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	String getMissingRequiredParams(UserDto proposed) {
 
@@ -105,9 +105,17 @@ public class UserApiImpl implements UserApi {
 	}
 
 	@Override
-	public Response getUserDetails(String id_token) throws RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
+	public Response getUserInfo() throws RuntimeException {
+
+		UserDto result = usrSvc.getUserInfo();
+		
+		if (Objects.isNull(result)) {
+
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+		
 	}
 
 }
