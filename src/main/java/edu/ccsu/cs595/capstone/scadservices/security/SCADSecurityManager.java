@@ -21,7 +21,7 @@ public class SCADSecurityManager {
 		return IDTOKEN.get();
 	}
 	public static void setIDTOKEN(String iDTOKEN) {
-		IDTOKEN.set(iDTOKEN);;
+		IDTOKEN.set(iDTOKEN);
 	}
 	public static String getACCESSTOKEN() {
 		return ACCESSTOKEN.get();
