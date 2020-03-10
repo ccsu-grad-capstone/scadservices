@@ -4,6 +4,7 @@ public class EndpointConstants {
 
 	public static final String APPLICATION_PATH = "/api/";
 	public static final String USER = "user";
+	public static final String LEAGUE = "league";
 
 	public static final String ID = "id";
 	public static final String RESOURCE_ID = "The ID of the resource.";

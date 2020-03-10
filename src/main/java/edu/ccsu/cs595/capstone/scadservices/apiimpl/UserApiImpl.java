@@ -1,14 +1,15 @@
 package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -22,15 +23,11 @@ import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jwt.SignedJWT;
+
 import edu.ccsu.cs595.capstone.scadservices.api.UserApi;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
-import edu.ccsu.cs595.capstone.scadservices.dto.UserListDto;
-import edu.ccsu.cs595.capstone.scadservices.exception.MissingParameterException;
-import edu.ccsu.cs595.capstone.scadservices.exception.MissingParameterMapper;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.UserService;
-
-import static edu.ccsu.cs595.capstone.scadservices.EndpointConstants.IDTOKEN;
 
 public class UserApiImpl implements UserApi {
 
@@ -40,25 +37,7 @@ public class UserApiImpl implements UserApi {
 	@Inject
 	SCADSecurityManager sm;
 
-	public Response getDashboard(String email) {
-		// This is the service to give the main data for the dashboard.
-		// User
-			// My leaques (league standing api)
-			// default
-				// My team
-			// any other SCAD
-			// other yahoo
-		UserDto result = usrSvc.getUser(email);
-
-		if (Objects.isNull(result)) {
-
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
-
-		return Response.status(Response.Status.OK).entity(result).build();
-
-	}
-//
+	//
 //	@Override
 //	public Response getAll() {
 //
@@ -135,7 +114,9 @@ public class UserApiImpl implements UserApi {
 
 	@Override
 	public Response getUserInfo() throws RuntimeException {
+		
 		String idToken = SCADSecurityManager.getIDTOKEN();
+		
 		if (idToken == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken").build();
 		}

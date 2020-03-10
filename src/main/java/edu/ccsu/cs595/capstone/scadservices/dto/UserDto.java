@@ -1,10 +1,8 @@
 package edu.ccsu.cs595.capstone.scadservices.dto;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
