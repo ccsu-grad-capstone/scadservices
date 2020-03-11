@@ -6,9 +6,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import edu.ccsu.cs595.capstone.scadservices.api.LeagueApi;
-import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
-import edu.ccsu.cs595.capstone.scadservices.exception.MissingParameterException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
 
@@ -58,8 +56,6 @@ public class LeagueApiImpl implements LeagueApi {
 
 	}
 
-
-
 	@Override
 	public Response getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		// TODO Auto-generated method stub
@@ -90,35 +86,5 @@ public class LeagueApiImpl implements LeagueApi {
 		return null;
 	}
 
-	@Override
-	public Response getUserAllSCADLeagues() throws AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response getUserSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response createSCADLeague(SCADLeagueDto proposed) throws MissingParameterException, AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response updateSCADLeague(Long id, SCADLeagueDto proposed)
-			throws MissingParameterException, AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Response deleteSCADLeague(Long id) throws MissingParameterException, AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
