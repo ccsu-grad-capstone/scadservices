@@ -24,6 +24,7 @@ import edu.ccsu.cs595.capstone.scadservices.dao.SCADLeagueDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
 import edu.ccsu.cs595.capstone.scadservices.entity.SCADLeague;
+import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 
 @Stateless
@@ -44,7 +45,7 @@ public class LeagueService {
 	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=";
 	private static final String YAHOORESTURI_USERLEAGUE_EXT = "/leagues?format=json";
 
-	public String getUserLeague(Long id) {
+	public String getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
 		String result = null;
 		UserDto userDto = new UserDto();
@@ -53,12 +54,11 @@ public class LeagueService {
 
 	}
 
-	public String getUserAllLeagues() {
+	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
 		String yahooGameStrg = null;
-		JsonObject yahooGameObj = null;
 		String yahooLeagueStrg = null;
 		JsonObject yahooLeagueObj = null;
 		String result = null;
@@ -68,8 +68,7 @@ public class LeagueService {
 		String leagues = "leagues";
 		String game = "game";
 		yahooGameStrg = getYahooData(YAHOORESTURI_GAMEINFO, user, game);
-		yahooGameObj = new JsonParser().parse(yahooGameStrg).getAsJsonObject();
-		int gameId = getGameId(yahooGameObj);
+		int gameId = getGameId(yahooGameStrg);
 		String leagueUrl = YAHOORESTURI_USERLEAGUE + gameId + YAHOORESTURI_USERLEAGUE_EXT;
 		yahooLeagueStrg = getYahooData(leagueUrl, user, leagues);
 		try {
@@ -86,15 +85,22 @@ public class LeagueService {
 
 	}
 	
-	private int getGameId(JsonObject gameObj) {
+	private int getGameId(String gameStrg) throws AuthorizationFailedException, RuntimeException {
 		
 		int gameId = 0;
-		JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("game_id");
+		JsonObject gameObj = null;
+		try {
+			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
+			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("game_id");
+			gameId = element.getAsInt();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
 
 		return gameId;
 	}
 
-	private String getLeaguesData(JsonObject leaguesObj) {
+	private String getLeaguesData(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
 
 		String result = null;
 
@@ -130,12 +136,13 @@ public class LeagueService {
 	}
 
 	@SuppressWarnings("static-access")
-	private String getYahooData(String url, String user, String type) {
+	private String getYahooData(String url, String user, String type) throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
 		boolean success = true;
 		String result = null;
+		JsonObject resultObj = null;
 		if (Objects.nonNull(url)) {
 			Client client = ClientBuilder.newClient();
 			WebTarget webTarget = client.target(url);
@@ -150,17 +157,35 @@ public class LeagueService {
 			} catch (Exception ex) {
 				success = false;
 				LOG.error("Yahoo getting {} request failed for user={}, url={} - {}", type, user, url, ex.getMessage());
+				throw new RuntimeException(ex.getMessage());
 			}
 		}
 		e = System.currentTimeMillis();
 		if (success) {
-			LOG.info("Yahoo getting {} request was successfull for user={}, and time took {}ms.", type, user, (e - s));
+			if (Objects.nonNull(result)) {
+				try {
+					resultObj = new JsonParser().parse(result).getAsJsonObject();
+					JsonElement error = resultObj.get("error");
+					if (Objects.nonNull(error)) {
+						LOG.error("Yahoo getting {} request failed for user={}, url={} - {}", type, user, url, error);
+						throw new AuthorizationFailedException(error.toString());
+					} else {
+						LOG.info("Yahoo getting {} request was successfull for user={}, and time took {}ms.", type, user, (e - s));
+					}
+				} catch (Exception ex) {
+					LOG.error("Yahoo getting {} request failed (exception) for user={}, url={} - {}", type, user, url, ex.getMessage());
+					throw new AuthorizationFailedException(ex.getMessage());
+				}
+			} else {
+				LOG.error("Yahoo getting {} request failed for user={}, url={}", type, user, url);
+			}
 		}
+		
 		return result;
 
 	}
 	
-	public SCADLeagueDto findSCADLeague(Long id) {
+	public SCADLeagueDto findSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException {
 		
 		SCADLeagueDto result = null;
 		SCADLeague slEntity = slDao.find(id);
@@ -170,7 +195,7 @@ public class LeagueService {
 	}
 	
 	
-	public SCADLeagueDto createSCADLeague(SCADLeagueDto slDto) {
+	public SCADLeagueDto createSCADLeague(SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
 		
 		SCADLeagueDto result = null;
 		SCADLeague newEntity = this.dtoToEntity(slDto);
@@ -180,7 +205,7 @@ public class LeagueService {
 		
 	}
 	
-	public SCADLeagueDto updateSCADLeague(Long id, SCADLeagueDto slDto) {
+	public SCADLeagueDto updateSCADLeague(Long id, SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
 		
 		SCADLeagueDto result = null;
 		SCADLeague existingEntity = slDao.find(id);
@@ -191,7 +216,7 @@ public class LeagueService {
 		
 	}
 	
-	public void deleteSCADLeague(Long id) {
+	public void deleteSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException{
 		
 		SCADLeague deleteEntity = slDao.find(id);
 		slDao.delete(deleteEntity);
