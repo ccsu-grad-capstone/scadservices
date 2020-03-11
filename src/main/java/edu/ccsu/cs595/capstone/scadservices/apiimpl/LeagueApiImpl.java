@@ -6,6 +6,8 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import edu.ccsu.cs595.capstone.scadservices.api.LeagueApi;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
+import edu.ccsu.cs595.capstone.scadservices.exception.MissingParameterException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
 
@@ -19,14 +21,14 @@ public class LeagueApiImpl implements LeagueApi {
 	SCADSecurityManager sm;
 
 	@Override
-	public Response getLeague( Long id) throws RuntimeException {
+	public Response getUserLeague( Long id) throws RuntimeException {
 
 
 		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
 		}
 
-		String result = lSvc.getLeague(id);
+		String result = lSvc.getUserLeague(id);
 
 		if (Objects.isNull(result)) {
 
@@ -38,13 +40,13 @@ public class LeagueApiImpl implements LeagueApi {
 	}
 
 	@Override
-	public Response getAllLeagues() throws RuntimeException {
+	public Response getUserAllLeagues() throws RuntimeException {
 
 		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
 		}
 		
-		String result = lSvc.getAllLeagues();
+		String result = lSvc.getUserAllLeagues();
 
 		if (Objects.isNull(result)) {
 
@@ -53,6 +55,67 @@ public class LeagueApiImpl implements LeagueApi {
 
 		return Response.status(Response.Status.OK).entity(result).build();
 		
+	}
+
+	@Override
+	public Response getUserLeagueTeams(Long leagueId) throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getUserLeagueSettings(Long leagueId) throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getUserLeagueStandings(Long leagueId) throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getUserLeagueTeamAndRoaster(Long leagueId, Long teamId) throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getUserLeaguePlayers(Long leagueId) throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getUserAllSCADLeagues() throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response getUserSCADLeague(Long id) throws RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response createSCADLeague(SCADLeagueDto proposed) throws MissingParameterException, RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response updateSCADLeague(Long id, SCADLeagueDto proposed)
+			throws MissingParameterException, RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response deleteSCADLeague(Long id) throws MissingParameterException, RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

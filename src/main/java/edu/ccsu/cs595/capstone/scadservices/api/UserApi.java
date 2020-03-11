@@ -74,7 +74,7 @@ public interface UserApi {
 //    					) throws MissingParameterException, RuntimeException;
 //	
 	@GET
-    @ApiOperation(value = "Get a User details by his yahoo id_token", notes = "Returns a User details by his id_token", response = UserDto.class)
+    @ApiOperation(value = "Get User details by his yahoo id_token", notes = "Returns User details by his id_token", response = UserDto.class)
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getUserInfo() throws RuntimeException;
 	

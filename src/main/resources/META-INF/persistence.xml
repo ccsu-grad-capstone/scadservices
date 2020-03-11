@@ -7,7 +7,7 @@
 		transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:/jdbc/ccsu/ScadDS</jta-data-source>
-		<class>edu.ccsu.cs595.capstone.scadservices.entity.User</class>
+		<class>edu.ccsu.cs595.capstone.scadservices.entity.SCADLeague</class>
 
 		<properties>
 			<property name="hibernate.default_schema" value="scad" />
