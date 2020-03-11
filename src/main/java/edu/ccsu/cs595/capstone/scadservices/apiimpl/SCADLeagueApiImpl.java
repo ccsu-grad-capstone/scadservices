@@ -10,7 +10,6 @@ import edu.ccsu.cs595.capstone.scadservices.exception.MissingParameterException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.SCADLeagueService;
 
-@SuppressWarnings("static-access")
 public class SCADLeagueApiImpl implements SCADLeagueApi {
 
 	@Inject
@@ -18,6 +17,12 @@ public class SCADLeagueApiImpl implements SCADLeagueApi {
 
 	@Inject
 	SCADSecurityManager sm;
+	
+	@Override
+	public Response getUserDefaultSCADLeague() throws AuthorizationFailedException, RuntimeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	@Override
 	public Response getUserAllSCADLeagues() throws AuthorizationFailedException, RuntimeException {

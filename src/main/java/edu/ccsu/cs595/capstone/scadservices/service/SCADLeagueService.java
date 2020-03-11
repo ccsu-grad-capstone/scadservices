@@ -1,28 +1,18 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import edu.ccsu.cs595.capstone.scadservices.api.UserApi;
 import edu.ccsu.cs595.capstone.scadservices.dao.SCADLeagueDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
-import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueListDto;
 import edu.ccsu.cs595.capstone.scadservices.entity.SCADLeague;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
@@ -34,14 +24,17 @@ public class SCADLeagueService {
 
 	@Inject
 	UserApi userApi;
+	
+	@Inject
+	LeagueService lSrv;
 
 	@Inject
 	SCADSecurityManager sm;
 	
 	@Inject
 	SCADLeagueDao slDao;
-
-	public SCADLeagueDto findSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException {
+	
+	public SCADLeagueDto getSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException {
 		
 		SCADLeagueDto result = null;
 		SCADLeague slEntity = slDao.find(id);
@@ -50,7 +43,40 @@ public class SCADLeagueService {
 		
 	}
 	
+	public SCADLeagueDto getDefaultSCADLeague() throws AuthorizationFailedException, RuntimeException {
+		
+		SCADLeagueDto result = null;
+		Long seasonYear = lSrv.getSeasonYear();
+		String userGuid = lSrv.getUserGuid();
+		SCADLeague slEntity = slDao.getDefaultSCADLeague(seasonYear, userGuid);
+		result = this.entityToDto(slEntity);
+		return result;
+		
+	}
 	
+	public SCADLeagueDto getSCADLeagueByYahooLeagueId(Long yahooLeagueID) throws AuthorizationFailedException, RuntimeException {
+		
+		SCADLeagueDto result = null;
+		SCADLeague slEntity = slDao.getSCADLeagueByYahooLeagueId(yahooLeagueID);
+		result = this.entityToDto(slEntity);
+		return result;
+		
+	}
+	
+	public SCADLeagueListDto getUserAllSCADLeagues() throws AuthorizationFailedException, RuntimeException {
+		
+		SCADLeagueListDto list = new SCADLeagueListDto();
+		Long seasonYear = lSrv.getSeasonYear();
+		String userGuid = lSrv.getUserGuid();
+		List<SCADLeague> slEntityList = slDao.getUserAllSCADLeagues(userGuid, seasonYear);
+		for (SCADLeague slEntity : slEntityList) {
+			SCADLeagueDto result = this.entityToDto(slEntity);
+			list.getScadLeagues().add(result);
+		}
+		return list;
+		
+	}
+
 	public SCADLeagueDto createSCADLeague(SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
 		
 		SCADLeagueDto result = null;
@@ -87,6 +113,7 @@ public class SCADLeagueService {
 			
 			result.setId(slEntity.getId());
 			result.setYahooLeagueID(slEntity.getYahooLeagueID());
+			result.setSeasonYear(slEntity.getSeasonYear());
 			result.setLeagueManagers(slEntity.getLeagueManagers());
 			result.setRookieDraftRds(slEntity.getRookieDraftRds());
 			result.setRookieDraftStrategy(slEntity.getRookieDraftStrategy());
@@ -111,7 +138,7 @@ public class SCADLeagueService {
 			result.setDefMin(slEntity.getDefMin());
 			result.setDefMax(slEntity.getDefMax());
 			result.setIsDefault(slEntity.getIsDefault());
-			result.setOwnerId(slEntity.getOwnerId());
+			result.setOwnerGuid(slEntity.getOwnerGuid());
 			result.setCreatedBy(slEntity.getCreatedBy());
 			result.setCreatedAt(slEntity.getCreatedAt());
 			result.setModifiedBy(slEntity.getModifiedBy());
@@ -130,6 +157,7 @@ public class SCADLeagueService {
 		if (Objects.nonNull(slDto)) {
 			
 			result.setYahooLeagueID(slDto.getYahooLeagueID());
+			result.setSeasonYear(slDto.getSeasonYear());
 			result.setLeagueManagers(slDto.getLeagueManagers());
 			result.setRookieDraftRds(slDto.getRookieDraftRds());
 			result.setRookieDraftStrategy(slDto.getRookieDraftStrategy());
@@ -154,7 +182,7 @@ public class SCADLeagueService {
 			result.setDefMin(slDto.getDefMin());
 			result.setDefMax(slDto.getDefMax());
 			result.setIsDefault(slDto.getIsDefault());
-			result.setOwnerId(slDto.getOwnerId());
+			result.setOwnerGuid(slDto.getOwnerGuid());
 			
 		}
 		

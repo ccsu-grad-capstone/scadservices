@@ -26,6 +26,12 @@ import io.swagger.annotations.ApiParam;
 public interface SCADLeagueApi {
    
 	@GET
+	@Path("/default")
+    @ApiOperation(value = "Get User default SCAD League", notes = "Returns User default SCAD League", response = SCADLeagueDto.class)
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response getUserDefaultSCADLeague() throws AuthorizationFailedException, RuntimeException;
+	
+	@GET
 	@Path("/all")
     @ApiOperation(value = "Get User SCAD Leagues", notes = "Returns User SCAD Leagues", response = SCADLeagueListDto.class)
     @Produces({ MediaType.APPLICATION_JSON })

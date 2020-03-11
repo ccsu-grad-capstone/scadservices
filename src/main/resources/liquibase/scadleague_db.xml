@@ -11,6 +11,9 @@
             <column name="yahoo_league_id" remarks="Yahoo League Id" type="int">
                 <constraints nullable="false"/>
             </column> 
+            <column name="season_year" type="int">
+                <constraints nullable="false"/>
+            </column> 
             <column name="league_managers" type="int">
                 <constraints nullable="false"/>
             </column>   
@@ -83,7 +86,7 @@
             <column defaultValueNumeric="0" name="default_ind" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="owner_id" remarks="Yahoo user id" type="varchar(100)">
+            <column name="owner_guid" remarks="Yahoo user id" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_time" remarks="Date And Time When Record was created" type="timestamp">
@@ -109,8 +112,11 @@
             <column name="yahoo_league_id"/>
         </createIndex>
         <createIndex indexName="indx02_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
-            <column name="owner_id"/>
+            <column name="owner_guid"/>
         </createIndex> 
+        <createIndex indexName="indx03_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
+            <column name="season_year"/>
+        </createIndex>         
    </changeSet>    
     
 </databaseChangeLog>

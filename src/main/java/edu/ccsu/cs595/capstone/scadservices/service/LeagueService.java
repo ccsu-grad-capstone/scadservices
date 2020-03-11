@@ -36,14 +36,54 @@ public class LeagueService {
 	SCADSecurityManager sm;
 	
 	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
-	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=";
-	private static final String YAHOORESTURI_USERLEAGUE_EXT = "/leagues?format=json";
+	private static final String YAHOORESTURI_USERLEAGUES = "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=";
+	private static final String YAHOORESTURI_USERLEAGUES_EXT = "/leagues?format=json";
+	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.";
+	private static final String YAHOORESTURI_USERLEAGUE_EXT = "?format=json";
+	
+	public String getUserGuid() {
+		
+		String userGuid = null;
+		Response response = userApi.getUserInfo();
+		UserDto userDto = response.readEntity(UserDto.class);
+		userGuid = userDto.getSub();
+		return userGuid;
+		
+	}
+	
+	public Long getGameId() throws AuthorizationFailedException, RuntimeException {
+		
+		return Long.valueOf(this.getYahooGameId());
+		
+	}
+	
+	public Long getSeasonYear() throws AuthorizationFailedException, RuntimeException {
+		
+		return Long.valueOf(this.getYahooGameSeason());
+		
+	}	
 
 	public String getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
+		Long s, e;
+		s = System.currentTimeMillis();
+		String league = "league";
 		String result = null;
-		UserDto userDto = new UserDto();
-		userDto.setId(1L);
+		String yahooLeagueStrg = null;
+		JsonObject yahooLeagueObj = null;
+		String userGuid = this.getUserGuid();
+		String leagueUrl = YAHOORESTURI_USERLEAGUE + leagueId + YAHOORESTURI_USERLEAGUE_EXT;
+		yahooLeagueStrg = this.getYahooData(leagueUrl, userGuid, league);
+		try {
+			if (Objects.nonNull(yahooLeagueStrg)) {
+				yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
+				result = this.getLeagueData(yahooLeagueObj);
+			}
+		} catch (Exception ex) {
+			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
+		}
+		e = System.currentTimeMillis();
+		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
 
 	}
@@ -52,37 +92,36 @@ public class LeagueService {
 
 		Long s, e;
 		s = System.currentTimeMillis();
-		String yahooGameStrg = null;
+		String leagues = "leagues";
+		String result = null;
 		String yahooLeagueStrg = null;
 		JsonObject yahooLeagueObj = null;
-		String result = null;
-		Response response = userApi.getUserInfo();
-		UserDto userDto = response.readEntity(UserDto.class);
-		String user = userDto.getSub();
-		String leagues = "leagues";
-		String game = "game";
-		yahooGameStrg = getYahooData(YAHOORESTURI_GAMEINFO, user, game);
-		int gameId = getGameId(yahooGameStrg);
-		String leagueUrl = YAHOORESTURI_USERLEAGUE + gameId + YAHOORESTURI_USERLEAGUE_EXT;
-		yahooLeagueStrg = getYahooData(leagueUrl, user, leagues);
+		String userGuid = this.getUserGuid();
+		Long gameId = this.getGameId();
+		String leagueUrl = YAHOORESTURI_USERLEAGUES + gameId + YAHOORESTURI_USERLEAGUES_EXT;
+		yahooLeagueStrg = this.getYahooData(leagueUrl, userGuid, leagues);
 		try {
 			if (Objects.nonNull(yahooLeagueStrg)) {
 				yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
-				result = getLeaguesData(yahooLeagueObj);
+				result = this.getLeaguesData(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
-			LOG.error("Leagues Json parsing error for user={} - {}", user, ex.getMessage());
+			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting all leagues for user={}, process took {}ms.", user, (e - s));
+		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
 
 	}
 	
-	private int getGameId(String gameStrg) throws AuthorizationFailedException, RuntimeException {
+	private int getYahooGameId() throws AuthorizationFailedException, RuntimeException {
 		
 		int gameId = 0;
+		String game = "game";
+		String gameStrg = null;
 		JsonObject gameObj = null;
+		String userGuid = this.getUserGuid();
+		gameStrg = getYahooData(YAHOORESTURI_GAMEINFO, userGuid, game);
 		try {
 			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
 			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("game_id");
@@ -92,6 +131,25 @@ public class LeagueService {
 		}
 
 		return gameId;
+	}
+	
+	private int getYahooGameSeason() throws AuthorizationFailedException, RuntimeException {
+		
+		int gameSeason = 0;
+		String game = "game";
+		String gameStrg = null;
+		JsonObject gameObj = null;
+		String userGuid = this.getUserGuid();
+		gameStrg = getYahooData(YAHOORESTURI_GAMEINFO, userGuid, game);
+		try {
+			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
+			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("season");
+			gameSeason = element.getAsInt();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+
+		return gameSeason;
 	}
 
 	private String getLeaguesData(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
@@ -117,6 +175,32 @@ public class LeagueService {
 					result = "{\"leagues\":" + newleagues.toString() + "}";
 				} else {
 					LOG.error("Leagues object has error: {} ", error);
+					result = "ERROR:" + error.toString();
+				}
+			} catch (Exception ex) {
+				throw new RuntimeException(ex.getMessage());
+			}
+
+		}
+
+		return result;
+
+	}
+	
+	private String getLeagueData(JsonObject leagueObj) throws AuthorizationFailedException, RuntimeException {
+
+		String result = null;
+
+		if (Objects.nonNull(leagueObj)) {
+			try {
+				JsonElement error = leagueObj.get("error");
+				if (Objects.isNull(error)) {
+					JsonObject fantasyContent = leagueObj.get("fantasy_content").getAsJsonObject();
+					JsonArray league = fantasyContent.get("league").getAsJsonArray();
+					JsonObject ldata = league.get(0).getAsJsonObject();
+					result = ldata.toString();
+				} else {
+					LOG.error("League object has error: {} ", error);
 					result = "ERROR:" + error.toString();
 				}
 			} catch (Exception ex) {

@@ -23,6 +23,23 @@ public class SCADLeagueDao {
 	public SCADLeague find(Long id) {
 		return scadEm().find(SCADLeague.class, id);
 	}
+	
+	public SCADLeague getDefaultSCADLeague(Long seasonYear, String userGuid) {
+
+		SCADLeague result = null;
+
+		if ((Objects.nonNull(seasonYear)) && (Objects.nonNull(userGuid))){
+			try {
+				result = (SCADLeague) scadEm().createQuery("from SCADLeague sl where sl.seasonYear = :vSY and sl.userGuid = :vUG and sl.isDefault = true")
+						.setParameter("vSY", seasonYear).setParameter("vUG", userGuid).getSingleResult();
+			} catch (NoResultException e) {
+				result = null;
+			}
+		}
+
+		return result;
+
+	}
 
 	public SCADLeague getSCADLeagueByYahooLeagueId(Long yahooLeagueID) {
 
@@ -42,14 +59,14 @@ public class SCADLeagueDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SCADLeague> getSCADLeaguesByYahooUserId(String userId) {
+	public List<SCADLeague> getUserAllSCADLeagues(String userGuid, Long seasonYear) {
 
 		List<SCADLeague> result = null;
 		
-		if (Objects.nonNull(userId)) {
+		if ((Objects.nonNull(userGuid)) && (Objects.nonNull(seasonYear))) {
 			try {
-				result = (List<SCADLeague>) scadEm().createQuery("from SCADLeague sl where sl.ownerId = :vUId")
-						.setParameter("vUId", userId).getResultList();
+				result = (List<SCADLeague>) scadEm().createQuery("from SCADLeague sl where sl.ownerGuid = :vUG and sl.seasonYear = :vSY")
+						.setParameter("vUG", userGuid).setParameter("vSY", seasonYear).getResultList();
 			} catch (NoResultException e) {
 				result = null;
 			}
