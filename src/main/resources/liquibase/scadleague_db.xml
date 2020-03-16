@@ -8,6 +8,9 @@
             <column name="scad_league_id" autoIncrement="true" remarks="Unique Identifier key" type="int">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="yahoo_game_id" remarks="Yahoo Game Id" type="int">
+                <constraints nullable="false"/>
+            </column> 
             <column name="yahoo_league_id" remarks="Yahoo League Id" type="int">
                 <constraints nullable="false"/>
             </column> 
@@ -48,40 +51,40 @@
                 <constraints nullable="false"/>
             </column>      
             <column name="qb_min" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>              
             <column name="qb_max" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>              
             <column name="rb_min" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>              
             <column name="rb_max" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>              
             <column name="wr_min" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>              
             <column name="wr_max" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>  
             <column name="te_min" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>  
             <column name="te_max" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>      
              <column name="k_min" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>  
             <column name="k_max" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>                                
             <column name="def_min" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column>  
             <column name="def_max" type="int">
-                <constraints nullable="true"/>
+                <constraints nullable="false"/>
             </column> 
             <column defaultValueNumeric="0" name="default_ind" type="int">
                 <constraints nullable="false"/>
@@ -104,7 +107,7 @@
     </changeSet>
     
   	<changeSet author="rk" id="scadleague-02">
-        <addUniqueConstraint columnNames="yahoo_league_id" constraintName="uniq_ylid_01" schemaName="scad_schema" tableName="scad_league"/>
+        <addUniqueConstraint columnNames="yahoo_game_id, yahoo_league_id" constraintName="uniq_ygylid_01" schemaName="scad_schema" tableName="scad_league"/>
     </changeSet>
     
   	<changeSet author="rk" id="scadleague-03">
@@ -116,7 +119,10 @@
         </createIndex> 
         <createIndex indexName="indx03_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
             <column name="season_year"/>
-        </createIndex>         
+        </createIndex> 
+        <createIndex indexName="indx04_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
+            <column name="yahoo_game_id"/>
+        </createIndex>        
    </changeSet>    
     
 </databaseChangeLog>

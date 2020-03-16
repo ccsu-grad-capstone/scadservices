@@ -9,8 +9,8 @@ import edu.ccsu.cs595.capstone.scadservices.api.LeagueApi;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
+import edu.ccsu.cs595.capstone.scadservices.util.HeaderHelper;
 
-@SuppressWarnings("static-access")
 public class LeagueApiImpl implements LeagueApi {
 
 	@Inject
@@ -19,12 +19,17 @@ public class LeagueApiImpl implements LeagueApi {
 	@Inject
 	SCADSecurityManager sm;
 	
+	@Inject
+	HeaderHelper hHlpr;
+	
 	@Override
 	public Response getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
 
-		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
-		}
+//		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
+//		}
+//		
+		hHlpr.isHeaderAccessValid(sm);
 		
 		String result = lSvc.getUserAllLeagues();
 
@@ -41,9 +46,11 @@ public class LeagueApiImpl implements LeagueApi {
 	public Response getUserLeague( Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
 
-		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
-		}
+//		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
+//			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
+//		}
+		
+		hHlpr.isHeaderAccessValid(sm);
 
 		String result = lSvc.getUserLeague(leagueId);
 

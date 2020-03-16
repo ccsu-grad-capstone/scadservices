@@ -19,6 +19,5 @@ public class UserListDto {
 	public String toString() {
 		return "UserListDto [users=" + users + "]";
 	}
-	
 
 }

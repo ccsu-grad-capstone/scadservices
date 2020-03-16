@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+ 	<changeSet author="rk" id="scadleagueteam-01">
+        <createTable remarks="Entity which defines the SCAD league team settings" schemaName="scad_schema" tableName="scad_league_team">
+            <column name="scad_league_team_id" autoIncrement="true" remarks="Unique Identifier key" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="yahoo_league_team_id" remarks="Yahoo League Team Id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="yahoo_league_id" remarks="Yahoo League Id" type="int">
+                <constraints nullable="false"/>
+            </column>            
+            <column name="scad_league_id" remarks="Foreign Key from scad_league" type="int">
+                <constraints nullable="false"/>
+            </column> 
+            <column defaultValueNumeric="0" name="salary" type="int">
+                <constraints nullable="false"/>
+            </column> 
+            <column defaultValueNumeric="0" name="franchise_tag" type="int">
+                <constraints nullable="false"/>
+            </column>       
+            <column defaultValueNumeric="0" name="exception_in" type="int">
+                <constraints nullable="false"/>
+            </column>             
+            <column defaultValueNumeric="0" name="exception_out" type="int">
+                <constraints nullable="false"/>
+            </column>             
+            <column name="created_time" remarks="Date And Time When Record was created" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" remarks="User Id of person who created record" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_time" remarks="Date And Time When Record was modified" type="timestamp"/>
+            <column name="modified_by" remarks="User Id of person who modified record" type="char(36)"/>
+            <column defaultValueNumeric="0" name="vsn" remarks="Version Number used by Hibernate" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+  	<changeSet author="rk" id="scadleagueteam-02">
+        <addUniqueConstraint columnNames="yahoo_league_id, yahoo_league_team_id" constraintName="uniq_ylyltid_01" schemaName="scad_schema" tableName="scad_league_team"/>
+    </changeSet>
+    
+  	<changeSet author="rk" id="scadleagueteam-03">
+        <createIndex indexName="indx01_slt" schemaName="scad_schema" tableName="scad_league_team" unique="false">
+            <column name="yahoo_league_team_id"/>
+        </createIndex>
+        <createIndex indexName="indx02_slt" schemaName="scad_schema" tableName="scad_league_team" unique="false">
+            <column name="scad_league_id"/>
+        </createIndex> 
+        <createIndex indexName="indx03_slt" schemaName="scad_schema" tableName="scad_league_team" unique="false">
+            <column name="yahoo_league_id"/>
+        </createIndex> 
+   </changeSet>    
+    
+</databaseChangeLog>

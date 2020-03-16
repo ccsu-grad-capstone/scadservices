@@ -5,5 +5,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
       
  	<include file="src/main/resources/liquibase/scadleague_db.xml"/>
+ 	<include file="src/main/resources/liquibase/scadleagueteam_db.xml"/>
+ 	<include file="src/main/resources/liquibase/scadleagueplayer_db.xml"/>
 
 </databaseChangeLog>

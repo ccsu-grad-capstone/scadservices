@@ -8,7 +8,7 @@ import javax.persistence.Table;
 /**
  * 
  * The persistent class for the SCAD_LEAGUE database table in SCAD schema.
-*/
+ */
 
 @Entity
 @Table(name = "scad_league", schema = "scad_schema")
@@ -17,7 +17,8 @@ public class SCADLeague extends AuditedEntity {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private Long yahooLeagueID;
+	private Long yahooGameId;
+	private Long yahooLeagueId;
 	private Long seasonYear;
 	private Long leagueManagers;
 	private Long rookieDraftRds;
@@ -42,8 +43,10 @@ public class SCADLeague extends AuditedEntity {
 	private Long kMax;
 	private Long defMin;
 	private Long defMax;
-	private Boolean isDefault; 
+	private Boolean isDefault;
 	private String ownerGuid;
+//	private Set<SCADLeagueTeam> scadLeagueTeams;
+//	private Set<SCADLeaguePlayer> scadLeaguePlayers;
 
 	@Id
 	@Column(name = "scad_league_id", nullable = false)
@@ -54,16 +57,25 @@ public class SCADLeague extends AuditedEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	@Column(name = "yahoo_league_id", nullable = false)
-	public Long getYahooLeagueID() {
-		return yahooLeagueID;
+
+	@Column(name = "yahoo_game_id", nullable = false)
+	public Long getYahooGameId() {
+		return yahooGameId;
 	}
 
-	public void setYahooLeagueID(Long yahooLeagueID) {
-		this.yahooLeagueID = yahooLeagueID;
+	public void setYahooGameId(Long yahooGameId) {
+		this.yahooGameId = yahooGameId;
 	}
-	
+
+	@Column(name = "yahoo_league_id", nullable = false)
+	public Long getYahooLeagueId() {
+		return yahooLeagueId;
+	}
+
+	public void setYahooLeagueId(Long yahooLeagueId) {
+		this.yahooLeagueId = yahooLeagueId;
+	}
+
 	@Column(name = "season_year", nullable = false)
 	public Long getSeasonYear() {
 		return seasonYear;
@@ -172,7 +184,7 @@ public class SCADLeague extends AuditedEntity {
 		this.tradingDraftPickYears = tradingDraftPickYears;
 	}
 
-	@Column(name = "qb_min", nullable = true)
+	@Column(name = "qb_min", nullable = false)
 	public Long getQbMin() {
 		return qbMin;
 	}
@@ -181,7 +193,7 @@ public class SCADLeague extends AuditedEntity {
 		this.qbMin = qbMin;
 	}
 
-	@Column(name = "qb_max", nullable = true)
+	@Column(name = "qb_max", nullable = false)
 	public Long getQbMax() {
 		return qbMax;
 	}
@@ -190,7 +202,7 @@ public class SCADLeague extends AuditedEntity {
 		this.qbMax = qbMax;
 	}
 
-	@Column(name = "rb_min", nullable = true)
+	@Column(name = "rb_min", nullable = false)
 	public Long getRbMin() {
 		return rbMin;
 	}
@@ -199,7 +211,7 @@ public class SCADLeague extends AuditedEntity {
 		this.rbMin = rbMin;
 	}
 
-	@Column(name = "rb_max", nullable = true)
+	@Column(name = "rb_max", nullable = false)
 	public Long getRbMax() {
 		return rbMax;
 	}
@@ -208,7 +220,7 @@ public class SCADLeague extends AuditedEntity {
 		this.rbMax = rbMax;
 	}
 
-	@Column(name = "wr_min", nullable = true)
+	@Column(name = "wr_min", nullable = false)
 	public Long getWrMin() {
 		return wrMin;
 	}
@@ -217,7 +229,7 @@ public class SCADLeague extends AuditedEntity {
 		this.wrMin = wrMin;
 	}
 
-	@Column(name = "wr_max", nullable = true)
+	@Column(name = "wr_max", nullable = false)
 	public Long getWrMax() {
 		return wrMax;
 	}
@@ -226,7 +238,7 @@ public class SCADLeague extends AuditedEntity {
 		this.wrMax = wrMax;
 	}
 
-	@Column(name = "te_min", nullable = true)
+	@Column(name = "te_min", nullable = false)
 	public Long getTeMin() {
 		return teMin;
 	}
@@ -235,7 +247,7 @@ public class SCADLeague extends AuditedEntity {
 		this.teMin = teMin;
 	}
 
-	@Column(name = "te_max", nullable = true)
+	@Column(name = "te_max", nullable = false)
 	public Long getTeMax() {
 		return teMax;
 	}
@@ -244,7 +256,7 @@ public class SCADLeague extends AuditedEntity {
 		this.teMax = teMax;
 	}
 
-	@Column(name = "k_min", nullable = true)
+	@Column(name = "k_min", nullable = false)
 	public Long getkMin() {
 		return kMin;
 	}
@@ -253,7 +265,7 @@ public class SCADLeague extends AuditedEntity {
 		this.kMin = kMin;
 	}
 
-	@Column(name = "k_max", nullable = true)
+	@Column(name = "k_max", nullable = false)
 	public Long getkMax() {
 		return kMax;
 	}
@@ -262,7 +274,7 @@ public class SCADLeague extends AuditedEntity {
 		this.kMax = kMax;
 	}
 
-	@Column(name = "def_min", nullable = true)
+	@Column(name = "def_min", nullable = false)
 	public Long getDefMin() {
 		return defMin;
 	}
@@ -271,7 +283,7 @@ public class SCADLeague extends AuditedEntity {
 		this.defMin = defMin;
 	}
 
-	@Column(name = "def_max", nullable = true)
+	@Column(name = "def_max", nullable = false)
 	public Long getDefMax() {
 		return defMax;
 	}
@@ -288,7 +300,7 @@ public class SCADLeague extends AuditedEntity {
 	public void setIsDefault(Boolean isDefault) {
 		this.isDefault = isDefault;
 	}
-	
+
 	@Column(name = "owner_guid", nullable = false)
 	public String getOwnerGuid() {
 		return ownerGuid;
@@ -298,6 +310,24 @@ public class SCADLeague extends AuditedEntity {
 		this.ownerGuid = ownerGuid;
 	}
 
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")    
+//	public Set<SCADLeagueTeam> getScadLeagueTeams() {
+//		return scadLeagueTeams;
+//	}
+//
+//	public void setScadLeagueTeams(Set<SCADLeagueTeam> scadLeagueTeams) {
+//		this.scadLeagueTeams = scadLeagueTeams;
+//	}
+//
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")   
+//	public Set<SCADLeaguePlayer> getScadLeaguePlayers() {
+//		return scadLeaguePlayers;
+//	}
+//
+//	public void setScadLeaguePlayers(Set<SCADLeaguePlayer> scadLeaguePlayers) {
+//		this.scadLeaguePlayers = scadLeaguePlayers;
+//	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -306,11 +336,13 @@ public class SCADLeague extends AuditedEntity {
 		result = prime * result + ((defMin == null) ? 0 : defMin.hashCode());
 		result = prime * result + ((franchiseTagReliefPerc == null) ? 0 : franchiseTagReliefPerc.hashCode());
 		result = prime * result + ((franchiseTagSpots == null) ? 0 : franchiseTagSpots.hashCode());
+		result = prime * result + ((yahooGameId == null) ? 0 : yahooGameId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((irReliefPerc == null) ? 0 : irReliefPerc.hashCode());
 		result = prime * result + ((isDefault == null) ? 0 : isDefault.hashCode());
 		result = prime * result + ((kMax == null) ? 0 : kMax.hashCode());
 		result = prime * result + ((kMin == null) ? 0 : kMin.hashCode());
+		result = prime * result + ((yahooLeagueId == null) ? 0 : yahooLeagueId.hashCode());
 		result = prime * result + ((leagueManagers == null) ? 0 : leagueManagers.hashCode());
 		result = prime * result + ((leagueSalaryCap == null) ? 0 : leagueSalaryCap.hashCode());
 		result = prime * result + ((ownerGuid == null) ? 0 : ownerGuid.hashCode());
@@ -329,7 +361,6 @@ public class SCADLeague extends AuditedEntity {
 		result = prime * result + ((tradingDraftPickYears == null) ? 0 : tradingDraftPickYears.hashCode());
 		result = prime * result + ((wrMax == null) ? 0 : wrMax.hashCode());
 		result = prime * result + ((wrMin == null) ? 0 : wrMin.hashCode());
-		result = prime * result + ((yahooLeagueID == null) ? 0 : yahooLeagueID.hashCode());
 		return result;
 	}
 
@@ -362,6 +393,11 @@ public class SCADLeague extends AuditedEntity {
 				return false;
 		} else if (!franchiseTagSpots.equals(other.franchiseTagSpots))
 			return false;
+		if (yahooGameId == null) {
+			if (other.yahooGameId != null)
+				return false;
+		} else if (!yahooGameId.equals(other.yahooGameId))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -386,6 +422,11 @@ public class SCADLeague extends AuditedEntity {
 			if (other.kMin != null)
 				return false;
 		} else if (!kMin.equals(other.kMin))
+			return false;
+		if (yahooLeagueId == null) {
+			if (other.yahooLeagueId != null)
+				return false;
+		} else if (!yahooLeagueId.equals(other.yahooLeagueId))
 			return false;
 		if (leagueManagers == null) {
 			if (other.leagueManagers != null)
@@ -477,17 +518,12 @@ public class SCADLeague extends AuditedEntity {
 				return false;
 		} else if (!wrMin.equals(other.wrMin))
 			return false;
-		if (yahooLeagueID == null) {
-			if (other.yahooLeagueID != null)
-				return false;
-		} else if (!yahooLeagueID.equals(other.yahooLeagueID))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "SCADLeague [id=" + id + ", yahooLeagueID=" + yahooLeagueID + ", seasonYear=" + seasonYear
+		return "SCADLeague [id=" + id + ", yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId + ", seasonYear=" + seasonYear
 				+ ", leagueManagers=" + leagueManagers + ", rookieDraftRds=" + rookieDraftRds + ", rookieDraftStrategy="
 				+ rookieDraftStrategy + ", rookieWageScale=" + rookieWageScale + ", teamSalaryCap=" + teamSalaryCap
 				+ ", leagueSalaryCap=" + leagueSalaryCap + ", salaryCapExemptionLimit=" + salaryCapExemptionLimit

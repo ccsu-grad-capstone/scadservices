@@ -1,12 +1,15 @@
 package edu.ccsu.cs595.capstone.scadservices.dto;
 
+import java.util.Set;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class SCADLeagueDto extends AuditedDto {
 	
-	private Long yahooLeagueID;
-	private String yahooLeagueName;
+	private Long yahooGameId;
+	private Long yahooLeagueId;
+	private String leagueName;
 	private Long seasonYear;
 	private Long leagueManagers;
 	private Long rookieDraftRds;
@@ -33,6 +36,8 @@ public class SCADLeagueDto extends AuditedDto {
 	private Long defMax;
 	private Boolean isDefault; 
 	private String ownerGuid;
+	private Set<SCADLeagueTeamDto> scadLeagueTeamsDto;
+	private Set<SCADLeaguePlayerDto> scadLeaguePlayersDto;
 
 	@Override
 	public Long getId() {
@@ -43,13 +48,21 @@ public class SCADLeagueDto extends AuditedDto {
 	public void setId(Long id) {
 
 	}
-
-	public Long getYahooLeagueID() {
-		return yahooLeagueID;
+	
+	public Long getYahooGameId() {
+		return yahooGameId;
 	}
 
-	public void setYahooLeagueID(Long yahooLeagueID) {
-		this.yahooLeagueID = yahooLeagueID;
+	public void setYahooGameId(Long yahooGameId) {
+		this.yahooGameId = yahooGameId;
+	}
+
+	public Long getYahooLeagueId() {
+		return yahooLeagueId;
+	}
+
+	public void setYahooLeagueId(Long yahooLeagueId) {
+		this.yahooLeagueId = yahooLeagueId;
 	}
 	
 	public Long getSeasonYear() {
@@ -60,12 +73,12 @@ public class SCADLeagueDto extends AuditedDto {
 		this.seasonYear = seasonYear;
 	}
 
-	public String getYahooLeagueName() {
-		return yahooLeagueName;
+	public String getLeagueName() {
+		return leagueName;
 	}
 
-	public void setYahooLeagueName(String yahooLeagueName) {
-		this.yahooLeagueName = yahooLeagueName;
+	public void setLeagueName(String leagueName) {
+		this.leagueName = leagueName;
 	}
 
 	public Long getLeagueManagers() {
@@ -267,10 +280,26 @@ public class SCADLeagueDto extends AuditedDto {
 	public void setOwnerGuid(String ownerGuid) {
 		this.ownerGuid = ownerGuid;
 	}
+	
+	public Set<SCADLeagueTeamDto> getScadLeagueTeamsDto() {
+		return scadLeagueTeamsDto;
+	}
+
+	public void setScadLeagueTeamsDto(Set<SCADLeagueTeamDto> scadLeagueTeamsDto) {
+		this.scadLeagueTeamsDto = scadLeagueTeamsDto;
+	}
+
+	public Set<SCADLeaguePlayerDto> getScadLeaguePlayersDto() {
+		return scadLeaguePlayersDto;
+	}
+
+	public void setScadLeaguePlayersDto(Set<SCADLeaguePlayerDto> scadLeaguePlayersDto) {
+		this.scadLeaguePlayersDto = scadLeaguePlayersDto;
+	}
 
 	@Override
 	public String toString() {
-		return "SCADLeagueDto [yahooLeagueID=" + yahooLeagueID + ", yahooLeagueName=" + yahooLeagueName
+		return "SCADLeagueDto [yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId + ", leagueName=" + leagueName
 				+ ", seasonYear=" + seasonYear + ", leagueManagers=" + leagueManagers + ", rookieDraftRds="
 				+ rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy + ", rookieWageScale="
 				+ rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap=" + leagueSalaryCap
