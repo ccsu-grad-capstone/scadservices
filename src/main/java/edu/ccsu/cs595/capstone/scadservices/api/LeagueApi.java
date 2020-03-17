@@ -14,7 +14,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@ApplicationScoped
 @Path(EndpointConstants.LEAGUE)
 @Api(value = EndpointConstants.LEAGUE, tags = "League", description = "Get User League details")
 public interface LeagueApi {

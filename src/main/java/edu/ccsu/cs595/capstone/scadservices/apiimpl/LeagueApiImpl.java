@@ -2,6 +2,7 @@ package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
 import java.util.Objects;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
@@ -10,6 +11,7 @@ import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedExcepti
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
 
+@ApplicationScoped
 @SuppressWarnings("static-access")
 public class LeagueApiImpl implements LeagueApi {
 
