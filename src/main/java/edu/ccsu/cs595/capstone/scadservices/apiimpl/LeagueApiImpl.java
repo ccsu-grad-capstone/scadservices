@@ -58,8 +58,17 @@ public class LeagueApiImpl implements LeagueApi {
 
 	@Override
 	public Response getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
+		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
+		}
+
+		String result = lSvc.getUserLeagueTeams(leagueId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
 	}
 
 	@Override
