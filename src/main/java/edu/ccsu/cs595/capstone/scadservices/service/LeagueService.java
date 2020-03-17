@@ -28,6 +28,7 @@ import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 public class LeagueService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LeagueService.class);
+	private String userGuid = null;
 
 	@Inject
 	UserApi userApi;
@@ -42,7 +43,9 @@ public class LeagueService {
 	private static final String YAHOORESTURI_USERLEAGUE_EXT = "?format=json";
 	
 	public String getUserGuid() {
-		
+		if (userGuid != null) {
+			return userGuid;
+		}
 		String userGuid = null;
 		Response response = userApi.getUserInfo();
 		UserDto userDto = response.readEntity(UserDto.class);
