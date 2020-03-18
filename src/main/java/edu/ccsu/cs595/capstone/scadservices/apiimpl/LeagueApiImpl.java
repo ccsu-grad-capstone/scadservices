@@ -83,8 +83,15 @@ public class LeagueApiImpl implements LeagueApi {
 
 	@Override
 	public Response getUserLeagueSettings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
+		hHlpr.isHeaderAccessValid(sm);
+
+		String result = lSvc.getUserLeagueSettings(leagueId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
 	}
 
 	@Override

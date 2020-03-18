@@ -94,6 +94,19 @@ public class LeagueService {
 
 	}
 
+	public String getUserLeagueSettings(Long leagueId) {
+		String userId = yahoo.getYahooUserGuid();
+		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/settings?format=json";
+		String result = null;
+		try {
+			result = yahoo.getYahooLeagueData(url, userId, "settings");
+		} catch (Exception e) {
+			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
+	}
+
 	private String getLeaguesData(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
 
 		String result = null;
