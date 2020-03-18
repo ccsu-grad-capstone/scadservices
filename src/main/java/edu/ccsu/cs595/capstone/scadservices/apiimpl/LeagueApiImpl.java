@@ -2,6 +2,7 @@ package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
 import java.util.Objects;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
@@ -11,6 +12,8 @@ import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
 import edu.ccsu.cs595.capstone.scadservices.util.HeaderHelper;
 
+@ApplicationScoped
+@SuppressWarnings("static-access")
 public class LeagueApiImpl implements LeagueApi {
 
 	@Inject
@@ -21,14 +24,14 @@ public class LeagueApiImpl implements LeagueApi {
 	
 	@Inject
 	HeaderHelper hHlpr;
-	
+
 	@Override
 	public Response getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
 
 //		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
 //			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
 //		}
-//		
+//
 		hHlpr.isHeaderAccessValid(sm);
 		
 		String result = lSvc.getUserAllLeagues();
@@ -49,7 +52,7 @@ public class LeagueApiImpl implements LeagueApi {
 //		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
 //			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
 //		}
-		
+
 		hHlpr.isHeaderAccessValid(sm);
 
 		String result = lSvc.getUserLeague(leagueId);
@@ -65,8 +68,17 @@ public class LeagueApiImpl implements LeagueApi {
 
 	@Override
 	public Response getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
-		// TODO Auto-generated method stub
-		return null;
+		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
+		}
+
+		String result = lSvc.getUserLeagueTeams(leagueId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
 	}
 
 	@Override

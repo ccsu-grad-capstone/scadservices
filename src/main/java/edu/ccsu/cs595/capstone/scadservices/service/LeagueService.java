@@ -28,7 +28,8 @@ public class LeagueService {
 	private static final String YAHOORESTURI_USERLEAGUES_EXT = "/leagues?format=json";
 	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.";
 	private static final String YAHOORESTURI_USERLEAGUE_EXT = "?format=json";
-	
+
+
 	public String getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
@@ -52,6 +53,19 @@ public class LeagueService {
 		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
 
+	}
+
+	public String getUserLeagueTeams(Long leagueId) {
+		String userId = yahoo.getYahooUserGuid();
+		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/teams?format=json";
+		String result = null;
+		try {
+			result = yahoo.getYahooLeagueData(url, userId, "teams");
+		} catch (Exception e) {
+			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
 	}
 
 	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
@@ -79,7 +93,7 @@ public class LeagueService {
 		return result;
 
 	}
-	
+
 	private String getLeaguesData(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
 
 		String result = null;
