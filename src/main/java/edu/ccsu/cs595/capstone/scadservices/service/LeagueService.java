@@ -107,6 +107,52 @@ public class LeagueService {
 		return result;
 	}
 
+	public String getUserLeagueStandings(Long leagueId) {
+		String userId = yahoo.getYahooUserGuid();
+		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/standings?format=json";
+		String result = null;
+		try {
+			result = yahoo.getYahooLeagueData(url, userId, "standings");
+		} catch (Exception e) {
+			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
+	}
+
+	public String getUserLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) {
+		String userId = yahoo.getYahooUserGuid();
+		String url = "https://fantasysports.yahooapis.com/fantasy/v2/team/nfl.l." + leagueId + ".t." + teamId + "/roster";
+		if (week != null) {
+			url += ";week=" + week;
+		}
+		url += "?format=json";
+
+		String result = null;
+		try {
+			result = yahoo.getYahooLeagueData(url, userId, "roster");
+		} catch (Exception e) {
+			LOG.error("Error getting rosters for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
+	}
+
+	public String getUserLeaguePlayers(Long leagueId) {
+		String userId = yahoo.getYahooUserGuid();
+		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId;
+		url += "/players?format=json";
+
+		String result = null;
+		try {
+			result = yahoo.getYahooLeagueData(url, userId, "players");
+		} catch (Exception e) {
+			LOG.error("Error getting players for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
+	}
+
 	private String getLeaguesData(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
 
 		String result = null;

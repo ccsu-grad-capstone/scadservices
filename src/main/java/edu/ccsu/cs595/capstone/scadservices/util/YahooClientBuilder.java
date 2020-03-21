@@ -32,17 +32,21 @@ public class YahooClientBuilder {
 
 	@Inject
 	SCADSecurityManager sm;
-	
+
+	private String userGuid = null;
+
 	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
 	
 	public String getYahooUserGuid() {
-		
-		String userGuid = null;
-		Response response = userApi.getUserInfo();
-		UserDto userDto = response.readEntity(UserDto.class);
-		userGuid = userDto.getSub();
-		return userGuid;
-		
+		if (userGuid == null) {
+			Response response = userApi.getUserInfo();
+			UserDto userDto = response.readEntity(UserDto.class);
+			userGuid = userDto.getSub();
+			return userGuid;
+		} else {
+			return userGuid;
+		}
+
 	}
 	
 	public Long getYahooGame() throws AuthorizationFailedException, RuntimeException {

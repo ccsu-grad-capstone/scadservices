@@ -1,10 +1,6 @@
 package edu.ccsu.cs595.capstone.scadservices.api;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -60,9 +56,10 @@ public interface LeagueApi {
 	@Path("/{leagueId}/team/{teamId}/roster")
 	@ApiOperation(value = "Get User League Team & Roster details from yahoo by \"league_id\" and \"teamId\"", notes = "Returns User League Team & Roster details from yahoo by \"league_id\" and \"teamId\"", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueTeamAndRoaster(
+	public Response getUserLeagueTeamAndRoster(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
-			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId)
+			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId,
+			@ApiParam(value = "NFL week associated with desired roster.") @QueryParam("week") Long week)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
