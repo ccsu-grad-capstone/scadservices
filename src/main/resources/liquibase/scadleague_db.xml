@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
  	<changeSet author="rk" id="scadleague-01">
+        <validCheckSum>7:9d4bfe09f93337278e3e79e1c903e9e2</validCheckSum>
         <createTable remarks="Entity which defines the SCAD league settings" schemaName="scad_schema" tableName="scad_league">
             <column name="scad_league_id" autoIncrement="true" remarks="Unique Identifier key" type="int">
                 <constraints primaryKey="true" nullable="false"/>
@@ -107,10 +108,12 @@
     </changeSet>
     
   	<changeSet author="rk" id="scadleague-02">
+        <validCheckSum>7:a40e53edf13d5c7c5d5364c842bd4a7d</validCheckSum>
         <addUniqueConstraint columnNames="yahoo_game_id, yahoo_league_id" constraintName="uniq_ygylid_01" schemaName="scad_schema" tableName="scad_league"/>
     </changeSet>
     
   	<changeSet author="rk" id="scadleague-03">
+        <validCheckSum>7:51cf707b28db94cffc4ca007dd34c25b</validCheckSum>
         <createIndex indexName="indx01_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
             <column name="yahoo_league_id"/>
         </createIndex>
