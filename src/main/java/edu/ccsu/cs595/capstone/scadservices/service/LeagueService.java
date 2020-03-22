@@ -1,5 +1,6 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
@@ -55,14 +56,55 @@ public class LeagueService {
 
 	}
 
-	public String getUserLeagueTeams(Long leagueId) {
+	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/teams?format=json";
+		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "teams");
 		String result = null;
 		try {
-			result = yahoo.getYahooLeagueData(url, userId, "teams");
+			if (Objects.nonNull(rawYahooResult)) {
+				JsonObject jsonObj = new JsonParser().parse(rawYahooResult).getAsJsonObject();
+				result = formatTeamsData(jsonObj);
+			}
 		} catch (Exception e) {
 			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
+	}
+
+
+	private String formatTeamsData(JsonObject rawYahooObj) {
+		String result = null;
+		if (Objects.nonNull(rawYahooObj)) {
+			try {
+				JsonElement error = rawYahooObj.get("error");
+				if (Objects.isNull(error)) {
+					JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
+					JsonArray newTeams = new JsonArray();
+					for (Integer i = 0; i < teams.get("count").getAsInt(); i++) {
+						JsonObject newTeam = new JsonObject();
+						JsonArray team = teams.get(i.toString()).getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray();
+						for (JsonElement x : team) {
+							if (x.isJsonArray() && ((JsonArray) x).size() == 0) {
+								continue;
+							} else if (x.isJsonObject()) {
+								JsonObject y = (JsonObject) x;
+								for (Map.Entry<String, JsonElement> entry : y.entrySet()) {
+									newTeam.add(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						newTeams.add(newTeam);
+					}
+					result = "{\"teams\":" + newTeams.toString() + "}";
+				} else {
+					LOG.error("SCAD Teams object has an error: {} ", error);
+					result = "ERROR:" + error.toString();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
 		}
 
 		return result;
