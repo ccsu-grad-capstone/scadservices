@@ -73,43 +73,6 @@ public class LeagueService {
 		return result;
 	}
 
-
-	private String formatTeamsData(JsonObject rawYahooObj) {
-		String result = null;
-		if (Objects.nonNull(rawYahooObj)) {
-			try {
-				JsonElement error = rawYahooObj.get("error");
-				if (Objects.isNull(error)) {
-					JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
-					JsonArray newTeams = new JsonArray();
-					for (Integer i = 0; i < teams.get("count").getAsInt(); i++) {
-						JsonObject newTeam = new JsonObject();
-						JsonArray team = teams.get(i.toString()).getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray();
-						for (JsonElement x : team) {
-							if (x.isJsonArray() && ((JsonArray) x).size() == 0) {
-								continue;
-							} else if (x.isJsonObject()) {
-								JsonObject y = (JsonObject) x;
-								for (Map.Entry<String, JsonElement> entry : y.entrySet()) {
-									newTeam.add(entry.getKey(), entry.getValue());
-								}
-							}
-						}
-						newTeams.add(newTeam);
-					}
-					result = "{\"teams\":" + newTeams.toString() + "}";
-				} else {
-					LOG.error("SCAD Teams object has an error: {} ", error);
-					result = "ERROR:" + error.toString();
-				}
-			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage());
-			}
-		}
-
-		return result;
-	}
-
 	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
@@ -180,14 +143,19 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeaguePlayers(Long leagueId) {
+	public String getUserLeaguePlayers(Long leagueId) throws AuthorizationFailedException {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId;
 		url += "/players?format=json";
+		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "players");
 
 		String result = null;
+
 		try {
-			result = yahoo.getYahooLeagueData(url, userId, "players");
+			if (Objects.nonNull(rawYahooResult)) {
+				JsonObject jsonObj = new JsonParser().parse(rawYahooResult).getAsJsonObject();
+				result = formatPlayersData(jsonObj);
+			}
 		} catch (Exception e) {
 			LOG.error("Error getting players for userGuid = {} - {}", userId, e.getMessage());
 		}
@@ -255,5 +223,69 @@ public class LeagueService {
 		return result;
 
 	}
-	
+
+	private String formatTeamsData(JsonObject rawYahooObj) {
+		String result = null;
+		if (Objects.nonNull(rawYahooObj)) {
+			try {
+				JsonElement error = rawYahooObj.get("error");
+				if (Objects.isNull(error)) {
+					JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
+					JsonArray newTeams = new JsonArray();
+					for (Integer i = 0; i < teams.get("count").getAsInt(); i++) {
+						JsonObject newTeam = new JsonObject();
+						JsonArray team = teams.get(i.toString()).getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray();
+						for (JsonElement x : team) {
+							if (x.isJsonObject()) {
+								for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+									newTeam.add(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						newTeams.add(newTeam);
+					}
+					result = "{\"teams\":" + newTeams.toString() + "}";
+				} else {
+					LOG.error("SCAD Teams object has an error: {} ", error);
+					result = "ERROR:" + error.toString();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
+
+	private String formatPlayersData(JsonObject rawYahooObj) {
+		String result = null;
+		if (Objects.nonNull(rawYahooObj)) {
+			try {
+				JsonElement error = rawYahooObj.get("error");
+				if (Objects.isNull(error)) {
+					JsonObject players = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("players").getAsJsonObject();
+					JsonArray newPlayers = new JsonArray();
+					for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
+						JsonObject newPlayer = new JsonObject();
+						JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+						for (JsonElement x : player) {
+							// Filter out blank JSON arrays
+							if (x.isJsonObject()) {
+								for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+									newPlayer.add(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						newPlayers.add(newPlayer);
+					}
+					result = "{\"players\":" + newPlayers.toString() + "}";
+				} else {
+					LOG.error("SCAD Players object has an error: {} ", error);
+					result = "ERROR:" + error.toString();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
 }
