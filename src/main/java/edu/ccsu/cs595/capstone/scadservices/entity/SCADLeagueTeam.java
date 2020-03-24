@@ -2,6 +2,8 @@ package edu.ccsu.cs595.capstone.scadservices.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -26,6 +28,7 @@ public class SCADLeagueTeam extends AuditedEntity {
 	private Long exceptionOut;
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "scad_league_team_id", nullable = false)
 	public Long getId() {
 		return id;

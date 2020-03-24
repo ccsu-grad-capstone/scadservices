@@ -2,9 +2,13 @@ package edu.ccsu.cs595.capstone.scadservices.dto;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class SCADLeagueTeamDto extends AuditedDto {
 	
+	private Long id;
 	private Long yahooLeagueTeamId;
 	private Long yahooLeagueId;
 	private Long scadLeagueId;
@@ -15,12 +19,12 @@ public class SCADLeagueTeamDto extends AuditedDto {
 	
 	@Override
 	public Long getId() {
-		return null;
+		return id;
 	}
 
 	@Override
 	public void setId(Long id) {
-
+		this.id = id;
 	}
 
 	public Long getYahooLeagueTeamId() {

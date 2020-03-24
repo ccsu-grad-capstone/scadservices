@@ -34,10 +34,12 @@ public class YahooClientBuilder {
 	SCADSecurityManager sm;
 
 	private String userGuid = null;
+	private String userName = null;
 
 	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
 	
 	public String getYahooUserGuid() {
+		
 		if (userGuid == null) {
 			Response response = userApi.getUserInfo();
 			UserDto userDto = response.readEntity(UserDto.class);
@@ -45,6 +47,19 @@ public class YahooClientBuilder {
 			return userGuid;
 		} else {
 			return userGuid;
+		}
+
+	}
+	
+	public String getYahooUserName() {
+		
+		if (userName == null) {
+			Response response = userApi.getUserInfo();
+			UserDto userDto = response.readEntity(UserDto.class);
+			userName = userDto.getName();
+			return userName;
+		} else {
+			return userName;
 		}
 
 	}
@@ -79,6 +94,7 @@ public class YahooClientBuilder {
 		}
 
 		return gameId;
+		
 	}
 	
 	private int getYahooGameSeason() throws AuthorizationFailedException, RuntimeException {
@@ -98,6 +114,7 @@ public class YahooClientBuilder {
 		}
 
 		return gameSeason;
+		
 	}
 	
 	public String getYahooLeagueData(String url, String user, String type) throws AuthorizationFailedException, RuntimeException {
