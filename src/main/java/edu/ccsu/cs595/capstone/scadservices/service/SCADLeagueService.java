@@ -1,17 +1,27 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import edu.ccsu.cs595.capstone.scadservices.api.LeagueApi;
 import edu.ccsu.cs595.capstone.scadservices.dao.SCADLeagueDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueListDto;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeaguePlayerDto;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueTeamDto;
+import edu.ccsu.cs595.capstone.scadservices.entity.AuditContext;
 import edu.ccsu.cs595.capstone.scadservices.entity.SCADLeague;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.util.YahooClientBuilder;
@@ -26,6 +36,15 @@ public class SCADLeagueService {
 
 	@Inject
 	YahooClientBuilder yahoo;
+	
+	@Inject
+	SCADLeagueTeamService sltSvc;
+	
+	@Inject
+	SCADLeaguePlayerService slpSvc;
+	
+	@Inject
+	LeagueApi lApi;
 
 	public SCADLeagueDto getSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException {
 
@@ -72,11 +91,82 @@ public class SCADLeagueService {
 	public SCADLeagueDto createSCADLeague(SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeagueDto result = null;
+		addYahooLeagueData(slDto);
 		SCADLeague newEntity = this.dtoToEntity(slDto);
 		newEntity = slDao.upsert(newEntity);
 		result = this.entityToDto(newEntity);
+		result.setYahooLeagueName(slDto.getYahooLeagueName());
+		List<SCADLeagueTeamDto> ltList = createLeagueTeams(result);
+		List<SCADLeaguePlayerDto> lpList = createLeaguePlayers(result);
+		result.setScadLeagueTeamsDto(ltList);
+		result.setScadLeaguePlayersDto(lpList);
 		return result;
 
+	}
+	
+	private void addYahooLeagueData(SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
+		
+		slDto.setYahooGameId(yahoo.getYahooGame());
+		slDto.setSeasonYear(yahoo.getSeasonYear());
+		slDto.setOwnerGuid(yahoo.getYahooUserGuid());
+		SCADLeagueDto dl = this.getDefaultSCADLeagueByYahooGame();
+		if (Objects.isNull(dl)) {
+			slDto.setIsDefault(true);
+		} else {
+			slDto.setIsDefault(false);
+		}
+		AuditContext ac = new AuditContext(yahoo.getYahooUserGuid(),yahoo.getYahooUserName());
+		AuditContext.setAuditContext(ac);
+		
+	}
+	
+	private List<SCADLeagueTeamDto> createLeagueTeams (SCADLeagueDto leagueDto) throws AuthorizationFailedException, RuntimeException {
+		
+		List<SCADLeagueTeamDto> result = new ArrayList<SCADLeagueTeamDto>();
+		Response lts = lApi.getUserLeagueTeams(leagueDto.getYahooLeagueId());
+		String ltsString = lts.readEntity(String.class);
+		JsonObject ltsObject = new JsonParser().parse(ltsString).getAsJsonObject();
+		JsonArray ltsArray = ltsObject.get("teams").getAsJsonArray();
+		for (int i = 0; i < ltsArray.size(); i++) {
+			SCADLeagueTeamDto newLTDto = new SCADLeagueTeamDto();
+			JsonObject teamObject = ltsArray.get(i).getAsJsonObject();
+			Long teamId = teamObject.get("team_id").getAsLong();
+			newLTDto.setYahooLeagueId(leagueDto.getYahooLeagueId());
+			newLTDto.setScadLeagueId(leagueDto.getId());
+			newLTDto.setYahooLeagueTeamId(teamId);
+			newLTDto.setSalary(0L);
+			newLTDto.setIsFranchiseTag(false);
+			newLTDto.setExceptionIn(0L);
+			newLTDto.setExceptionOut(0L);
+			SCADLeagueTeamDto scadLTDto = sltSvc.createSCADLeagueTeam(newLTDto);
+			result.add(scadLTDto);
+		}
+		return result;
+		
+	}
+	
+	private List<SCADLeaguePlayerDto> createLeaguePlayers (SCADLeagueDto leagueDto) throws AuthorizationFailedException, RuntimeException {
+
+		List<SCADLeaguePlayerDto> result = new ArrayList<SCADLeaguePlayerDto>();
+		Response lps = lApi.getUserLeaguePlayers(leagueDto.getYahooLeagueId());
+		String lpsString = lps.readEntity(String.class);
+		JsonObject lpsObject = new JsonParser().parse(lpsString).getAsJsonObject();
+		JsonArray lpsArray = lpsObject.get("players").getAsJsonArray();
+		for (int i = 0; i < lpsArray.size(); i++) {
+			SCADLeaguePlayerDto newLPDto = new SCADLeaguePlayerDto();
+			JsonObject playerObject = lpsArray.get(i).getAsJsonObject();
+			Long playerId = playerObject.get("player_id").getAsLong();
+			newLPDto.setYahooLeagueId(leagueDto.getYahooLeagueId());
+			newLPDto.setScadLeagueId(leagueDto.getId());
+			newLPDto.setYahooLeaguePlayerId(playerId);
+			newLPDto.setSalary(0L);
+			newLPDto.setIsFranchiseTag(false);
+			SCADLeaguePlayerDto scadLTDto = slpSvc.createSCADLeaguePlayer(newLPDto);
+			result.add(scadLTDto);
+		}
+			
+		return result;
+		
 	}
 
 	public SCADLeagueDto updateSCADLeague(Long id, SCADLeagueDto slDto)
@@ -85,6 +175,8 @@ public class SCADLeagueService {
 		SCADLeagueDto result = null;
 		SCADLeague existingEntity = slDao.find(id);
 		this.dtoToEntityForUpdate(slDto, existingEntity);
+		AuditContext ac = new AuditContext(yahoo.getYahooUserGuid(),yahoo.getYahooUserName());
+		AuditContext.setAuditContext(ac);
 		existingEntity = slDao.upsert(existingEntity);
 		result = this.entityToDto(existingEntity);
 		return result;
@@ -94,15 +186,17 @@ public class SCADLeagueService {
 	public void deleteSCADLeague(Long id) throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeague deleteEntity = slDao.find(id);
+		AuditContext ac = new AuditContext(yahoo.getYahooUserGuid(),yahoo.getYahooUserName());
+		AuditContext.setAuditContext(ac);
 		slDao.delete(deleteEntity);
 
 	}
 
 	private SCADLeagueDto entityToDto(SCADLeague slEntity) {
 
-		SCADLeagueDto result = new SCADLeagueDto();
-
 		if (Objects.nonNull(slEntity)) {
+			
+			SCADLeagueDto result = new SCADLeagueDto();
 
 			result.setId(slEntity.getId());
 			result.setYahooGameId(slEntity.getYahooGameId());
@@ -137,18 +231,20 @@ public class SCADLeagueService {
 			result.setCreatedAt(slEntity.getCreatedAt());
 			result.setModifiedBy(slEntity.getModifiedBy());
 			result.setModifiedAt(slEntity.getModifiedAt());
+			
+			return result;
 
 		}
 
-		return result;
+		return null;
 
 	}
 
 	private SCADLeague dtoToEntity(SCADLeagueDto slDto) {
 
-		SCADLeague result = new SCADLeague();
-
 		if (Objects.nonNull(slDto)) {
+			
+			SCADLeague result = new SCADLeague();
 
 			result.setYahooGameId(slDto.getYahooGameId());
 			result.setYahooLeagueId(slDto.getYahooLeagueId());
@@ -178,10 +274,12 @@ public class SCADLeagueService {
 			result.setDefMax(slDto.getDefMax());
 			result.setIsDefault(slDto.getIsDefault());
 			result.setOwnerGuid(slDto.getOwnerGuid());
+			
+			return result;
 
 		}
 
-		return result;
+		return null;
 
 	}
 

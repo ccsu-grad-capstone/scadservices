@@ -52,14 +52,6 @@ public interface SCADLeagueApi {
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long id)
 			throws AuthorizationFailedException, RuntimeException;
 
-	@GET
-	@Path("/yahoo/{leagueId}")
-	@ApiOperation(value = "Get SCAD League by yahoo league id", notes = "Returns SCAD League by yahoo league id", response = SCADLeagueDto.class)
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getSCADLeagueByYahooLeagueId(
-			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
-			throws AuthorizationFailedException, RuntimeException;
-
 	@POST
 	@ApiOperation(value = "Create a new SCAD League resource", notes = "Add League additional settings in SCAD system", response = SCADLeagueDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -86,6 +78,14 @@ public interface SCADLeagueApi {
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(value = EndpointConstants.ID) Long id)
 			throws MissingParameterException, AuthorizationFailedException, RuntimeException;
 
+	@GET
+	@Path("/yahoo/{leagueId}")
+	@ApiOperation(value = "Get SCAD League by yahoo league id", notes = "Returns SCAD League by yahoo league id", response = SCADLeagueDto.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getSCADLeagueByYahooLeague(
+			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
+			throws AuthorizationFailedException, RuntimeException;
+
 	// League Teams
 
 	@GET
@@ -100,7 +100,7 @@ public interface SCADLeagueApi {
 	@Path("/{leagueId}" + EndpointConstants.SCADLEAGUETEAM + "/all")
 	@ApiOperation(value = "Get SCAD League Teams by SCAD league id", notes = "Returns SCAD League Teams by SCAD league id", response = SCADLeagueTeamListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeagueTeamsBySCADLeagueId(
+	public Response getAllSCADLeagueTeamsBySCADLeague(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
@@ -108,7 +108,7 @@ public interface SCADLeagueApi {
 	@Path("/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUETEAM + "/all")
 	@ApiOperation(value = "Get SCAD League Teams by yahoo league id", notes = "Returns SCAD League Teams by yahoo league id", response = SCADLeagueTeamListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeagueTeamsByYahooLeagueId(
+	public Response getAllSCADLeagueTeamsByYahooLeague(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
@@ -116,7 +116,7 @@ public interface SCADLeagueApi {
 	@Path("/{leagueId}" + EndpointConstants.SCADLEAGUETEAM + "/{id}")
 	@ApiOperation(value = "Get SCAD League Teams by SCAD league id and id", notes = "Returns SCAD League Teams by SCAD league id and id", response = SCADLeagueTeamListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeagueTeamsBySCADLeagueIdAndId(
+	public Response getSCADLeagueTeamBySCADLeagueAndTeam(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long id)
 			throws AuthorizationFailedException, RuntimeException;
@@ -125,7 +125,7 @@ public interface SCADLeagueApi {
 	@Path("/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUETEAM + "/{teamId}")
 	@ApiOperation(value = "Get SCAD League Teams by yahoo league id and team id", notes = "Returns SCAD League Teams by yahoo league id and team id", response = SCADLeagueTeamListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeagueTeamsByYahooLeagueIdAndTeamId(
+	public Response getSCADLeagueTeamByYahooLeagueAndTeam(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
 			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId)
 			throws AuthorizationFailedException, RuntimeException;
@@ -171,7 +171,7 @@ public interface SCADLeagueApi {
 	@Path("/{leagueId}" + EndpointConstants.SCADLEAGUEPLAYER + "/all")
 	@ApiOperation(value = "Get SCAD League Players by SCAD league id", notes = "Returns SCAD League Players by SCAD league id", response = SCADLeaguePlayerListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeaguePlayersBySCADLeagueId(
+	public Response getAllSCADLeaguePlayersBySCADLeague(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
@@ -179,7 +179,7 @@ public interface SCADLeagueApi {
 	@Path("/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUEPLAYER + "/all")
 	@ApiOperation(value = "Get SCAD League Players by yahoo league id", notes = "Returns SCAD League Players by yahoo league id", response = SCADLeaguePlayerListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeaguePlayersByYahooLeagueId(
+	public Response getAllSCADLeaguePlayersByYahooLeague(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
@@ -187,16 +187,16 @@ public interface SCADLeagueApi {
 	@Path("/{leagueId}" + EndpointConstants.SCADLEAGUEPLAYER + "/{id}")
 	@ApiOperation(value = "Get SCAD League Players by SCAD league id and id", notes = "Returns SCAD League Players by SCAD league id and id", response = SCADLeaguePlayerListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeaguePlayersBySCADLeagueIdAndId(
+	public Response getSCADLeaguePlayerBySCADLeagueAndPlayer(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long id)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUEPLAYER + "/{teamId}")
+	@Path("/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUEPLAYER + "/{playerId}")
 	@ApiOperation(value = "Get SCAD League Players by yahoo league id and player id", notes = "Returns SCAD League Players by yahoo league id and player id", response = SCADLeaguePlayerListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getAllSCADLeaguePlayersByYahooLeagueIdAndPlayerId(
+	public Response getSCADLeaguePlayerByYahooLeagueAndPlayer(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
 			@ApiParam(value = EndpointConstants.PLAYER_RESOURCE_ID, required = true) @PathParam(EndpointConstants.PLAYERID) Long playerId)
 			throws AuthorizationFailedException, RuntimeException;
