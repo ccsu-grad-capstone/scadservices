@@ -11,6 +11,7 @@ import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedExcepti
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.DashboardService;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
+import edu.ccsu.cs595.capstone.scadservices.util.HeaderHelper;
 
 @SuppressWarnings("static-access")
 public class DashboardApiImpl implements DashboardApi {
@@ -21,12 +22,13 @@ public class DashboardApiImpl implements DashboardApi {
 	@Inject
 	SCADSecurityManager sm;
 	
+	@Inject
+	HeaderHelper hHlpr;
+	
 	@Override
 	public Response getDashboardDetails() throws AuthorizationFailedException, RuntimeException {
 
-		if ((Objects.isNull(sm.getIDTOKEN())) || (Objects.isNull(sm.getACCESSTOKEN()))) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Missing SCAD idToken or accessToken").build();
-		}
+		hHlpr.isHeaderAccessValid(sm);
 		
 		String result = dbSvc.getDashboardDetails();
 
