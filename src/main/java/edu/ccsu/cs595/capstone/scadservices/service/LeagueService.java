@@ -103,8 +103,13 @@ public class LeagueService {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/settings?format=json";
 		String result = null;
+
 		try {
-			result = yahoo.getYahooLeagueData(url, userId, "settings");
+			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "settings");
+			if (Objects.nonNull(rawYahooData)) {
+				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+				result = formatSettingsData(jsonObj);
+			}
 		} catch (Exception e) {
 			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
 		}
@@ -143,15 +148,15 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeaguePlayers(Long leagueId) throws AuthorizationFailedException {
+	public String getUserLeaguePlayers(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId;
 		url += "/players?format=json";
-		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "players");
 
 		String result = null;
 
 		try {
+			String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "players");
 			if (Objects.nonNull(rawYahooResult)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooResult).getAsJsonObject();
 				result = formatPlayersData(jsonObj);
@@ -280,6 +285,25 @@ public class LeagueService {
 					result = "{\"players\":" + newPlayers.toString() + "}";
 				} else {
 					LOG.error("SCAD Players object has an error: {} ", error);
+					result = "ERROR:" + error.toString();
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
+
+	private String formatSettingsData(JsonObject rawYahooObj) {
+		String result = null;
+		if (Objects.nonNull(rawYahooObj)) {
+			try {
+				JsonElement error = rawYahooObj.get("error");
+				if (Objects.isNull(error)) {
+					JsonArray settings = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("settings").getAsJsonArray();
+					result = "{\"settings\":" + settings.toString() + "}";
+				} else {
+					LOG.error("SCAD Teams object has an error: {} ", error);
 					result = "ERROR:" + error.toString();
 				}
 			} catch (Exception e) {
