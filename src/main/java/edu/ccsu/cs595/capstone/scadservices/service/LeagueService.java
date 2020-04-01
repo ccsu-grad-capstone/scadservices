@@ -160,7 +160,7 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) {
+	public String getUserLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) throws IOException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/team/nfl.l." + leagueId + ".t." + teamId + "/roster";
 		if (week != null) {
@@ -168,11 +168,21 @@ public class LeagueService {
 		}
 		url += "?format=json";
 
-		String result = null;
+		String result;
+		String rawYahooData = null;
+
 		try {
-			result = yahoo.getYahooLeagueData(url, userId, "roster");
+			rawYahooData = yahoo.getYahooLeagueData(url, userId, "roster");
 		} catch (Exception e) {
 			LOG.error("Error getting rosters for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		if (Objects.nonNull(rawYahooData)) {
+			JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+			result = formatRosterData(jsonObj);
+		} else {
+			byte[] dummyData = Files.readAllBytes(Paths.get(EndpointConstants.DUMMY_DATA_ROOT + "/rosterDummyData.json"));
+			result = new String(dummyData, StandardCharsets.US_ASCII);
 		}
 
 		return result;
@@ -336,6 +346,39 @@ public class LeagueService {
 					LOG.error("SCAD Teams object has an error: {} ", error);
 					result = "ERROR:" + error.toString();
 				}
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
+	}
+
+	private String formatRosterData(JsonObject rawYahooObj) {
+		String result = null;
+		if (Objects.nonNull(rawYahooObj)) {
+			try {
+				JsonObject roster = rawYahooObj.get("fantasy_content").getAsJsonObject().get("roster").getAsJsonObject();
+				JsonObject newRoster = new JsonObject();
+				newRoster.add("coverage_type", roster.get("coverage_type"));
+				newRoster.add("week", roster.get("week"));
+				newRoster.add("is_editable", roster.get("is_editable"));
+				JsonObject players = roster.get("0").getAsJsonObject().get("players").getAsJsonObject();
+				JsonArray newPlayers = new JsonArray();
+				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
+					JsonObject newPlayer = new JsonObject();
+					JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+					for (JsonElement x : player) {
+						// Filter out blank JSON arrays
+						if (x.isJsonObject()) {
+							for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+								newPlayer.add(entry.getKey(), entry.getValue());
+							}
+						}
+					}
+					newPlayers.add(newPlayer);
+				}
+				newRoster.add("players", newPlayers);
+				result = "{\"roster\":" + newRoster.toString() + "}";
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}

@@ -119,8 +119,14 @@ public class LeagueApiImpl implements LeagueApi {
 	public Response getUserLeagueTeamAndRoster(Long leagueId, Long teamId, @QueryParam("week") Long week) throws AuthorizationFailedException, RuntimeException {
 		hHlpr.isHeaderAccessValid(sm);
 
+		String result = null;
 
-		String result = lSvc.getUserLeagueTeamAndRoster(leagueId, teamId, week);
+		try {
+			result = lSvc.getUserLeagueTeamAndRoster(leagueId, teamId, week);
+		} catch (IOException ex) {
+			// Could not get the dummy data.
+		}
+
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
