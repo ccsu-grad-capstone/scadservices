@@ -1,5 +1,6 @@
 package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -40,10 +41,14 @@ public class LeagueApiImpl implements LeagueApi {
 	}
 
 	@Override
-	public Response getUserLeague( Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public Response getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		hHlpr.isHeaderAccessValid(sm);
-
-		String result = lSvc.getUserLeague(leagueId);
+		String result = null;
+		try {
+			result = lSvc.getUserLeague(leagueId);
+		} catch (IOException ex) {
+			//This will hit if something is wrong with getting the dummy data from the file system.
+		}
 
 		if (Objects.isNull(result)) {
 

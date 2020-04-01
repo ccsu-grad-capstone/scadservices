@@ -1,11 +1,16 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import edu.ccsu.cs595.capstone.scadservices.EndpointConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +36,7 @@ public class LeagueService {
 	private static final String YAHOORESTURI_USERLEAGUE_EXT = "?format=json";
 
 
-	public String getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getUserLeague(Long leagueId) throws RuntimeException, IOException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -41,19 +46,23 @@ public class LeagueService {
 		JsonObject yahooLeagueObj = null;
 		String userGuid = yahoo.getYahooUserGuid();
 		String leagueUrl = YAHOORESTURI_USERLEAGUE + leagueId + YAHOORESTURI_USERLEAGUE_EXT;
-		yahooLeagueStrg = yahoo.getYahooLeagueData(leagueUrl, userGuid, league);
 		try {
-			if (Objects.nonNull(yahooLeagueStrg)) {
-				yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
-				result = this.getLeagueData(yahooLeagueObj);
-			}
+			yahooLeagueStrg = yahoo.getYahooLeagueData(leagueUrl, userGuid, league);
 		} catch (Exception ex) {
 			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
 		}
+
+		if (yahooLeagueStrg == null) {
+			byte[] dummyData = Files.readAllBytes(Paths.get(EndpointConstants.DUMMY_DATA_ROOT + "/leagueDetails.json"));
+			result = new String(dummyData, StandardCharsets.US_ASCII);
+		} else {
+			yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
+			result = this.getLeagueData(yahooLeagueObj);
+		}
+
 		e = System.currentTimeMillis();
 		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
-
 	}
 
 	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
@@ -203,7 +212,7 @@ public class LeagueService {
 
 	}
 	
-	private String getLeagueData(JsonObject leagueObj) throws AuthorizationFailedException, RuntimeException {
+	private String getLeagueData(JsonObject leagueObj) throws RuntimeException {
 
 		String result = null;
 
