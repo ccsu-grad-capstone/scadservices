@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import edu.ccsu.cs595.capstone.scadservices.EndpointConstants;
+import org.omg.SendingContext.RunTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,32 @@ public class LeagueService {
 	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.";
 	private static final String YAHOORESTURI_USERLEAGUE_EXT = "?format=json";
 
+
+	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException, IOException {
+
+		Long s, e;
+		s = System.currentTimeMillis();
+		String leagues = "leagues";
+		String result = null;
+		String yahooLeagueStrg = null;
+		JsonObject yahooLeagueObj = null;
+		String userGuid = yahoo.getYahooUserGuid();
+		Long yahooGameId = yahoo.getYahooGame();
+		String leagueUrl = YAHOORESTURI_USERLEAGUES + yahooGameId + YAHOORESTURI_USERLEAGUES_EXT;
+		yahooLeagueStrg = yahoo.getYahooLeagueData(leagueUrl, userGuid, leagues);
+		try {
+			if (Objects.nonNull(yahooLeagueStrg)) {
+				yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
+				result = this.getLeaguesData(yahooLeagueObj);
+			}
+		} catch (Exception ex) {
+			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
+		}
+		e = System.currentTimeMillis();
+		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
+		return result;
+
+	}
 
 	public String getUserLeague(Long leagueId) throws RuntimeException, IOException {
 
@@ -82,51 +109,30 @@ public class LeagueService {
 			result = formatTeamsData(parser.parse(rawYahooResult).getAsJsonObject());
 		} else {
 			byte[] dummyData = Files.readAllBytes(Paths.get(EndpointConstants.DUMMY_DATA_ROOT + "/teamsDummyData.json"));
-			result = formatTeamsData(parser.parse(new String(dummyData, StandardCharsets.US_ASCII)).getAsJsonObject());
+			result = new String(dummyData, StandardCharsets.US_ASCII);
 		}
 
 		return result;
 	}
 
-	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException, IOException {
-
-		Long s, e;
-		s = System.currentTimeMillis();
-		String leagues = "leagues";
-		String result = null;
-		String yahooLeagueStrg = null;
-		JsonObject yahooLeagueObj = null;
-		String userGuid = yahoo.getYahooUserGuid();
-		Long yahooGameId = yahoo.getYahooGame();
-		String leagueUrl = YAHOORESTURI_USERLEAGUES + yahooGameId + YAHOORESTURI_USERLEAGUES_EXT;
-		yahooLeagueStrg = yahoo.getYahooLeagueData(leagueUrl, userGuid, leagues);
-		try {
-			if (Objects.nonNull(yahooLeagueStrg)) {
-				yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
-				result = this.getLeaguesData(yahooLeagueObj);
-			}
-		} catch (Exception ex) {
-			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
-		}
-		e = System.currentTimeMillis();
-		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
-		return result;
-
-	}
-
-	public String getUserLeagueSettings(Long leagueId) {
+	public String getUserLeagueSettings(Long leagueId) throws IOException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/settings?format=json";
 		String result = null;
+		String rawYahooData = null;
 
 		try {
-			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "settings");
-			if (Objects.nonNull(rawYahooData)) {
-				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
-				result = formatSettingsData(jsonObj);
-			}
+			rawYahooData = yahoo.getYahooLeagueData(url, userId, "settings");
 		} catch (Exception e) {
 			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		if (Objects.nonNull(rawYahooData)) {
+			JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+			result = formatSettingsData(jsonObj);
+		} else {
+			byte[] dummyData = Files.readAllBytes(Paths.get(EndpointConstants.DUMMY_DATA_ROOT + "/settingsDummyData.json"));
+			result = new String(dummyData, StandardCharsets.US_ASCII);
 		}
 
 		return result;
