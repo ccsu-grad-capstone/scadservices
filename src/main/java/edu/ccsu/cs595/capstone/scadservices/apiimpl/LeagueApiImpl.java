@@ -101,8 +101,13 @@ public class LeagueApiImpl implements LeagueApi {
 	@Override
 	public Response getUserLeagueStandings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		hHlpr.isHeaderAccessValid(sm);
+		String result = null;
 
-		String result = lSvc.getUserLeagueStandings(leagueId);
+		try {
+			result = lSvc.getUserLeagueStandings(leagueId);
+		} catch (IOException ex) {
+			// Could not get the dummy data.
+		}
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();

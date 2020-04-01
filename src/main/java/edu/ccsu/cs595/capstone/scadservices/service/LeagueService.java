@@ -63,7 +63,7 @@ public class LeagueService {
 
 	}
 
-	public String getUserLeague(Long leagueId) throws RuntimeException, IOException {
+	public String getUserLeague(Long leagueId) throws  IOException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -138,14 +138,23 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeagueStandings(Long leagueId) {
+	public String getUserLeagueStandings(Long leagueId) throws IOException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/standings?format=json";
 		String result = null;
+		String rawYahooData = null;
 		try {
-			result = yahoo.getYahooLeagueData(url, userId, "standings");
+			rawYahooData = yahoo.getYahooLeagueData(url, userId, "standings");
 		} catch (Exception e) {
 			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		if (Objects.nonNull(rawYahooData)) {
+			JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+			result = formatSettingsData(jsonObj);
+		} else {
+			byte[] dummyData = Files.readAllBytes(Paths.get(EndpointConstants.DUMMY_DATA_ROOT + "/standingsDummyData.json"));
+			result = new String(dummyData, StandardCharsets.US_ASCII);
 		}
 
 		return result;
