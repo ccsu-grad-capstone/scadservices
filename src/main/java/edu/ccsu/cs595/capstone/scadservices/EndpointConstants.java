@@ -32,5 +32,5 @@ public class EndpointConstants {
 	public static final String PUTPROPOSED = "The proposed state of the resource "
 	        + "(you may supply only the ID and the changes).";
 
-	public static final String DUMMY_DATA_ROOT = "src/main/resources/yahoo";
+	public static final String DUMMY_DATA_ROOT = "src/main/resources/yahoo-dummy-data";
 }

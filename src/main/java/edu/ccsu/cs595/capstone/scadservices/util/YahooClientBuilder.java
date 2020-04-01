@@ -156,7 +156,7 @@ public class YahooClientBuilder {
 					JsonElement error = resultObj.get("error");
 					if (Objects.nonNull(error)) {
 						LOG.error("Yahoo getting {} request failed for user={}, url={} - {}", type, user, url, error);
-						throw new AuthorizationFailedException(error.toString());
+						throw new RuntimeException(error.toString());
 					} else {
 						LOG.info("Yahoo getting {} request was successfull for user={}, and time took {}ms.", type, user, (e - s));
 					}

@@ -28,8 +28,12 @@ public class LeagueApiImpl implements LeagueApi {
 	@Override
 	public Response getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
 		hHlpr.isHeaderAccessValid(sm);
-		
-		String result = lSvc.getUserAllLeagues();
+		String result = null;
+		try {
+			result = lSvc.getUserAllLeagues();
+		} catch (IOException ex) {
+			//This will hit if something is wrong with getting the dummy data from the file system.
+		}
 
 		if (Objects.isNull(result)) {
 
@@ -62,8 +66,12 @@ public class LeagueApiImpl implements LeagueApi {
 	@Override
 	public Response getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		hHlpr.isHeaderAccessValid(sm);
-
-		String result = lSvc.getUserLeagueTeams(leagueId);
+        String result = null;
+        try {
+            result = lSvc.getUserLeagueTeams(leagueId);
+        } catch (IOException ex) {
+            // Foo
+        }
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
