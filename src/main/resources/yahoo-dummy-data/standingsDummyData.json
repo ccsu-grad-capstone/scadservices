@@ -1,8 +1,6 @@
 {
   "dummy_data": "true",
-  "standings": {
-      "teams": {
-          "team": [
+  "standings": [
             {
               "team_key": "390.l.22351.t.3",
               "team_id": "3",
@@ -681,8 +679,5 @@
                 "points_against": "1545"
               }
             }
-          ],
-          "_count": "12"
-        }
-  }
+          ]
 }
