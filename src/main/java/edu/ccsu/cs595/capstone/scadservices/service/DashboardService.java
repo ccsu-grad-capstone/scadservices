@@ -71,7 +71,7 @@ public class DashboardService {
 			JsonObject allUserLeaguesObj = new JsonParser().parse(allUserLeaguesStrg).getAsJsonObject();
 			JsonArray allUserLeaguesArray = allUserLeaguesObj.get("leagues").getAsJsonArray();
 			String allUserLeaguesStrg1 = allUserLeaguesArray.toString();
-			dbDetailsBody = ", \"YahooLeague\":" + allUserLeaguesStrg1;
+			dbDetailsBody = ", \"YahooLeagues\":" + allUserLeaguesStrg1;
 		}
 		dbDetails = dbDetailsBegin + dbDetailsKey + dbDetailsBody + dbDetailsEnd;
 		return dbDetails;
