@@ -1,5 +1,10 @@
 package edu.ccsu.cs595.capstone.scadservices.util;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -35,6 +40,16 @@ public class YahooClientBuilder {
 
 	private String userGuid = null;
 	private String userName = null;
+
+	private final String YAHOO_DUMMY_DATA_ROOT = "src/main/resources/data/";
+	private final Map<String, String> dummyData = new HashMap<String, String>() {{
+		put("leagues", "user_leagues.json");
+		put("league", "user_league.json");
+		put("teams", "user_league_teams.json");
+		put("settings", "user_league_settings.json");
+		put("standings", "user_league_standings.json");
+		put("roster", "user_league_team_roster.json");
+	}};
 
 	//private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
 	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/390?format=json";
@@ -162,8 +177,12 @@ public class YahooClientBuilder {
 						LOG.info("Yahoo getting {} request was successfull for user={}, and time took {}ms.", type, user, (e - s));
 					}
 				} catch (Exception ex) {
-					LOG.error("Yahoo getting {} request failed (exception) for user={}, url={} - {}", type, user, url, ex.getMessage());
-					throw new AuthorizationFailedException(ex.getMessage());
+					LOG.error("Yahoo getting {} request failed (exception) for user={}, url={} - {}. Falling back to dummy data.", type, user, url, ex.getMessage());
+					try {
+						result = new String(Files.readAllBytes(Paths.get(YAHOO_DUMMY_DATA_ROOT + dummyData.get(type))));
+					} catch (IOException exe){
+						LOG.info("SCAD had a problem getting dummy data for {}", type);
+					}
 				}
 			} else {
 				LOG.error("Yahoo getting {} request failed for user={}, url={}", type, user, url);

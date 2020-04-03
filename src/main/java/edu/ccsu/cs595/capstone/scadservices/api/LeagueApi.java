@@ -29,18 +29,18 @@ public interface LeagueApi {
 	public Response getUserAllLeaguesAsCommissioner() throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/teams")
-	@ApiOperation(value = "Get selected League all Teams from yahoo", notes = "Returns selected League all Teams from yahoo", response = String.class)
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueTeams(
-			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
-			throws AuthorizationFailedException, RuntimeException;
-
-	@GET
 	@Path("/{leagueId}")
 	@ApiOperation(value = "Get User League from yahoo by \"league_id\"", notes = "Returns User League from yahoo by \"league_id\"", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUserLeague(
+			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
+			throws AuthorizationFailedException, RuntimeException;
+
+	@GET
+	@Path("/{leagueId}/teams")
+	@ApiOperation(value = "Get selected League all Teams from yahoo", notes = "Returns selected League all Teams from yahoo", response = String.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getUserLeagueTeams(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
