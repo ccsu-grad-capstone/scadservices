@@ -312,4 +312,73 @@ public class LeagueService {
 		}
 		return result;
 	}
+	
+	public String getUserAllLeaguesAsCommissioner() throws AuthorizationFailedException, RuntimeException {
+
+		Long s, e;
+		s = System.currentTimeMillis();
+		String leagues = "leagues";
+		String result = null;
+		String yahooLeagueStrg = null;
+		JsonObject yahooLeagueObj = null;
+		String userGuid = yahoo.getYahooUserGuid();
+		Long yahooGameId = yahoo.getYahooGame();
+		String leagueUrl = YAHOORESTURI_USERLEAGUES + yahooGameId + YAHOORESTURI_USERLEAGUES_EXT;
+		yahooLeagueStrg = yahoo.getYahooLeagueData(leagueUrl, userGuid, leagues);
+		try {
+			if (Objects.nonNull(yahooLeagueStrg)) {
+				yahooLeagueObj = new JsonParser().parse(yahooLeagueStrg).getAsJsonObject();
+				result = this.getLeaguesDataAsCommissioner(yahooLeagueObj);
+			}
+		} catch (Exception ex) {
+			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
+		}
+		e = System.currentTimeMillis();
+		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
+		return result;
+
+	}
+	
+	private String getLeaguesDataAsCommissioner(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+
+		String result = null;
+
+		if (Objects.nonNull(leaguesObj)) {
+			try {
+				JsonElement error = leaguesObj.get("error");
+				if (Objects.isNull(error)) {
+					JsonObject fantasyContent = leaguesObj.get("fantasy_content").getAsJsonObject();
+					JsonObject users = fantasyContent.get("users").getAsJsonObject();
+					JsonArray userArray = (users.get("0").getAsJsonObject()).get("user").getAsJsonArray();
+					JsonObject games = userArray.get(1).getAsJsonObject().get("games").getAsJsonObject();
+					JsonArray gameArray = games.get("0").getAsJsonObject().get("game").getAsJsonArray();
+					JsonObject leagues = gameArray.get(1).getAsJsonObject().get("leagues").getAsJsonObject();
+					int leagueCnt = leagues.get("count").getAsInt();
+					JsonArray newleagues = new JsonArray();
+					for (int i = 0; i < leagueCnt; i++) {
+						JsonArray league = leagues.get(Integer.toString(i)).getAsJsonObject().get("league").getAsJsonArray();
+						if (validateAsCommissioner(league.get(0))) {
+							newleagues.add(league.get(0));
+						}
+					}
+					result = "{\"leagues\":" + newleagues.toString() + "}";
+				} else {
+					LOG.error("Leagues object has error: {} ", error);
+					result = "ERROR:" + error.toString();
+				}
+			} catch (Exception ex) {
+				throw new RuntimeException(ex.getMessage());
+			}
+
+		}
+
+		return result;
+
+	}
+	
+	private boolean validateAsCommissioner (JsonElement league) {
+		boolean result = false;
+		return result;
+	}
+
 }

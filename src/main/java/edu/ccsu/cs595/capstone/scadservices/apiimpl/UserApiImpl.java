@@ -1,16 +1,9 @@
 package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import edu.ccsu.cs595.capstone.scadservices.api.UserApi;
 import edu.ccsu.cs595.capstone.scadservices.dto.UserDto;

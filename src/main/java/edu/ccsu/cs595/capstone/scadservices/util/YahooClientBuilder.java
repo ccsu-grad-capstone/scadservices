@@ -36,7 +36,8 @@ public class YahooClientBuilder {
 	private String userGuid = null;
 	private String userName = null;
 
-	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
+	//private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
+	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/390?format=json";
 	
 	public String getYahooUserGuid() {
 		
