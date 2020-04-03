@@ -17,3 +17,10 @@ https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;leagu
 https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;league_keys=390.l.13143/teams/players?format=json -- League all teams and players
 
 https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;league_keys=390.l.22351/teams/players?format=json  -- League all teams and players
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143? -- specific league

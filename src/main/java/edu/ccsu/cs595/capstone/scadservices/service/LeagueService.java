@@ -27,9 +27,9 @@ public class LeagueService {
 	
 	private static final String YAHOORESTURI_USERLEAGUES = "https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=";
 	private static final String YAHOORESTURI_USERLEAGUES_EXT = "/leagues?format=json";
-	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.";
+	//private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l.";
+	private static final String YAHOORESTURI_USERLEAGUE = "https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=";
 	private static final String YAHOORESTURI_USERLEAGUE_EXT = "?format=json";
-
 
 	public String getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
@@ -39,8 +39,9 @@ public class LeagueService {
 		String result = null;
 		String yahooLeagueStrg = null;
 		JsonObject yahooLeagueObj = null;
+		Long yahooGameId = yahoo.getYahooGame();
 		String userGuid = yahoo.getYahooUserGuid();
-		String leagueUrl = YAHOORESTURI_USERLEAGUE + leagueId + YAHOORESTURI_USERLEAGUE_EXT;
+		String leagueUrl = YAHOORESTURI_USERLEAGUE + yahooGameId+".l."+leagueId + YAHOORESTURI_USERLEAGUE_EXT;
 		yahooLeagueStrg = yahoo.getYahooLeagueData(leagueUrl, userGuid, league);
 		try {
 			if (Objects.nonNull(yahooLeagueStrg)) {
@@ -54,23 +55,6 @@ public class LeagueService {
 		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
 
-	}
-
-	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
-		String userId = yahoo.getYahooUserGuid();
-		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/teams?format=json";
-		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "teams");
-		String result = null;
-		try {
-			if (Objects.nonNull(rawYahooResult)) {
-				JsonObject jsonObj = new JsonParser().parse(rawYahooResult).getAsJsonObject();
-				result = formatTeamsData(jsonObj);
-			}
-		} catch (Exception e) {
-			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
-		}
-
-		return result;
 	}
 
 	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
@@ -97,6 +81,23 @@ public class LeagueService {
 		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
 
+	}
+	
+	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		String userId = yahoo.getYahooUserGuid();
+		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId + "/teams?format=json";
+		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "teams");
+		String result = null;
+		try {
+			if (Objects.nonNull(rawYahooResult)) {
+				JsonObject jsonObj = new JsonParser().parse(rawYahooResult).getAsJsonObject();
+				result = formatTeamsData(jsonObj);
+			}
+		} catch (Exception e) {
+			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+		}
+
+		return result;
 	}
 
 	public String getUserLeagueSettings(Long leagueId) {
@@ -212,7 +213,8 @@ public class LeagueService {
 				JsonElement error = leagueObj.get("error");
 				if (Objects.isNull(error)) {
 					JsonObject fantasyContent = leagueObj.get("fantasy_content").getAsJsonObject();
-					JsonArray league = fantasyContent.get("league").getAsJsonArray();
+					JsonObject leagues = fantasyContent.get("leagues").getAsJsonObject();
+					JsonArray league = (leagues.get("0").getAsJsonObject()).get("league").getAsJsonArray();
 					JsonObject ldata = league.get(0).getAsJsonObject();
 					result = ldata.toString();
 				} else {
