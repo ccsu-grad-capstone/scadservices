@@ -49,6 +49,7 @@ public class YahooClientBuilder {
 		put("settings", "user_league_settings.json");
 		put("standings", "user_league_standings.json");
 		put("roster", "user_league_team_roster.json");
+		put("players", "user_league_players.json");
 	}};
 
 	//private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";

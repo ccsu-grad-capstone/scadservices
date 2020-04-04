@@ -175,8 +175,7 @@ public class LeagueService {
 
 	public String getUserLeaguePlayers(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId;
-		url += "/players?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/teams/roster?format=json";
 
 		String result = null;
 
@@ -326,10 +325,11 @@ public class LeagueService {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
-				JsonElement error = rawYahooObj.get("error");
-				if (Objects.isNull(error)) {
-					JsonObject players = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("players").getAsJsonObject();
-					JsonArray newPlayers = new JsonArray();
+				JsonArray newPlayers = new JsonArray();
+				JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
+				for (Integer j = 0; j < 12; j++) {
+					JsonObject roster = teams.get(j.toString()).getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("roster").getAsJsonObject();
+					JsonObject players = roster.get("0").getAsJsonObject().get("players").getAsJsonObject();
 					for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 						JsonObject newPlayer = new JsonObject();
 						JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
@@ -343,11 +343,8 @@ public class LeagueService {
 						}
 						newPlayers.add(newPlayer);
 					}
-					result = "{\"players\":" + newPlayers.toString() + "}";
-				} else {
-					LOG.error("SCAD Players object has an error: {} ", error);
-					result = "ERROR:" + error.toString();
 				}
+				result = "{\"players\":" + newPlayers.toString() + "}";
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
