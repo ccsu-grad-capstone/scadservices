@@ -25,7 +25,7 @@ public class LeagueService {
 	@Inject
 	YahooClientBuilder yahoo;
 	
-	private static final String BASE_URI = "https://fantasysports.yahooapis.com/fantasy/v2/";
+	private static final String BASE_URI = "https://fantasysports.yahooapis.com/fantasy/v2";
 	private static final String GAME_KEY = "390";
 
 	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
@@ -101,7 +101,7 @@ public class LeagueService {
 
 	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "league/" + GAME_KEY + ".l." + leagueId + "/teams?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/teams?format=json";
 		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "teams");
 		String result = null;
 		try {
@@ -118,7 +118,7 @@ public class LeagueService {
 
 	public String getUserLeagueSettings(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "league/" + GAME_KEY + ".l." + leagueId + "/settings?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/settings?format=json";
 		String result = null;
 
 		try {
@@ -136,7 +136,7 @@ public class LeagueService {
 
 	public String getUserLeagueStandings(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "league/" + GAME_KEY + ".l." + leagueId + "/standings?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/standings?format=json";
 		String result = null;
 		try {
 			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "standings");
@@ -153,7 +153,7 @@ public class LeagueService {
 
 	public String getUserLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "team/" + GAME_KEY + ".l." + leagueId + ".t." + teamId + "/roster";
+		String url = BASE_URI + "/team/" + GAME_KEY + ".l." + leagueId + ".t." + teamId + "/roster";
 		if (week != null) {
 			url += ";week=" + week;
 		}
