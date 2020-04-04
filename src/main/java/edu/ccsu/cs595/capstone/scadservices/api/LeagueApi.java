@@ -24,7 +24,7 @@ public interface LeagueApi {
 
 	@GET
 	@Path("/commissioner/all")
-	@ApiOperation(value = "Get User Leagues from yahoo as League Commissioner", notes = "Returns User Leagues from yahoo as League Commissioner", response = String.class)
+	@ApiOperation(value = "Gets the leagues of which a user is a commissioner", notes = "Returns User Leagues from yahoo as League Commissioner", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUserAllLeaguesAsCommissioner() throws AuthorizationFailedException, RuntimeException;
 
