@@ -24,15 +24,15 @@ public class SCADLeagueDao {
 		return scadEm().find(SCADLeague.class, id);
 	}
 
-	public SCADLeague getDefaultSCADLeagueByYahooGame(Long yahooGameId) {
+	public SCADLeague getDefaultSCADLeagueByYahooGame(Long yahooGameId, String userGuid) {
 
 		SCADLeague result = null;
 
-		if (Objects.nonNull(yahooGameId)) {
+		if ((Objects.nonNull(yahooGameId)) && (Objects.nonNull(userGuid))) {
 			try {
 				result = (SCADLeague) scadEm()
-						.createQuery("from SCADLeague sl where sl.yahooGameId = :vYGId and sl.isDefault = true")
-						.setParameter("vYGId", yahooGameId).getSingleResult();
+						.createQuery("from SCADLeague sl where sl.yahooGameId = :vYGId and sl.ownerGuid = :vUserGuid and sl.isDefault = true")
+						.setParameter("vYGId", yahooGameId).setParameter("vUserGuid", userGuid).getSingleResult();
 			} catch (NoResultException e) {
 				result = null;
 			}
@@ -61,14 +61,14 @@ public class SCADLeagueDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SCADLeague> getAllSCADLeaguesByYahooGame(Long yahooGameId) {
+	public List<SCADLeague> getAllSCADLeaguesByYahooGame(Long yahooGameId, String userGuid) {
 
 		List<SCADLeague> result = null;
 
-		if (Objects.nonNull(yahooGameId)) {
+		if ((Objects.nonNull(yahooGameId)) && (Objects.nonNull(userGuid))) {
 			try {
-				result = (List<SCADLeague>) scadEm().createQuery("from SCADLeague sl where sl.yahooGameId = :vYGId")
-						.setParameter("vYGId", yahooGameId).getResultList();
+				result = (List<SCADLeague>) scadEm().createQuery("from SCADLeague sl where sl.yahooGameId = :vYGId and sl.ownerGuid = :vUserGuid")
+						.setParameter("vYGId", yahooGameId).setParameter("vUserGuid", userGuid).getResultList();
 			} catch (NoResultException e) {
 				result = null;
 			}

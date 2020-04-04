@@ -13,12 +13,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @ApplicationScoped
-@Path(EndpointConstants.DASHBOARD)
+@Path(EndpointConstants.SCAD)
 @Api(value = EndpointConstants.DASHBOARD, tags = "Dashboard", description = "Get SCAD dashboard details")
 public interface DashboardApi {
    
 	@GET
-	@Path("/details")
+	@Path(EndpointConstants.DASHBOARD + "/details")
     @ApiOperation(value = "Get dashboard details for SCAD UI", notes = "Returns dashboard details for SCAD UI", response = String.class)
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getDashboardDetails() throws AuthorizationFailedException, RuntimeException;

@@ -59,7 +59,8 @@ public class SCADLeagueService {
 
 		SCADLeagueDto result = null;
 		Long yahooGameId = yahoo.getYahooGame();
-		SCADLeague slEntity = slDao.getDefaultSCADLeagueByYahooGame(yahooGameId);
+		String userGuid = yahoo.getYahooUserGuid();
+		SCADLeague slEntity = slDao.getDefaultSCADLeagueByYahooGame(yahooGameId, userGuid);
 		result = this.entityToDto(slEntity);
 		return result;
 
@@ -79,7 +80,8 @@ public class SCADLeagueService {
 
 		SCADLeagueListDto list = new SCADLeagueListDto();
 		Long yahooGameId = yahoo.getYahooGame();
-		List<SCADLeague> slEntityList = slDao.getAllSCADLeaguesByYahooGame(yahooGameId);
+		String userGuid = yahoo.getYahooUserGuid();
+		List<SCADLeague> slEntityList = slDao.getAllSCADLeaguesByYahooGame(yahooGameId, userGuid);
 		for (SCADLeague slEntity : slEntityList) {
 			SCADLeagueDto result = this.entityToDto(slEntity);
 			list.getScadLeagues().add(result);
