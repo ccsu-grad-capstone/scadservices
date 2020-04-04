@@ -25,7 +25,7 @@ public class LeagueService {
 	@Inject
 	YahooClientBuilder yahoo;
 	
-	private static final String BASE_URI = "https://fantasysports.yahooapis.com/fantasy/v2/";
+	private static final String BASE_URI = "https://fantasysports.yahooapis.com/fantasy/v2";
 	private static final String GAME_KEY = "390";
 
 	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
@@ -59,12 +59,13 @@ public class LeagueService {
 		String rawYahooData = null;
 		JsonObject yahooLeagueObj = null;
 		String userGuid = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + GAME_KEY + "/leagues?format=json";
-		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "leagues");
+
+		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + GAME_KEY + "/leagues/teams?format=json";
+		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "commissionerLeagues");
 		try {
 			if (Objects.nonNull(rawYahooData)) {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
-				result = this.getLeaguesDataAsCommissioner(yahooLeagueObj);
+				result = this.formatLeaguesDataAsCommissioner(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
 			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
@@ -101,7 +102,7 @@ public class LeagueService {
 
 	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "league/" + GAME_KEY + ".l." + leagueId + "/teams?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/teams?format=json";
 		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "teams");
 		String result = null;
 		try {
@@ -118,7 +119,7 @@ public class LeagueService {
 
 	public String getUserLeagueSettings(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "league/" + GAME_KEY + ".l." + leagueId + "/settings?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/settings?format=json";
 		String result = null;
 
 		try {
@@ -136,7 +137,7 @@ public class LeagueService {
 
 	public String getUserLeagueStandings(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "league/" + GAME_KEY + ".l." + leagueId + "/standings?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/standings?format=json";
 		String result = null;
 		try {
 			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "standings");
@@ -153,7 +154,7 @@ public class LeagueService {
 
 	public String getUserLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = BASE_URI + "team/" + GAME_KEY + ".l." + leagueId + ".t." + teamId + "/roster";
+		String url = BASE_URI + "/team/" + GAME_KEY + ".l." + leagueId + ".t." + teamId + "/roster";
 		if (week != null) {
 			url += ";week=" + week;
 		}
@@ -161,10 +162,10 @@ public class LeagueService {
 
 		String result = null;
 		try {
-			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "roster");
+			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "team");
 			if (Objects.nonNull(rawYahooData)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
-				result = formatRosterData(jsonObj);
+				result = formatTeamAndRosterData(jsonObj);
 			}
 		} catch (Exception e) {
 			LOG.error("Error getting rosters for userGuid = {} - {}", userId, e.getMessage());
@@ -175,8 +176,7 @@ public class LeagueService {
 
 	public String getUserLeaguePlayers(Long leagueId) {
 		String userId = yahoo.getYahooUserGuid();
-		String url = "https://fantasysports.yahooapis.com/fantasy/v2/league/nfl.l." + leagueId;
-		url += "/players?format=json";
+		String url = BASE_URI + "/league/" + GAME_KEY + ".l." + leagueId + "/teams/roster?format=json";
 
 		String result = null;
 
@@ -326,10 +326,11 @@ public class LeagueService {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
-				JsonElement error = rawYahooObj.get("error");
-				if (Objects.isNull(error)) {
-					JsonObject players = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("players").getAsJsonObject();
-					JsonArray newPlayers = new JsonArray();
+				JsonArray newPlayers = new JsonArray();
+				JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
+				for (Integer j = 0; j < 12; j++) {
+					JsonObject roster = teams.get(j.toString()).getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("roster").getAsJsonObject();
+					JsonObject players = roster.get("0").getAsJsonObject().get("players").getAsJsonObject();
 					for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 						JsonObject newPlayer = new JsonObject();
 						JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
@@ -343,11 +344,8 @@ public class LeagueService {
 						}
 						newPlayers.add(newPlayer);
 					}
-					result = "{\"players\":" + newPlayers.toString() + "}";
-				} else {
-					LOG.error("SCAD Players object has an error: {} ", error);
-					result = "ERROR:" + error.toString();
 				}
+				result = "{\"players\":" + newPlayers.toString() + "}";
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
@@ -374,33 +372,28 @@ public class LeagueService {
 		return result;
 	}
 
-	private String getLeaguesDataAsCommissioner(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+	private String formatLeaguesDataAsCommissioner(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
 
 		String result = null;
 
 		if (Objects.nonNull(leaguesObj)) {
 			try {
-				JsonElement error = leaguesObj.get("error");
-				if (Objects.isNull(error)) {
-					JsonObject fantasyContent = leaguesObj.get("fantasy_content").getAsJsonObject();
-					JsonObject users = fantasyContent.get("users").getAsJsonObject();
-					JsonArray userArray = (users.get("0").getAsJsonObject()).get("user").getAsJsonArray();
-					JsonObject games = userArray.get(1).getAsJsonObject().get("games").getAsJsonObject();
-					JsonArray gameArray = games.get("0").getAsJsonObject().get("game").getAsJsonArray();
-					JsonObject leagues = gameArray.get(1).getAsJsonObject().get("leagues").getAsJsonObject();
-					int leagueCnt = leagues.get("count").getAsInt();
-					JsonArray newleagues = new JsonArray();
-					for (int i = 0; i < leagueCnt; i++) {
-						JsonArray league = leagues.get(Integer.toString(i)).getAsJsonObject().get("league").getAsJsonArray();
-						if (validateAsCommissioner(league.get(0))) {
-							newleagues.add(league.get(0));
+				JsonObject leagues = leaguesObj.get("fantasy_content").getAsJsonObject().get("users").getAsJsonObject().get("0").getAsJsonObject().get("user").getAsJsonArray().get(1).getAsJsonObject().get("games").getAsJsonObject().get("0").getAsJsonObject().get("game").getAsJsonArray().get(1).getAsJsonObject().get("leagues").getAsJsonObject();
+				JsonArray commissLeagues = new JsonArray();
+				for (Integer i = 0; i < leagues.get("count").getAsInt(); i++) {
+					JsonArray league = leagues.get(i.toString()).getAsJsonObject().get("league").getAsJsonArray();
+					JsonArray managers = league.get(1).getAsJsonObject().get("teams").getAsJsonObject().get("0").getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray().get(19).getAsJsonObject().get("managers").getAsJsonArray();
+					for (JsonElement manager : managers) {
+						JsonObject manObj = ((JsonObject) manager).get("manager").getAsJsonObject();
+						if (manObj.keySet().contains("is_commissioner")
+								&& manObj.get("is_commissioner").getAsString().equals("1")
+								&& manObj.keySet().contains("is_current_login")
+								&& manObj.get("is_current_login").getAsString().equals("1")) {
+							commissLeagues.add(league.get(0).getAsJsonObject());
 						}
 					}
-					result = "{\"leagues\":" + newleagues.toString() + "}";
-				} else {
-					LOG.error("Leagues object has error: {} ", error);
-					result = "ERROR:" + error.toString();
 				}
+				result = "{\"commissionerLeagues\":" + commissLeagues.toString() + "}";
 			} catch (Exception ex) {
 				throw new RuntimeException(ex.getMessage());
 			}
@@ -411,11 +404,14 @@ public class LeagueService {
 
 	}
 
-	private String formatRosterData(JsonObject rawYahooObj) {
+	private String formatTeamAndRosterData(JsonObject rawYahooObj) {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
-				JsonObject roster = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("roster").getAsJsonObject();
+				JsonArray team = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray();
+				JsonObject roster = team.get(1).getAsJsonObject().get("roster").getAsJsonObject();
+
+				//Format the roster
 				JsonObject newRoster = new JsonObject();
 				newRoster.add("coverage_type", roster.get("coverage_type"));
 				newRoster.add("week", roster.get("week"));
@@ -436,17 +432,22 @@ public class LeagueService {
 					newPlayers.add(newPlayer);
 				}
 				newRoster.add("players", newPlayers);
-				result = "{\"roster\":" + newRoster.toString() + "}";
+
+				//Format the team and include the roster
+				JsonObject newTeam = new JsonObject();
+				for (JsonElement x : team.get(0).getAsJsonArray()) {
+					if (x.isJsonObject()) {
+						for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+							newTeam.add(entry.getKey(), entry.getValue());
+						}
+					}
+				}
+				newTeam.add("roster", newRoster);
+				result = "{\"team\":" + newTeam.toString() + "}";
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
 		return result;
 	}
-
-	private boolean validateAsCommissioner (JsonElement league) {
-		boolean result = false;
-		return result;
-	}
-
 }
