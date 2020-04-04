@@ -294,27 +294,26 @@ public class LeagueService {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
-				JsonElement error = rawYahooObj.get("error");
-				if (Objects.isNull(error)) {
-					JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("standings").getAsJsonArray().get(0).getAsJsonObject().get("teams").getAsJsonObject();
-					JsonArray newTeams = new JsonArray();
-					for (Integer i = 0; i < teams.get("count").getAsInt(); i++) {
-						JsonObject newTeam = new JsonObject();
-						JsonArray team = teams.get(i.toString()).getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray();
-						for (JsonElement x : team) {
-							if (x.isJsonObject()) {
-								for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
-									newTeam.add(entry.getKey(), entry.getValue());
-								}
+				JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("standings").getAsJsonArray().get(0).getAsJsonObject().get("teams").getAsJsonObject();
+				JsonArray newTeams = new JsonArray();
+				for (Integer i = 0; i < teams.get("count").getAsInt(); i++) {
+					JsonObject newTeam = new JsonObject();
+
+					//There's a double array here, which is why we use outerTeam and team
+					JsonArray outerTeam = teams.get(i.toString()).getAsJsonObject().get("team").getAsJsonArray();
+					JsonArray team = outerTeam.get(0).getAsJsonArray();
+					for (JsonElement x : team) {
+						if (x.isJsonObject()) {
+							for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+								newTeam.add(entry.getKey(), entry.getValue());
 							}
 						}
-						newTeams.add(newTeam);
 					}
-					result = "{\"standings\":" + newTeams.toString() + "}";
-				} else {
-					LOG.error("SCAD Teams object has an error: {} ", error);
-					result = "ERROR:" + error.toString();
+					newTeam.add("team_points", outerTeam.get(1).getAsJsonObject());
+					newTeam.add("team_standings", outerTeam.get(2).getAsJsonObject());
+					newTeams.add(newTeam);
 				}
+				result = "{\"standings\":" + newTeams.toString() + "}";
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
