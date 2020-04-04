@@ -48,7 +48,7 @@ public class YahooClientBuilder {
 		put("teams", "user_league_teams.json");
 		put("settings", "user_league_settings.json");
 		put("standings", "user_league_standings.json");
-		put("roster", "user_league_team_roster.json");
+		put("team", "user_league_team.json");
 		put("players", "user_league_players.json");
 		put("commissionerLeagues", "user_commissioner_leagues.json");
 	}};

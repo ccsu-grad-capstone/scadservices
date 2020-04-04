@@ -61,7 +61,7 @@ public interface LeagueApi {
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/team/{teamId}/roster")
+	@Path("/{leagueId}/team/{teamId}")
 	@ApiOperation(value = "Get User League Team & Roster details from yahoo by \"league_id\" and \"teamId\"", notes = "Returns User League Team & Roster details from yahoo by \"league_id\" and \"teamId\"", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getUserLeagueTeamAndRoster(

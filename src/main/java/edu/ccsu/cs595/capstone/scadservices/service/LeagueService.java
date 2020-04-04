@@ -162,10 +162,10 @@ public class LeagueService {
 
 		String result = null;
 		try {
-			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "roster");
+			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "team");
 			if (Objects.nonNull(rawYahooData)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
-				result = formatRosterData(jsonObj);
+				result = formatTeamAndRosterData(jsonObj);
 			}
 		} catch (Exception e) {
 			LOG.error("Error getting rosters for userGuid = {} - {}", userId, e.getMessage());
@@ -404,11 +404,14 @@ public class LeagueService {
 
 	}
 
-	private String formatRosterData(JsonObject rawYahooObj) {
+	private String formatTeamAndRosterData(JsonObject rawYahooObj) {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
-				JsonObject roster = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("roster").getAsJsonObject();
+				JsonArray team = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray();
+				JsonObject roster = team.get(1).getAsJsonObject().get("roster").getAsJsonObject();
+
+				//Format the roster
 				JsonObject newRoster = new JsonObject();
 				newRoster.add("coverage_type", roster.get("coverage_type"));
 				newRoster.add("week", roster.get("week"));
@@ -429,7 +432,18 @@ public class LeagueService {
 					newPlayers.add(newPlayer);
 				}
 				newRoster.add("players", newPlayers);
-				result = "{\"roster\":" + newRoster.toString() + "}";
+
+				//Format the team and include the roster
+				JsonObject newTeam = new JsonObject();
+				for (JsonElement x : team.get(0).getAsJsonArray()) {
+					if (x.isJsonObject()) {
+						for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+							newTeam.add(entry.getKey(), entry.getValue());
+						}
+					}
+				}
+				newTeam.add("roster", newRoster);
+				result = "{\"team\":" + newTeam.toString() + "}";
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
