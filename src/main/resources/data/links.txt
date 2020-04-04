@@ -1,4 +1,5 @@
 
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl?format=json -- all seasons
 
 https://fantasysports.yahooapis.com/fantasy/v2/game/390?format=json -- Game 2019 season
 
@@ -24,3 +25,13 @@ https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;leagu
 
 
 https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143? -- specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams;team_keys=390.l.13143.t.1/players?format=json
+
+https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=390.l.13143.t.1/players?format=json
+
+-----------------------
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams/players?format=json -- all teams and players for a specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams?format=json -- all teams for a specific league

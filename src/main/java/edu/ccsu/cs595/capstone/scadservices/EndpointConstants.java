@@ -5,8 +5,10 @@ public class EndpointConstants {
 	public static final String APPLICATION_PATH = "/api/";
 	public static final String USER = "user";
 	public static final String LEAGUE = "yahoo/league";
-	public static final String DASHBOARD = "scad/dashboard";
-	public static final String SCADLEAGUE = "scad/league";
+	public static final String SCAD = "scad";
+	public static final String DASHBOARD = "/dashboard";
+	public static final String SCADEMAIL = "/email";
+	public static final String SCADLEAGUE = "/league";
 	public static final String SCADLEAGUETEAM = "/team";
 	public static final String SCADLEAGUEPLAYER = "/player";
 
