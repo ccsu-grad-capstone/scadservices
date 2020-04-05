@@ -217,13 +217,39 @@ public class LeagueService {
 				result = this.formatLeagueMyTeam(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
-			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
+			LOG.error("My Team Json parsing error for league {} for userGuid={} - {}", leagueId, userGuid, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
+		LOG.info("Getting my teams for league {} for userGuid={}, process took {}ms.", leagueId, userGuid, (e - s));
 		return result;
 
 	}
+	
+	public String getUserLeagueMyTeamMyPlayers(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
+
+		Long s, e;
+		s = System.currentTimeMillis();
+		String result = null;
+		String rawYahooData = null;
+		JsonObject yahooLeagueObj = null;
+		String userGuid = yahoo.getYahooUserGuid();
+		Long yahooGameKey = yahoo.getYahooGame();
+		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + yahooGameKey + "/leagues;league_keys=" + yahooGameKey + ".l." + leagueId + "/teams;team_key=" + + yahooGameKey + ".l." + leagueId + ".t." + teamId + "/players" + BASE_URI_FORMAT;
+		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "myPlayers");
+		try {
+			if (Objects.nonNull(rawYahooData)) {
+				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+				result = this.formatLeagueMyTeamMyPlayers(yahooLeagueObj);
+			}
+		} catch (Exception ex) {
+			LOG.error("My Players Json parsing error for league {} my team {} for userGuid={} - {}", leagueId, teamId, userGuid, ex.getMessage());
+		}
+		e = System.currentTimeMillis();
+		LOG.info("Getting my players for league {} my team {} for userGuid={}, process took {}ms.", leagueId, teamId, userGuid, (e - s));
+		return result;
+
+	}
+
 
 	// Helper methods
 
@@ -502,6 +528,39 @@ public class LeagueService {
 			} catch (Exception ex) {
 				throw new RuntimeException(ex.getMessage());
 			}
+
+		}
+
+		return result;
+
+	}
+
+	private String formatLeagueMyTeamMyPlayers(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+
+		String result = null;
+
+		if (Objects.nonNull(leaguesObj)) {
+			try {
+				JsonObject teams = leaguesObj.get("fantasy_content").getAsJsonObject().get("users").getAsJsonObject().get("0").getAsJsonObject().get("user").getAsJsonArray().get(1).getAsJsonObject().get("games").getAsJsonObject().get("0").getAsJsonObject().get("game").getAsJsonArray().get(1).getAsJsonObject().get("leagues").getAsJsonObject().get("0").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
+				JsonObject players = teams.get("0").getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("players").getAsJsonObject();
+				JsonArray newPlayers = new JsonArray();
+				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
+					JsonObject newPlayer = new JsonObject();
+					JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+					for (JsonElement x : player) {
+						// Filter out blank JSON arrays
+						if (x.isJsonObject()) {
+							for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+								newPlayer.add(entry.getKey(), entry.getValue());
+							}
+						}
+					}
+					newPlayers.add(newPlayer);
+				}
+				result = newPlayers.toString();
+				} catch (Exception ex) {
+					throw new RuntimeException(ex.getMessage());
+				}
 
 		}
 

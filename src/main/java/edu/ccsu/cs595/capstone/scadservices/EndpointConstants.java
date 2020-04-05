@@ -16,10 +16,12 @@ public class EndpointConstants {
 	public static final String LEAGUEID = "leagueId";
 	public static final String TEAMID = "teamId";
 	public static final String PLAYERID = "playerId";
+	public static final String PLAYERIDS = "playerIds";
 	public static final String RESOURCE_ID = "The ID of the resource.";
 	public static final String LEAGUE_RESOURCE_ID = "The League ID of the resource.";
 	public static final String TEAM_RESOURCE_ID = "The Team ID of the resource.";
 	public static final String PLAYER_RESOURCE_ID = "The Player ID of the resource.";
+	public static final String PLAYER_RESOURCE_IDS = "The Player IDs of the resource.";
 	public static final String EMAIL = "email";
 	public static final String PASSWORD = "password";
 	

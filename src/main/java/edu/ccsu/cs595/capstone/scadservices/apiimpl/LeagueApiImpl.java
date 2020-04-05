@@ -148,5 +148,22 @@ public class LeagueApiImpl implements LeagueApi {
 
 	}
 
+	@Override
+	public Response getUserLeagueMyTeamMyPlayers(Long leagueId, Long teamId)
+			throws AuthorizationFailedException, RuntimeException {
+		hHlpr.isHeaderAccessValid(sm);
+
+		String result = lSvc.getUserLeagueMyTeamMyPlayers(leagueId, teamId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+		
+	}
+	
+	
+
 
 }

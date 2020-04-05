@@ -53,6 +53,16 @@ public interface LeagueApi {
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
+	@Path("/{leagueId}/myTeam/{teamId}/myPlayers")
+	@ApiOperation(value = "Get selected League my team from yahoo", notes = "Returns selected League my team from yahoo", response = String.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getUserLeagueMyTeamMyPlayers(
+			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
+			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId)
+			throws AuthorizationFailedException, RuntimeException;
+
+	
+	@GET
 	@Path("/{leagueId}/settings")
 	@ApiOperation(value = "Get User League Settings from yahoo by \"league_id\"", notes = "Returns User League Settings from yahoo by \"league_id\"", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
