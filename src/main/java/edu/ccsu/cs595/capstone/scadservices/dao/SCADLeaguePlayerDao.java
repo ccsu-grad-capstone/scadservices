@@ -94,6 +94,24 @@ public class SCADLeaguePlayerDao {
 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<SCADLeaguePlayer> getSCADLeaguePlayersBySCADLeagueAndYahooPlayersIds(Long scadLeagueId, List<Long> yahooPlayerIds) {
+
+		List<SCADLeaguePlayer> result = null;
+		
+		if ((Objects.nonNull(scadLeagueId)) && (Objects.nonNull(yahooPlayerIds))){
+			try {
+				result = (List<SCADLeaguePlayer>) scadEm().createQuery("from SCADLeaguePlayer slp where slp.scadLeagueId = :vSCADLId and slp.yahooLeaguePlayerId in (:vYPIds)")
+						.setParameter("vSCADLId", scadLeagueId).setParameter("vYPIds", yahooPlayerIds).getResultList();
+			} catch (NoResultException e) {
+				result = null;
+			}
+		}
+
+		return result;
+
+	}
+	
 	public SCADLeaguePlayer upsert(SCADLeaguePlayer entity) {
 		return scadEm().merge(entity);
 	}

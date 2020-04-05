@@ -1,5 +1,6 @@
 package edu.ccsu.cs595.capstone.scadservices.apiimpl;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -559,6 +560,23 @@ public class SCADLeagueApiImpl implements SCADLeagueApi {
 		hHlpr.isHeaderAccessValid(sm);
 		
 		SCADLeagueTeamDto result = sltSvc.getSCADLeagueMyTeamBySCADLeague(leagueId, yahooTeamId);
+
+		if (Objects.isNull(result)) {
+
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+		
+	}
+
+	@Override
+	public Response getSCADLeagueMyTeamMyPlayersBySCADLeague(Long leagueId, List<Long> yahooPlayerIds)
+			throws AuthorizationFailedException, RuntimeException {
+		
+		hHlpr.isHeaderAccessValid(sm);
+		
+		SCADLeaguePlayerListDto result = slpSvc.getSCADLeagueMyTeamMyPlayersBySCADLeague(leagueId, yahooPlayerIds);
 
 		if (Objects.isNull(result)) {
 

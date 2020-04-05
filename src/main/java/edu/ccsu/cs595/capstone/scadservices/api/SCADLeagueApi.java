@@ -1,5 +1,7 @@
 package edu.ccsu.cs595.capstone.scadservices.api;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -108,7 +110,7 @@ public interface SCADLeagueApi {
 
 	@GET
 	@Path("/league/{id}" + EndpointConstants.SCADLEAGUETEAM + "/myTeam")
-	@ApiOperation(value = "Get SCAD League myTeam by SCAD league id", notes = "Returns SCAD League myTeam by SCAD league id", response = SCADLeagueTeamListDto.class)
+	@ApiOperation(value = "Get SCAD League myTeam by SCAD league and yahoo team id", notes = "Returns SCAD League myTeam by SCAD league and yahoo team id", response = SCADLeagueTeamListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getSCADLeagueMyTeamBySCADLeague(
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long leagueId,
@@ -238,5 +240,14 @@ public interface SCADLeagueApi {
 	public Response deleteSCADLeaguePlayer(
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(value = EndpointConstants.ID) Long id)
 			throws MissingParameterException, AuthorizationFailedException, RuntimeException;
+	
+	@GET
+	@Path("/league/{id}" + EndpointConstants.SCADLEAGUETEAM + "/myTeam/myPlayers")
+	@ApiOperation(value = "Get SCAD League myTeam and myPlayers by SCAD league and yahoo players ids", notes = "Returns SCAD League myTeam and myPlayers by SCAD league and yahoo player ids", response = SCADLeaguePlayerListDto.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getSCADLeagueMyTeamMyPlayersBySCADLeague(
+			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long leagueId,
+			@ApiParam(value = EndpointConstants.PLAYER_RESOURCE_IDS, required = true) @QueryParam(EndpointConstants.PLAYERIDS) List<Long> yahooPlayerIds)
+			throws AuthorizationFailedException, RuntimeException;
 
 }

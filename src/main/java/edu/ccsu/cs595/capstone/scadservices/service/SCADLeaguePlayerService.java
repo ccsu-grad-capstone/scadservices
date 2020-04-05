@@ -12,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import edu.ccsu.cs595.capstone.scadservices.dao.SCADLeaguePlayerDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeaguePlayerDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeaguePlayerListDto;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueTeamDto;
 import edu.ccsu.cs595.capstone.scadservices.entity.AuditContext;
 import edu.ccsu.cs595.capstone.scadservices.entity.SCADLeaguePlayer;
+import edu.ccsu.cs595.capstone.scadservices.entity.SCADLeagueTeam;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.util.YahooClientBuilder;
 
@@ -77,6 +79,18 @@ public class SCADLeaguePlayerService {
 		}
 		return list;
 
+	}
+	
+	public SCADLeaguePlayerListDto getSCADLeagueMyTeamMyPlayersBySCADLeague(Long scadLeagueId, List<Long> yahooPlayerIds) {
+		
+		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
+		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersBySCADLeagueAndYahooPlayersIds(scadLeagueId, yahooPlayerIds);
+		for (SCADLeaguePlayer slpEntity : slpEntityList) {
+			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
+			list.getScadLeaguePlayers().add(result);
+		}
+		return list;
+		
 	}
 
 	public SCADLeaguePlayerDto createSCADLeaguePlayer(SCADLeaguePlayerDto slpDto) throws AuthorizationFailedException, RuntimeException {
