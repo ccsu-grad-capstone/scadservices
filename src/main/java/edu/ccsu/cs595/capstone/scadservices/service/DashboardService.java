@@ -18,6 +18,7 @@ import com.google.gson.JsonParser;
 import edu.ccsu.cs595.capstone.scadservices.api.LeagueApi;
 import edu.ccsu.cs595.capstone.scadservices.api.SCADLeagueApi;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueTeamDto;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.util.YahooClientBuilder;
@@ -56,6 +57,9 @@ public class DashboardService {
 			dbDetailsKey = "\"League\"";
 			Response yahooLeague = lApi.getUserLeague(defaultSCADLeagueDto.getYahooLeagueId());
 			String yahooLeagueStrg = yahooLeague.readEntity(String.class);
+			Response yahooLeagueMyTeam = lApi.getUserLeagueMyTeam(defaultSCADLeagueDto.getYahooLeagueId());
+			String yahooLeagueMyTeamStrg = yahooLeagueMyTeam.readEntity(String.class);
+			Long yahooLeagueMyTeamId = new JsonParser().parse(yahooLeagueMyTeamStrg).getAsJsonObject().get("team_id").getAsLong();
 			ObjectMapper mapper = new ObjectMapper();
 			String defaultSCADLeagueStrg = null;
 			try {
@@ -63,15 +67,26 @@ public class DashboardService {
 			} catch (JsonProcessingException e) {
 				LOG.info(e.getMessage());
 			}
-			dbDetailsBody = ", \"YahooLeague\":" + yahooLeagueStrg + ", \"SCADLeague\":" + defaultSCADLeagueStrg;			
+			Response scadLeagueMyTeam = slApi.getSCADLeagueMyTeamBySCADLeague(defaultSCADLeagueDto.getId(), yahooLeagueMyTeamId);
+			SCADLeagueTeamDto myTeamSCADLeagueTeamDto = null;
+			if (scadLeagueMyTeam.hasEntity()) {
+				myTeamSCADLeagueTeamDto = scadLeagueMyTeam.readEntity(SCADLeagueTeamDto.class);
+			}
+			String myTeamSCADLeagueTeamDtoStrg = null;
+			try {
+				myTeamSCADLeagueTeamDtoStrg = mapper.writeValueAsString(myTeamSCADLeagueTeamDto);
+			} catch (JsonProcessingException e) {
+				LOG.info(e.getMessage());
+			}
+			dbDetailsBody = ", \"yahooLeague\":" + yahooLeagueStrg + ", \"yeahooMyTeam\":" + yahooLeagueMyTeamStrg + ", \"scadLeague\":" + defaultSCADLeagueStrg + ", \"scadMyTeam\":" + myTeamSCADLeagueTeamDtoStrg;			
 		} else {
 			dbDetailsKey = "\"Register\"";
-			Response allUserLeagues = lApi.getUserAllLeagues();
+			Response allUserLeagues = lApi.getUserAllLeaguesAsCommissioner();
 			String allUserLeaguesStrg = allUserLeagues.readEntity(String.class);
 			JsonObject allUserLeaguesObj = new JsonParser().parse(allUserLeaguesStrg).getAsJsonObject();
-			JsonArray allUserLeaguesArray = allUserLeaguesObj.get("leagues").getAsJsonArray();
+			JsonArray allUserLeaguesArray = allUserLeaguesObj.get("commissionerLeagues").getAsJsonArray();
 			String allUserLeaguesStrg1 = allUserLeaguesArray.toString();
-			dbDetailsBody = ", \"YahooLeagues\":" + allUserLeaguesStrg1;
+			dbDetailsBody = ", \"yahooLeagues\":" + allUserLeaguesStrg1;
 		}
 		dbDetails = dbDetailsBegin + dbDetailsKey + dbDetailsBody + dbDetailsEnd;
 		return dbDetails;

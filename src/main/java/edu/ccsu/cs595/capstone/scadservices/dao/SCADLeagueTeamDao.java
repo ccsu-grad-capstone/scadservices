@@ -58,6 +58,23 @@ public class SCADLeagueTeamDao {
 
 	}
 	
+	public SCADLeagueTeam getSCADLeagueTeamBySCADLeagueAndYahooTeamId(Long scadLeagueId, Long yahooTeamId) {
+
+		SCADLeagueTeam result = null;
+
+		if ((Objects.nonNull(scadLeagueId)) && (Objects.nonNull(yahooTeamId))) {
+			try {
+				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.scadLeagueId = :vSCADLId and slt.yahooLeagueTeamId = :vYahooTeamId")
+						.setParameter("vSCADLId", scadLeagueId).setParameter("vYahooTeamId", yahooTeamId).getSingleResult();
+			} catch (NoResultException e) {
+				result = null;
+			}
+		}
+
+		return result;
+
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<SCADLeagueTeam> getAllSCADLeagueTeamsByYahooLeague(Long yahooLeagueId) {
 
