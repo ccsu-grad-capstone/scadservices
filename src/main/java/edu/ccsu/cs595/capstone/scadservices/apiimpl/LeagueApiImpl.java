@@ -12,7 +12,6 @@ import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
 import edu.ccsu.cs595.capstone.scadservices.util.HeaderHelper;
 
-@SuppressWarnings("static-access")
 public class LeagueApiImpl implements LeagueApi {
 
 	@Inject
@@ -133,6 +132,20 @@ public class LeagueApiImpl implements LeagueApi {
 		}
 
 		return Response.status(Response.Status.OK).entity(result).build();
+	}
+
+	@Override
+	public Response getUserLeagueMyTeam(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		hHlpr.isHeaderAccessValid(sm);
+
+		String result = lSvc.getUserLeagueMyTeam(leagueId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+
 	}
 
 

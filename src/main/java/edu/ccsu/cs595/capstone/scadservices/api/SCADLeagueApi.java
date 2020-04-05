@@ -9,6 +9,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -98,11 +99,20 @@ public interface SCADLeagueApi {
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/league//{id}" + EndpointConstants.SCADLEAGUETEAM + "/all")
+	@Path("/league/{id}" + EndpointConstants.SCADLEAGUETEAM + "/all")
 	@ApiOperation(value = "Get SCAD League Teams by SCAD league id", notes = "Returns SCAD League Teams by SCAD league id", response = SCADLeagueTeamListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getAllSCADLeagueTeamsBySCADLeague(
 			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long leagueId)
+			throws AuthorizationFailedException, RuntimeException;
+
+	@GET
+	@Path("/league/{id}" + EndpointConstants.SCADLEAGUETEAM + "/myTeam")
+	@ApiOperation(value = "Get SCAD League myTeam by SCAD league id", notes = "Returns SCAD League myTeam by SCAD league id", response = SCADLeagueTeamListDto.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getSCADLeagueMyTeamBySCADLeague(
+			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(EndpointConstants.ID) Long leagueId,
+			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @QueryParam(EndpointConstants.TEAMID) Long yahooTeamId)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET

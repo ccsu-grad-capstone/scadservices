@@ -93,16 +93,22 @@ public class SCADLeagueService {
 	public SCADLeagueDto createSCADLeague(SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeagueDto result = null;
-		addYahooLeagueData(slDto);
-		SCADLeague newEntity = this.dtoToEntity(slDto);
-		newEntity = slDao.upsert(newEntity);
-		result = this.entityToDto(newEntity);
-		result.setYahooLeagueName(slDto.getYahooLeagueName());
-		List<SCADLeagueTeamDto> ltList = createLeagueTeams(result);
-		List<SCADLeaguePlayerDto> lpList = createLeaguePlayers(result);
-		result.setScadLeagueTeamsDto(ltList);
-		result.setScadLeaguePlayersDto(lpList);
-		return result;
+		SCADLeagueDto existingEntity = getSCADLeagueByYahooGameAndLeague(slDto.getYahooLeagueId());
+		if (Objects.nonNull(existingEntity)) {
+			throw new RuntimeException("SCAD League registration details already exists for " + slDto.getYahooLeagueId());
+		} else {
+			addYahooLeagueData(slDto);
+			SCADLeague newEntity = this.dtoToEntity(slDto);
+			newEntity = slDao.upsert(newEntity);
+			result = this.entityToDto(newEntity);
+			result.setYahooLeagueName(slDto.getYahooLeagueName());
+			List<SCADLeagueTeamDto> ltList = createLeagueTeams(result);
+			List<SCADLeaguePlayerDto> lpList = createLeaguePlayers(result);
+			result.setScadLeagueTeamsDto(ltList);
+			result.setScadLeaguePlayersDto(lpList);
+			return result;
+		}
+
 
 	}
 	

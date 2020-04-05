@@ -78,6 +78,15 @@ public class SCADLeagueTeamService {
 		return list;
 
 	}
+	
+	public SCADLeagueTeamDto getSCADLeagueMyTeamBySCADLeague(Long scadLeagueId, Long yahooTeamId) {
+		
+		SCADLeagueTeamDto result = null;
+		SCADLeagueTeam sltEntity = sltDao.getSCADLeagueTeamBySCADLeagueAndYahooTeamId(scadLeagueId, yahooTeamId);
+		result = this.entityToDto(sltEntity);
+		return result;
+		
+	}
 
 	public SCADLeagueTeamDto createSCADLeagueTeam(SCADLeagueTeamDto sltDto) throws AuthorizationFailedException, RuntimeException {
 
