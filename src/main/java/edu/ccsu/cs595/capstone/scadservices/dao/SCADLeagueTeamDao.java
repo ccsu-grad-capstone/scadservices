@@ -30,7 +30,7 @@ public class SCADLeagueTeamDao {
 
 		if ((Objects.nonNull(leagueId)) && (Objects.nonNull(teamId))) {
 			try {
-				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.yahooLeagueId = :vYLId and slt.yahooLeagueTeamId = :vTId")
+				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.yahooLeagueId = :vLId and slt.yahooLeagueTeamId = :vTId")
 						.setParameter("vLId", leagueId).setParameter("vTId", teamId).getSingleResult();
 			} catch (NoResultException e) {
 				result = null;
