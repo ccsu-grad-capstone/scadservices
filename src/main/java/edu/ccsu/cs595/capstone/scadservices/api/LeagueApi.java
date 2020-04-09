@@ -12,87 +12,95 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @ApplicationScoped
-@Path(EndpointConstants.LEAGUE)
-@Api(value = EndpointConstants.LEAGUE, tags = "League", description = "Get User League details")
+@Path(EndpointConstants.YAHOO)
+@Api(value = EndpointConstants.LEAGUE, tags = "Yahoo APIs", description = "Get league, team and player settings from yahoo")
 public interface LeagueApi {
 
 	@GET
-	@Path("/all")
-	@ApiOperation(value = "Get User Leagues from yahoo", notes = "Returns User Leagues from yahoo", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/all")
+	@ApiOperation(value = "Gets user Leagues from yahoo by season", notes = "Returns user Leagues from yahoo by season", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserAllLeagues() throws AuthorizationFailedException, RuntimeException;
+	public Response getUserLeaguesBySeason() throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/commissioner/all")
-	@ApiOperation(value = "Gets the leagues of which a user is a commissioner", notes = "Returns User Leagues from yahoo as League Commissioner", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/commissioner/all")
+	@ApiOperation(value = "Gets user Leagues of which a user is a commissioner by season", notes = "Returns user Leagues from yahoo as league commissioner by season", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserAllLeaguesAsCommissioner() throws AuthorizationFailedException, RuntimeException;
+	public Response getUserLeaguesAsCommissionerBySeason() throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}")
-	@ApiOperation(value = "Get User League from yahoo by \"league_id\"", notes = "Returns User League from yahoo by \"league_id\"", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}")
+	@ApiOperation(value = "Get specific League from yahoo by leagueId", notes = "Returns specific League from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeague(
+	public Response getYahooLeague(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/teams")
-	@ApiOperation(value = "Get selected League all Teams from yahoo", notes = "Returns selected League all Teams from yahoo", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/teams")
+	@ApiOperation(value = "Gets all Teams from yahoo by leagueId", notes = "Returns all Teams from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueTeams(
+	public Response getYahooLeagueTeams(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/myTeam")
-	@ApiOperation(value = "Get selected League my team from yahoo", notes = "Returns selected League my team from yahoo", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/myTeam")
+	@ApiOperation(value = "Gets MyTeam from yahoo by leagueId", notes = "Returns MyTeam from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueMyTeam(
+	public Response getYahooLeagueMyTeam(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/myTeam/{teamId}/myPlayers")
-	@ApiOperation(value = "Get selected League my team from yahoo", notes = "Returns selected League my team from yahoo", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/myPlayers")
+	@ApiOperation(value = "Gets MyPlayers from yahoo by leagueId", notes = "Returns MyPlayers from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueMyTeamMyPlayers(
-			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
-			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId)
+	public Response getYahooLeagueMyPlayers(
+			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
-
 	
 	@GET
-	@Path("/{leagueId}/settings")
-	@ApiOperation(value = "Get User League Settings from yahoo by \"league_id\"", notes = "Returns User League Settings from yahoo by \"league_id\"", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/settings")
+	@ApiOperation(value = "Gets Settings from yahoo by leagueId", notes = "Returns Settings from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueSettings(
+	public Response getYahooLeagueSettings(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/standings")
-	@ApiOperation(value = "Get User League Standings from yahoo by \"league_id\"", notes = "Returns User League Standings from yahoo by \"league_id\"", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/standings")
+	@ApiOperation(value = "Gets Standings from yahoo by leagueId", notes = "Returns Standings from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueStandings(
+	public Response getYahooLeagueStandings(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path("/{leagueId}/team/{teamId}")
-	@ApiOperation(value = "Get User League Team & Roster details from yahoo by \"league_id\" and \"teamId\"", notes = "Returns User League Team & Roster details from yahoo by \"league_id\" and \"teamId\"", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/team/{teamId}/roster")
+	@ApiOperation(value = "Gets Team & Roster details from yahoo by leagueId and teamId", notes = "Returns Team & Roster details from yahoo by leagueId and teamId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeagueTeamAndRoster(
+	public Response getYahooLeagueTeamAndRoster(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
 			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId,
 			@ApiParam(value = "NFL week associated with desired roster.") @QueryParam("week") Long week)
 			throws AuthorizationFailedException, RuntimeException;
+	
+	@GET
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/team/{teamId}/players")
+	@ApiOperation(value = "Gets Player details from yahoo by leagueId and teamId", notes = "Returns Team & Roster details from yahoo by leagueId and teamId", response = String.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getYahooLeagueTeamPlayers(
+			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
+			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId)
+			throws AuthorizationFailedException, RuntimeException;
+
 
 	@GET
-	@Path("/{leagueId}/players")
-	@ApiOperation(value = "Get User League Players from yahoo by \"league_id\"", notes = "Returns User League Players from yahoo by \"league_id\"", response = String.class)
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/players")
+	@ApiOperation(value = "Gets all Players from yahoo by leagueId", notes = "Returns all Players from yahoo by leagueId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getUserLeaguePlayers(
+	public Response getYahooLeaguePlayers(
 			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId)
 			throws AuthorizationFailedException, RuntimeException;
 

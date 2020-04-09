@@ -35,3 +35,24 @@ https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=390.l.13143.t.1/p
 https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams/players?format=json -- all teams and players for a specific league
 
 https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams?format=json -- all teams for a specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.22351/players;player_keys=390.l.22351.p.8780?format=json 
+
+
+
+-------------
+
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.22351/teams/players;player_keys=390.p.8780?format=json -- League, player and all teams
+
+https://fantasysports.yahooapis.com/fantasy/v2/league/390.l.22351/players;player_keys=390.p.8780/metadata?format=json --League and players details
+
+https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=390.p.8780/metadata?format=json -- Just player details
+
+
+-----------------------
+
+http://localhost:8080/scadservices/api/yahoo/league/22351/teams
+
+http://localhost:8080/scadservices/api/yahoo/league/22351/team/1/players
+

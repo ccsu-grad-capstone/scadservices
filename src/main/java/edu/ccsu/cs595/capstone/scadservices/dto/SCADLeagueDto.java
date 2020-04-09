@@ -42,8 +42,8 @@ public class SCADLeagueDto extends AuditedDto {
 	private Long defMax;
 	private Boolean isDefault; 
 	private String ownerGuid;
-	private List<SCADLeagueTeamDto> scadLeagueTeamsDto;
-	private List<SCADLeaguePlayerDto> scadLeaguePlayersDto;
+	private List<SCADLeagueTeamDto> scadLeagueTeams;
+	private List<SCADLeaguePlayerDto> scadLeaguePlayers;
 
 	@Override
 	public Long getId() {
@@ -288,19 +288,19 @@ public class SCADLeagueDto extends AuditedDto {
 	}
 	
 	public List<SCADLeagueTeamDto> getScadLeagueTeamsDto() {
-		return scadLeagueTeamsDto;
+		return scadLeagueTeams;
 	}
 
 	public void setScadLeagueTeamsDto(List<SCADLeagueTeamDto> scadLeagueTeamsDto) {
-		this.scadLeagueTeamsDto = scadLeagueTeamsDto;
+		this.scadLeagueTeams = scadLeagueTeamsDto;
 	}
 
 	public List<SCADLeaguePlayerDto> getScadLeaguePlayersDto() {
-		return scadLeaguePlayersDto;
+		return scadLeaguePlayers;
 	}
 
 	public void setScadLeaguePlayersDto(List<SCADLeaguePlayerDto> scadLeaguePlayersDto) {
-		this.scadLeaguePlayersDto = scadLeaguePlayersDto;
+		this.scadLeaguePlayers = scadLeaguePlayersDto;
 	}
 
 	@Override

@@ -102,7 +102,7 @@ public class YahooClientBuilder {
 		String gameStrg = null;
 		JsonObject gameObj = null;
 		String userGuid = this.getYahooUserGuid();
-		gameStrg = getYahooData(YAHOORESTURI_GAMEINFO, userGuid, game);
+		gameStrg = callYahooApis(YAHOORESTURI_GAMEINFO, userGuid, game);
 		try {
 			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
 			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("game_id");
@@ -122,7 +122,7 @@ public class YahooClientBuilder {
 		String gameStrg = null;
 		JsonObject gameObj = null;
 		String userGuid = this.getYahooUserGuid();
-		gameStrg = getYahooData(YAHOORESTURI_GAMEINFO, userGuid, game);
+		gameStrg = callYahooApis(YAHOORESTURI_GAMEINFO, userGuid, game);
 		try {
 			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
 			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("season");
@@ -135,14 +135,14 @@ public class YahooClientBuilder {
 		
 	}
 	
-	public String getYahooLeagueData(String url, String user, String type) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooData(String url, String user, String type) throws AuthorizationFailedException, RuntimeException {
 		
-		return this.getYahooData(url, user, type);
+		return this.callYahooApis(url, user, type);
 		
 	}
 
 	@SuppressWarnings("static-access")
-	private String getYahooData(String url, String user, String type) throws AuthorizationFailedException, RuntimeException {
+	private String callYahooApis(String url, String user, String type) throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();

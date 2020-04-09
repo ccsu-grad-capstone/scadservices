@@ -24,10 +24,11 @@ public class LeagueApiImpl implements LeagueApi {
 	HeaderHelper hHlpr;
 
 	@Override
-	public Response getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
+	public Response getUserLeaguesBySeason() throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 		
-		String result = lSvc.getUserAllLeagues();
+		String result = lSvc.getUserLeaguesBySeason();
 
 		if (Objects.isNull(result)) {
 
@@ -39,11 +40,11 @@ public class LeagueApiImpl implements LeagueApi {
 	}
 
 	@Override
-	public Response getUserAllLeaguesAsCommissioner() throws AuthorizationFailedException, RuntimeException {
+	public Response getUserLeaguesAsCommissionerBySeason() throws AuthorizationFailedException, RuntimeException {
 
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserAllLeaguesAsCommissioner();
+		String result = lSvc.getUserLeaguesAsCommissionerBySeason();
 
 		if (Objects.isNull(result)) {
 
@@ -55,10 +56,11 @@ public class LeagueApiImpl implements LeagueApi {
 	}
 
 	@Override
-	public Response getUserLeague( Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public Response getYahooLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserLeague(leagueId);
+		String result = lSvc.getYahooLeague(leagueId);
 
 		if (Objects.isNull(result)) {
 
@@ -70,75 +72,87 @@ public class LeagueApiImpl implements LeagueApi {
 	}
 
 	@Override
-	public Response getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public Response getYahooLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserLeagueTeams(leagueId);
+		String result = lSvc.getYahooLeagueTeams(leagueId);
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 
 		return Response.status(Response.Status.OK).entity(result).build();
+	
 	}
 
 	@Override
-	public Response getUserLeagueSettings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public Response getYahooLeagueSettings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserLeagueSettings(leagueId);
+		String result = lSvc.getYahooLeagueSettings(leagueId);
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 
 		return Response.status(Response.Status.OK).entity(result).build();
+	
 	}
 
 	@Override
-	public Response getUserLeagueStandings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public Response getYahooLeagueStandings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserLeagueStandings(leagueId);
+		String result = lSvc.getYahooLeagueStandings(leagueId);
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
+		
 		return Response.status(Response.Status.OK).entity(result).build();
+	
 	}
 
 	@Override
-	public Response getUserLeagueTeamAndRoster(Long leagueId, Long teamId, @QueryParam("week") Long week) throws AuthorizationFailedException, RuntimeException {
+	public Response getYahooLeagueTeamAndRoster(Long leagueId, Long teamId, @QueryParam("week") Long week) throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
 
-		String result = lSvc.getUserLeagueTeamAndRoster(leagueId, teamId, week);
-
-		if (Objects.isNull(result)) {
-			return Response.status(Response.Status.NOT_FOUND).build();
-		}
-
-		return Response.status(Response.Status.OK).entity(result).build();
-	}
-
-	@Override
-	public Response getUserLeaguePlayers(Long leagueId) throws AuthorizationFailedException, RuntimeException {
-		hHlpr.isHeaderAccessValid(sm);
-
-		String result = lSvc.getUserLeaguePlayers(leagueId);
+		String result = lSvc.getYahooLeagueTeamAndRoster(leagueId, teamId, week);
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
 		}
 
 		return Response.status(Response.Status.OK).entity(result).build();
+	
 	}
 
 	@Override
-	public Response getUserLeagueMyTeam(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public Response getYahooLeaguePlayers(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserLeagueMyTeam(leagueId);
+		String result = lSvc.getYahooLeaguePlayers(leagueId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+	
+	}
+
+	@Override
+	public Response getYahooLeagueMyTeam(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+		
+		hHlpr.isHeaderAccessValid(sm);
+
+		String result = lSvc.getYahooLeagueMyTeam(leagueId);
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
@@ -149,11 +163,28 @@ public class LeagueApiImpl implements LeagueApi {
 	}
 
 	@Override
-	public Response getUserLeagueMyTeamMyPlayers(Long leagueId, Long teamId)
+	public Response getYahooLeagueMyPlayers(Long leagueId)
 			throws AuthorizationFailedException, RuntimeException {
+		
 		hHlpr.isHeaderAccessValid(sm);
 
-		String result = lSvc.getUserLeagueMyTeamMyPlayers(leagueId, teamId);
+		String result = lSvc.getYahooLeagueMyPlayers(leagueId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+		
+	}
+
+	@Override
+	public Response getYahooLeagueTeamPlayers(Long leagueId, Long teamId)
+			throws AuthorizationFailedException, RuntimeException {
+		
+		hHlpr.isHeaderAccessValid(sm);
+
+		String result = lSvc.getYahooLeagueTeamPlayers(leagueId, teamId);
 
 		if (Objects.isNull(result)) {
 			return Response.status(Response.Status.NOT_FOUND).build();
