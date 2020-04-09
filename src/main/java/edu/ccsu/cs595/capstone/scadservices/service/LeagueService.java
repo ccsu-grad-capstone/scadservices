@@ -28,7 +28,7 @@ public class LeagueService {
 	private static final String BASE_URI = "https://fantasysports.yahooapis.com/fantasy/v2";
 	private static final String BASE_URI_FORMAT = "?format=json";
 
-	public String getUserAllLeagues() throws AuthorizationFailedException, RuntimeException {
+	public String getUserLeaguesBySeason() throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -37,7 +37,7 @@ public class LeagueService {
 		String userGuid = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + yahooGameKey + "/leagues" + BASE_URI_FORMAT;
-		String rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "leagues");
+		String rawYahooData = yahoo.getYahooData(url, userGuid, "leagues");
 		try {
 			if (Objects.nonNull(rawYahooData)) {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
@@ -52,7 +52,7 @@ public class LeagueService {
 
 	}
 
-	public String getUserAllLeaguesAsCommissioner() throws AuthorizationFailedException, RuntimeException {
+	public String getUserLeaguesAsCommissionerBySeason() throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -62,7 +62,7 @@ public class LeagueService {
 		String userGuid = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + yahooGameKey + "/leagues/teams" + BASE_URI_FORMAT;
-		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "commissionerLeagues");
+		rawYahooData = yahoo.getYahooData(url, userGuid, "commissionerLeagues");
 		try {
 			if (Objects.nonNull(rawYahooData)) {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
@@ -77,7 +77,7 @@ public class LeagueService {
 
 	}
 
-	public String getUserLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -87,26 +87,26 @@ public class LeagueService {
 		String userGuid = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/league/" + yahooGameKey + ".l." + leagueId + BASE_URI_FORMAT;
-		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "league");
+		rawYahooData = yahoo.getYahooData(url, userGuid, "league");
 		try {
 			if (Objects.nonNull(rawYahooData)) {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = this.formatLeagueData(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
-			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
+			LOG.error("League Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
+		LOG.info("Getting league for userGuid={}, process took {}ms.", userGuid, (e - s));
 		return result;
 
 	}
 
-	public String getUserLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeagueTeams(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/league/" + yahooGameKey + ".l." + leagueId + "/teams" + BASE_URI_FORMAT;
-		String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "teams");
+		String rawYahooResult = yahoo.getYahooData(url, userId, "teams");
 		String result = null;
 		try {
 			if (Objects.nonNull(rawYahooResult)) {
@@ -120,14 +120,14 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeagueSettings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeagueSettings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/league/" + yahooGameKey + ".l." + leagueId + "/settings" + BASE_URI_FORMAT;
 		String result = null;
 
 		try {
-			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "settings");
+			String rawYahooData = yahoo.getYahooData(url, userId, "settings");
 			if (Objects.nonNull(rawYahooData)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = formatSettingsData(jsonObj);
@@ -139,13 +139,13 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeagueStandings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeagueStandings(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/league/" + yahooGameKey + ".l." + leagueId + "/standings" + BASE_URI_FORMAT;
 		String result = null;
 		try {
-			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "standings");
+			String rawYahooData = yahoo.getYahooData(url, userId, "standings");
 			if (Objects.nonNull(rawYahooData)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = formatStandingsData(jsonObj);
@@ -157,7 +157,7 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeagueTeamAndRoster(Long leagueId, Long teamId, Long week) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/team/" + yahooGameKey + ".l." + leagueId + ".t." + teamId + "/roster";
@@ -168,7 +168,7 @@ public class LeagueService {
 
 		String result = null;
 		try {
-			String rawYahooData = yahoo.getYahooLeagueData(url, userId, "team");
+			String rawYahooData = yahoo.getYahooData(url, userId, "team");
 			if (Objects.nonNull(rawYahooData)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = formatTeamAndRosterData(jsonObj);
@@ -180,7 +180,7 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeaguePlayers(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeaguePlayers(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		String userId = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/league/" + yahooGameKey + ".l." + leagueId + "/teams/roster" + BASE_URI_FORMAT;
@@ -188,7 +188,7 @@ public class LeagueService {
 		String result = null;
 
 		try {
-			String rawYahooResult = yahoo.getYahooLeagueData(url, userId, "players");
+			String rawYahooResult = yahoo.getYahooData(url, userId, "players");
 			if (Objects.nonNull(rawYahooResult)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooResult).getAsJsonObject();
 				result = formatPlayersData(jsonObj);
@@ -200,7 +200,7 @@ public class LeagueService {
 		return result;
 	}
 
-	public String getUserLeagueMyTeam(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeagueMyTeam(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -210,7 +210,7 @@ public class LeagueService {
 		String userGuid = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + yahooGameKey + "/leagues;league_keys=" + yahooGameKey + ".l." + leagueId + "/teams" + BASE_URI_FORMAT;
-		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "myTeam");
+		rawYahooData = yahoo.getYahooData(url, userGuid, "myTeam");
 		try {
 			if (Objects.nonNull(rawYahooData)) {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
@@ -225,7 +225,17 @@ public class LeagueService {
 
 	}
 	
-	public String getUserLeagueMyTeamMyPlayers(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
+	public String getYahooLeagueMyPlayers(Long leagueId) throws AuthorizationFailedException, RuntimeException {
+
+		String result = null;
+		String yahooLeagueMyTeamStrg = this.getYahooLeagueMyTeam(leagueId);
+		Long teamId = new JsonParser().parse(yahooLeagueMyTeamStrg).getAsJsonObject().get("team_id").getAsLong();
+		result = this.getYahooLeagueMyPlayers(leagueId, teamId);
+		return result;
+
+	}
+	
+	public String getYahooLeagueMyPlayers(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
 
 		Long s, e;
 		s = System.currentTimeMillis();
@@ -235,7 +245,7 @@ public class LeagueService {
 		String userGuid = yahoo.getYahooUserGuid();
 		Long yahooGameKey = yahoo.getYahooGame();
 		String url = BASE_URI + "/users;use_login=1/games;game_keys=" + yahooGameKey + "/leagues;league_keys=" + yahooGameKey + ".l." + leagueId + "/teams;team_key=" + + yahooGameKey + ".l." + leagueId + ".t." + teamId + "/players" + BASE_URI_FORMAT;
-		rawYahooData = yahoo.getYahooLeagueData(url, userGuid, "myPlayers");
+		rawYahooData = yahoo.getYahooData(url, userGuid, "myPlayers");
 		try {
 			if (Objects.nonNull(rawYahooData)) {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();

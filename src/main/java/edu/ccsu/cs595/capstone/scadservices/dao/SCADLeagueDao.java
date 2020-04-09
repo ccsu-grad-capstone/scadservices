@@ -24,7 +24,7 @@ public class SCADLeagueDao {
 		return scadEm().find(SCADLeague.class, id);
 	}
 
-	public SCADLeague getDefaultSCADLeagueByYahooGame(Long yahooGameId, String userGuid) {
+	public SCADLeague getDefaultUserSCADLeagueBySeason(Long yahooGameId, String userGuid) {
 
 		SCADLeague result = null;
 
@@ -42,15 +42,15 @@ public class SCADLeagueDao {
 
 	}
 
-	public SCADLeague getSCADLeagueByYahooGameAndLeague(Long yahooGameId, Long yahooLeagueId) {
+	public SCADLeague getSCADLeagueByYahooLeague(Long leagueId) {
 
 		SCADLeague result = null;
 
-		if ((Objects.nonNull(yahooGameId)) && (Objects.nonNull(yahooLeagueId))) {
+		if (Objects.nonNull(leagueId)) {
 			try {
 				result = (SCADLeague) scadEm()
-						.createQuery("from SCADLeague sl where sl.yahooGameId = :vYGId and sl.yahooLeagueId = :vYLId")
-						.setParameter("vYGId", yahooGameId).setParameter("vYLId", yahooLeagueId).getSingleResult();
+						.createQuery("from SCADLeague sl where sl.yahooLeagueId = :vLId")
+						.setParameter("vLId", leagueId).getSingleResult();
 			} catch (NoResultException e) {
 				result = null;
 			}
@@ -61,7 +61,7 @@ public class SCADLeagueDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SCADLeague> getAllSCADLeaguesByYahooGame(Long yahooGameId, String userGuid) {
+	public List<SCADLeague> getUserSCADLeaguesBySeason(Long yahooGameId, String userGuid) {
 
 		List<SCADLeague> result = null;
 

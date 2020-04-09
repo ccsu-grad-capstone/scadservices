@@ -24,14 +24,14 @@ public class SCADLeagueTeamDao {
 		return scadEm().find(SCADLeagueTeam.class, id);
 	}
 	
-	public SCADLeagueTeam getSCADLeagueTeamByYahooLeagueAndTeam(Long yahooLeagueID, Long yahooLeagueTeamId) {
+	public SCADLeagueTeam getSCADLeagueTeamByYahooLeagueAndTeam(Long leagueId, Long teamId) {
 
 		SCADLeagueTeam result = null;
 
-		if ((Objects.nonNull(yahooLeagueID)) && (Objects.nonNull(yahooLeagueTeamId))) {
+		if ((Objects.nonNull(leagueId)) && (Objects.nonNull(teamId))) {
 			try {
-				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.yahooLeagueId = :vYLId and slt.yahooLeagueTeamId = :vYLTId")
-						.setParameter("vYLId", yahooLeagueID).setParameter("vYLTId", yahooLeagueTeamId).getSingleResult();
+				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.yahooLeagueId = :vYLId and slt.yahooLeagueTeamId = :vTId")
+						.setParameter("vLId", leagueId).setParameter("vTId", teamId).getSingleResult();
 			} catch (NoResultException e) {
 				result = null;
 			}
@@ -64,8 +64,8 @@ public class SCADLeagueTeamDao {
 
 		if ((Objects.nonNull(scadLeagueId)) && (Objects.nonNull(yahooTeamId))) {
 			try {
-				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.scadLeagueId = :vSCADLId and slt.yahooLeagueTeamId = :vYahooTeamId")
-						.setParameter("vSCADLId", scadLeagueId).setParameter("vYahooTeamId", yahooTeamId).getSingleResult();
+				result = (SCADLeagueTeam) scadEm().createQuery("from SCADLeagueTeam slt where slt.scadLeagueId = :vSCADLId and slt.yahooLeagueTeamId = :vYLTId")
+						.setParameter("vSCADLId", scadLeagueId).setParameter("vYLTId", yahooTeamId).getSingleResult();
 			} catch (NoResultException e) {
 				result = null;
 			}
@@ -76,14 +76,14 @@ public class SCADLeagueTeamDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SCADLeagueTeam> getAllSCADLeagueTeamsByYahooLeague(Long yahooLeagueId) {
+	public List<SCADLeagueTeam> getSCADLeagueTeamsByYahooLeague(Long leagueId) {
 
 		List<SCADLeagueTeam> result = null;
 		
-		if (Objects.nonNull(yahooLeagueId)) {
+		if (Objects.nonNull(leagueId)) {
 			try {
-				result = (List<SCADLeagueTeam>) scadEm().createQuery("from SCADLeagueTeam slt where slt.yahooLeagueId = :vYLId")
-						.setParameter("vYLId", yahooLeagueId).getResultList();
+				result = (List<SCADLeagueTeam>) scadEm().createQuery("from SCADLeagueTeam slt where slt.yahooLeagueId = :vLId")
+						.setParameter("vLId", leagueId).getResultList();
 			} catch (NoResultException e) {
 				result = null;
 			}
@@ -94,7 +94,7 @@ public class SCADLeagueTeamDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<SCADLeagueTeam> getAllSCADLeagueTeamsBySCADLeague(Long scadLeagueId) {
+	public List<SCADLeagueTeam> getSCADLeagueTeamsBySCADLeague(Long scadLeagueId) {
 
 		List<SCADLeagueTeam> result = null;
 		
