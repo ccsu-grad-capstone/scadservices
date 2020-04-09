@@ -77,7 +77,7 @@ public interface LeagueApi {
 			throws AuthorizationFailedException, RuntimeException;
 
 	@GET
-	@Path(EndpointConstants.LEAGUE + "/{leagueId}/team/{teamId}")
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/team/{teamId}/roster")
 	@ApiOperation(value = "Gets Team & Roster details from yahoo by leagueId and teamId", notes = "Returns Team & Roster details from yahoo by leagueId and teamId", response = String.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getYahooLeagueTeamAndRoster(
@@ -85,6 +85,16 @@ public interface LeagueApi {
 			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId,
 			@ApiParam(value = "NFL week associated with desired roster.") @QueryParam("week") Long week)
 			throws AuthorizationFailedException, RuntimeException;
+	
+	@GET
+	@Path(EndpointConstants.LEAGUE + "/{leagueId}/team/{teamId}/players")
+	@ApiOperation(value = "Gets Player details from yahoo by leagueId and teamId", notes = "Returns Team & Roster details from yahoo by leagueId and teamId", response = String.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getYahooLeagueTeamPlayers(
+			@ApiParam(value = EndpointConstants.LEAGUE_RESOURCE_ID, required = true) @PathParam(EndpointConstants.LEAGUEID) Long leagueId,
+			@ApiParam(value = EndpointConstants.TEAM_RESOURCE_ID, required = true) @PathParam(EndpointConstants.TEAMID) Long teamId)
+			throws AuthorizationFailedException, RuntimeException;
+
 
 	@GET
 	@Path(EndpointConstants.LEAGUE + "/{leagueId}/players")

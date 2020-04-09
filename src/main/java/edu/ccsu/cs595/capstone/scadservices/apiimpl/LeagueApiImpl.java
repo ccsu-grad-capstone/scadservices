@@ -177,6 +177,22 @@ public class LeagueApiImpl implements LeagueApi {
 		return Response.status(Response.Status.OK).entity(result).build();
 		
 	}
+
+	@Override
+	public Response getYahooLeagueTeamPlayers(Long leagueId, Long teamId)
+			throws AuthorizationFailedException, RuntimeException {
+		
+		hHlpr.isHeaderAccessValid(sm);
+
+		String result = lSvc.getYahooLeagueTeamPlayers(leagueId, teamId);
+
+		if (Objects.isNull(result)) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(result).build();
+		
+	}
 	
 	
 

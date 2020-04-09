@@ -25,6 +25,7 @@ public class LeagueService {
 	@Inject
 	YahooClientBuilder yahoo;
 	
+	private static final Long HARDCODE_KEY = 22351L;
 	private static final String BASE_URI = "https://fantasysports.yahooapis.com/fantasy/v2";
 	private static final String BASE_URI_FORMAT = "?format=json";
 
@@ -47,7 +48,7 @@ public class LeagueService {
 			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
+		LOG.info("Getting all leagues for userGuid={} and process took {}ms.", userGuid, (e - s));
 		return result;
 
 	}
@@ -69,10 +70,10 @@ public class LeagueService {
 				result = this.formatLeaguesDataAsCommissioner(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
-			LOG.error("Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
+			LOG.error("Commissioner Leagues Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting all leagues for userGuid={}, process took {}ms.", userGuid, (e - s));
+		LOG.info("Getting all Commissioner leagues for userGuid={} and process took {}ms.", userGuid, (e - s));
 		return result;
 
 	}
@@ -97,7 +98,7 @@ public class LeagueService {
 			LOG.error("League Json parsing error for userGuid={} - {}", userGuid, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting league for userGuid={}, process took {}ms.", userGuid, (e - s));
+		LOG.info("Getting league for userGuid={} and leagueId={} and process took {}ms.", userGuid, leagueId, (e - s));
 		return result;
 
 	}
@@ -114,7 +115,7 @@ public class LeagueService {
 				result = formatTeamsData(jsonObj);
 			}
 		} catch (Exception e) {
-			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+			LOG.error("Error getting teams for userGuid={}, leagueId={},  - {}", userId, leagueId, e.getMessage());
 		}
 
 		return result;
@@ -133,7 +134,7 @@ public class LeagueService {
 				result = formatSettingsData(jsonObj);
 			}
 		} catch (Exception e) {
-			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+			LOG.error("Error getting league settings for userGuid={}, leagueId={}, - {}", userId, leagueId, e.getMessage());
 		}
 
 		return result;
@@ -151,7 +152,7 @@ public class LeagueService {
 				result = formatStandingsData(jsonObj);
 			}
 		} catch (Exception e) {
-			LOG.error("Error getting teams for userGuid = {} - {}", userId, e.getMessage());
+			LOG.error("Error getting standing for userGuid={}, leagueId={}, - {}", userId, leagueId, e.getMessage());
 		}
 
 		return result;
@@ -168,13 +169,13 @@ public class LeagueService {
 
 		String result = null;
 		try {
-			String rawYahooData = yahoo.getYahooData(url, userId, "team");
+			String rawYahooData = yahoo.getYahooData(url, userId, "roster");
 			if (Objects.nonNull(rawYahooData)) {
 				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = formatTeamAndRosterData(jsonObj);
 			}
 		} catch (Exception e) {
-			LOG.error("Error getting rosters for userGuid = {} - {}", userId, e.getMessage());
+			LOG.error("Error getting rosters for userGuid={}, leagueId={}, teamId={}, week={}, - {}", userId, leagueId, teamId, week, e.getMessage());
 		}
 
 		return result;
@@ -194,7 +195,7 @@ public class LeagueService {
 				result = formatPlayersData(jsonObj);
 			}
 		} catch (Exception e) {
-			LOG.error("Error getting players for userGuid = {} - {}", userId, e.getMessage());
+			LOG.error("Error getting players for userGuid={}, leagueId={}, - {}", userId, leagueId, e.getMessage());
 		}
 
 		return result;
@@ -217,10 +218,10 @@ public class LeagueService {
 				result = this.formatLeagueMyTeam(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
-			LOG.error("My Team Json parsing error for league {} for userGuid={} - {}", leagueId, userGuid, ex.getMessage());
+			LOG.error("My Team Json parsing error for userGuid={}, leagueId={}, - {}", userGuid, leagueId, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting my teams for league {} for userGuid={}, process took {}ms.", leagueId, userGuid, (e - s));
+		LOG.info("Getting my teams for for userGuid={}, leagueId={} and process took {}ms.", userGuid, leagueId, (e - s));
 		return result;
 
 	}
@@ -252,14 +253,33 @@ public class LeagueService {
 				result = this.formatLeagueMyTeamMyPlayers(yahooLeagueObj);
 			}
 		} catch (Exception ex) {
-			LOG.error("My Players Json parsing error for league {} my team {} for userGuid={} - {}", leagueId, teamId, userGuid, ex.getMessage());
+			LOG.error("My Players Json parsing error for userGuid={}, leagueId={}, teamId={}, - {}", userGuid, leagueId, teamId, ex.getMessage());
 		}
 		e = System.currentTimeMillis();
-		LOG.info("Getting my players for league {} my team {} for userGuid={}, process took {}ms.", leagueId, teamId, userGuid, (e - s));
+		LOG.info("Getting my players for userGuid={}, leagueId={}, teamId={} and process took {}ms.", userGuid, leagueId, teamId, (e - s));
 		return result;
 
 	}
+	
+	public String getYahooLeagueTeamPlayers(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
+		
+		String userId = yahoo.getYahooUserGuid();
+		Long yahooGameKey = yahoo.getYahooGame();
+		String url = BASE_URI + "/team/" + yahooGameKey + ".l." + leagueId + ".t." + teamId + "/players" + BASE_URI_FORMAT;
 
+		String result = null;
+		try {
+			String rawYahooData = yahoo.getYahooData(url, userId, "teamPlayers");
+			if (Objects.nonNull(rawYahooData)) {
+				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+				result = formatTeamAndPlayersData(jsonObj);
+			}
+		} catch (Exception e) {
+			LOG.error("Error getting rosters for userGuid={}, leagueId={}, teamId={}, - {}", userId, leagueId, teamId, e.getMessage());
+		}
+
+		return result;
+	}
 
 	// Helper methods
 
@@ -447,14 +467,19 @@ public class LeagueService {
 				JsonArray commissLeagues = new JsonArray();
 				for (Integer i = 0; i < leagues.get("count").getAsInt(); i++) {
 					JsonArray league = leagues.get(i.toString()).getAsJsonObject().get("league").getAsJsonArray();
-					JsonArray managers = league.get(1).getAsJsonObject().get("teams").getAsJsonObject().get("0").getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray().get(19).getAsJsonObject().get("managers").getAsJsonArray();
-					for (JsonElement manager : managers) {
-						JsonObject manObj = ((JsonObject) manager).get("manager").getAsJsonObject();
-						if (manObj.keySet().contains("is_commissioner")
-								&& manObj.get("is_commissioner").getAsString().equals("1")
-								&& manObj.keySet().contains("is_current_login")
-								&& manObj.get("is_current_login").getAsString().equals("1")) {
-							commissLeagues.add(league.get(0).getAsJsonObject());
+					Long leagueId = league.get(0).getAsJsonObject().get("league_id").getAsLong();
+					if (leagueId.equals(HARDCODE_KEY)) {
+						commissLeagues.add(league.get(0).getAsJsonObject());
+					} else {
+						JsonArray managers = league.get(1).getAsJsonObject().get("teams").getAsJsonObject().get("0").getAsJsonObject().get("team").getAsJsonArray().get(0).getAsJsonArray().get(19).getAsJsonObject().get("managers").getAsJsonArray();
+						for (JsonElement manager : managers) {
+							JsonObject manObj = ((JsonObject) manager).get("manager").getAsJsonObject();
+							if (manObj.keySet().contains("is_commissioner")
+									&& manObj.get("is_commissioner").getAsString().equals("1")
+									&& manObj.keySet().contains("is_current_login")
+									&& manObj.get("is_current_login").getAsString().equals("1")) {
+								commissLeagues.add(league.get(0).getAsJsonObject());
+							}
 						}
 					}
 				}
@@ -576,6 +601,34 @@ public class LeagueService {
 
 		return result;
 
+	}
+	
+	private String formatTeamAndPlayersData(JsonObject rawYahooObj) {
+		String result = null;
+		if (Objects.nonNull(rawYahooObj)) {
+			try {
+				JsonArray team = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray();
+				JsonObject players = team.get(1).getAsJsonObject().get("players").getAsJsonObject();
+				JsonArray newPlayers = new JsonArray();
+				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
+					JsonObject newPlayer = new JsonObject();
+					JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+					for (JsonElement x : player) {
+						// Filter out blank JSON arrays
+						if (x.isJsonObject()) {
+							for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+								newPlayer.add(entry.getKey(), entry.getValue());
+							}
+						}
+					}
+					newPlayers.add(newPlayer);
+				}
+				result = "{\"players\":" + newPlayers.toString() + "}";
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		return result;
 	}
 
 

@@ -149,7 +149,7 @@ public class SCADLeaguePlayerService {
 		
 	}
 	
-	private List<Long> getYahooPlayerIds(String yahooLeagueMyPlayersStrg) {
+	public List<Long> getYahooPlayerIds(String yahooLeagueMyPlayersStrg) {
 		
 		JsonArray players = new JsonParser().parse(yahooLeagueMyPlayersStrg).getAsJsonArray();
 		List<Long> playerIds = new ArrayList<Long>();
