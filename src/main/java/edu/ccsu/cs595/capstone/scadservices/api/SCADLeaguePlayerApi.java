@@ -85,7 +85,7 @@ public interface SCADLeaguePlayerApi {
 			throws AuthorizationFailedException, RuntimeException;
 	
 	@GET
-	@Path("/league/{scadLeagueId}" + EndpointConstants.SCADLEAGUETEAM +"/{scadTeamId}" + EndpointConstants.SCADLEAGUEPLAYER + "/players")
+	@Path("/league/{scadLeagueId}" + EndpointConstants.SCADLEAGUETEAM +"/{scadTeamId}" + "/players")
 	@ApiOperation(value = "Gets Players from SCAD by scadLeagueId and scadTeamId", notes = "Returns Players from SCAD by scadLeagueId and scadTeamId", response = SCADLeaguePlayerListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getSCADLeaguePlayersBySCADLeagueAndTeam(
@@ -94,7 +94,7 @@ public interface SCADLeaguePlayerApi {
 			throws AuthorizationFailedException, RuntimeException;
 	
 	@GET
-	@Path("/league/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUETEAM +"/{teamId}" + EndpointConstants.SCADLEAGUEPLAYER + "/players")
+	@Path("/league/yahoo/{leagueId}" + EndpointConstants.SCADLEAGUETEAM +"/{teamId}" + "/players")
 	@ApiOperation(value = "Gets Players from SCAD by yahoo leagueId and teamId", notes = "Returns Players from SCAD by yahoo leagueId and teamId", response = SCADLeaguePlayerListDto.class)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getSCADLeaguePlayersByYahooLeagueAndTeam(

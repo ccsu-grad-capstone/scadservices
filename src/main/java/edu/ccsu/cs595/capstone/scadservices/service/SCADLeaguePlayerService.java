@@ -19,6 +19,7 @@ import edu.ccsu.cs595.capstone.scadservices.dao.SCADLeaguePlayerDao;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeaguePlayerDto;
 import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeaguePlayerListDto;
+import edu.ccsu.cs595.capstone.scadservices.dto.SCADLeagueTeamDto;
 import edu.ccsu.cs595.capstone.scadservices.entity.AuditContext;
 import edu.ccsu.cs595.capstone.scadservices.entity.SCADLeaguePlayer;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
@@ -64,26 +65,19 @@ public class SCADLeaguePlayerService {
 	
 	public SCADLeaguePlayerListDto getSCADLeaguePlayersBySCADLeagueAndTeam(Long scadLeagueId, Long scadTeamId) throws AuthorizationFailedException, RuntimeException {
 
-		//Need
-		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
-		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersByYahooLeague(scadLeagueId);
-		for (SCADLeaguePlayer slpEntity : slpEntityList) {
-			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
-			list.getScadLeaguePlayers().add(result);
-		}
+		SCADLeaguePlayerListDto list = null;
+		SCADLeagueDto scadLeagueDto = slSvc.getSCADLeague(scadLeagueId);
+		SCADLeagueTeamDto scadLeagueTeamDto = sltSvc.getSCADLeagueTeam(scadTeamId);
+		list = this.getSCADLeaguePlayersByYahooLeagueAndTeam(scadLeagueDto.getYahooLeagueId(), scadLeagueTeamDto.getYahooLeagueTeamId());
 		return list;
 
 	}
 	
 	public SCADLeaguePlayerListDto getSCADLeaguePlayersByYahooLeagueAndTeam(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
 
-		//Need
-		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
-		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersByYahooLeague(leagueId);
-		for (SCADLeaguePlayer slpEntity : slpEntityList) {
-			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
-			list.getScadLeaguePlayers().add(result);
-		}
+		SCADLeaguePlayerListDto list = null;
+		List<Long> playerIds = this.getPlayersByYahooLeagueAndTeam(leagueId, teamId);
+		list = this.getSCADLeagueMyPlayersByYahooLeague(leagueId, playerIds);
 		return list;
 
 	}
@@ -143,6 +137,14 @@ public class SCADLeaguePlayerService {
 	public List<Long> getPlayersIds(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 		
 		Long teamId = sltSvc.getMyYahooTeamId(leagueId);
+		String yahooLeagueMyPlayersStrg = lSvc.getYahooLeagueMyPlayers(leagueId, teamId);
+		List<Long>	playerIds = this.getYahooPlayerIds(yahooLeagueMyPlayersStrg);
+		return playerIds;
+		
+	}
+	
+	public List<Long> getPlayersByYahooLeagueAndTeam(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
+		
 		String yahooLeagueMyPlayersStrg = lSvc.getYahooLeagueMyPlayers(leagueId, teamId);
 		List<Long>	playerIds = this.getYahooPlayerIds(yahooLeagueMyPlayersStrg);
 		return playerIds;

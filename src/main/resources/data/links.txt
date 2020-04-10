@@ -49,10 +49,26 @@ https://fantasysports.yahooapis.com/fantasy/v2/league/390.l.22351/players;player
 
 https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=390.p.8780/metadata?format=json -- Just player details
 
+https://fantasysports.yahooapis.com/fantasy/v2/games;seasons=2019,2018?format=json -- seasons
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl;seasons=2019,2018?format=json -- nfl seasons
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl;seasons=2019,2018,2017,2016?format=json
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=359/leagues?format=json -- 2016
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=371/leagues?format=json -- 2017
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=380/leagues?format=json -- 2018
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=390/leagues?format=json -- 2019
 
 -----------------------
 
 http://localhost:8080/scadservices/api/yahoo/league/22351/teams
 
 http://localhost:8080/scadservices/api/yahoo/league/22351/team/1/players
+
+
+
 
