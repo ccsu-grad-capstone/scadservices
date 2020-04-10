@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,7 +239,10 @@ public class SCADLeagueService {
 			result.setCreatedAt(slEntity.getCreatedAt());
 			result.setModifiedBy(slEntity.getModifiedBy());
 			result.setModifiedAt(slEntity.getModifiedAt());
-			
+
+			if (slEntity.getOwnerGuid().equals(yahoo.getYahooUserGuid())) {
+				result.setIsCurrentlyLoggedInUserACommissioner(true);
+			}
 			return result;
 
 		}
