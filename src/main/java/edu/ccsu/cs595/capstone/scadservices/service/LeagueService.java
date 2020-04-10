@@ -117,7 +117,6 @@ public class LeagueService {
 		} catch (Exception e) {
 			LOG.error("Error getting teams for userGuid={}, leagueId={},  - {}", userId, leagueId, e.getMessage());
 		}
-
 		return result;
 	}
 
@@ -275,7 +274,7 @@ public class LeagueService {
 				result = formatTeamAndPlayersData(jsonObj);
 			}
 		} catch (Exception e) {
-			LOG.error("Error getting rosters for userGuid={}, leagueId={}, teamId={}, - {}", userId, leagueId, teamId, e.getMessage());
+			LOG.error("Error getting teamPlayers for userGuid={}, leagueId={}, teamId={}, - {}", userId, leagueId, teamId, e.getMessage());
 		}
 
 		return result;

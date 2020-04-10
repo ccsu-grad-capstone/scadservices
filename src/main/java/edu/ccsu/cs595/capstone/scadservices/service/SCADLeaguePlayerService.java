@@ -1,7 +1,9 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
@@ -29,6 +31,8 @@ import edu.ccsu.cs595.capstone.scadservices.util.YahooClientBuilder;
 public class SCADLeaguePlayerService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SCADLeaguePlayerService.class);
+	private static String CACHE_YAHOO_TEAMS = null;
+	private Map<Long, String> CACHE_YAHOO_PLAYERS = new LinkedHashMap<>();
 
 	@Inject
 	SCADLeaguePlayerDao slpDao;
@@ -145,8 +149,11 @@ public class SCADLeaguePlayerService {
 	
 	public List<Long> getPlayersByYahooLeagueAndTeam(Long leagueId, Long teamId) throws AuthorizationFailedException, RuntimeException {
 		
-		String yahooLeagueMyPlayersStrg = lSvc.getYahooLeagueMyPlayers(leagueId, teamId);
-		List<Long>	playerIds = this.getYahooPlayerIds(yahooLeagueMyPlayersStrg);
+		String yahooLeagueMyPlayersStrg = lSvc.getYahooLeagueTeamPlayers(leagueId, teamId);
+		JsonObject yahooLeagueMyPlayersObj = new JsonParser().parse(yahooLeagueMyPlayersStrg).getAsJsonObject();
+		JsonArray yahooLeagueMyPlayersArray = yahooLeagueMyPlayersObj.get("players").getAsJsonArray();
+		String yahooLeagueMyPlayersStrg1 = yahooLeagueMyPlayersArray.toString();
+		List<Long>	playerIds = this.getYahooPlayerIds(yahooLeagueMyPlayersStrg1);
 		return playerIds;
 		
 	}
@@ -241,6 +248,7 @@ public class SCADLeaguePlayerService {
 			result.setCreatedAt(slpEntity.getCreatedAt());
 			result.setModifiedBy(slpEntity.getModifiedBy());
 			result.setModifiedAt(slpEntity.getModifiedAt());
+			this.setPlayerTeamDetails(result);
 			
 			return result;
 
@@ -283,6 +291,83 @@ public class SCADLeaguePlayerService {
 
 		}
 
+	}
+	
+	private void setPlayerTeamDetails(SCADLeaguePlayerDto result) {
+		
+		if (Objects.nonNull(result)) {
+			
+			SCADLeagueTeamDto SCADLeagueTeam = this.getSCADTeamByYahooPlayer(result.getYahooLeagueId(), result.getYahooLeaguePlayerId());
+			if (Objects.nonNull(SCADLeagueTeam)) {
+				result.setYahooTeamId(SCADLeagueTeam.getYahooLeagueTeamId());
+				result.setScadTeamId(SCADLeagueTeam.getId());
+			}
+		}
+		
+	}
+	
+	private SCADLeagueTeamDto getSCADTeamByYahooPlayer(Long leagueId, Long playerId) {
+		
+		SCADLeagueTeamDto result = null;
+		
+		if (Objects.nonNull(playerId)) {
+			
+			try {
+				String yahooTeams = null;
+				if (Objects.isNull(CACHE_YAHOO_TEAMS)) {
+					yahooTeams = lSvc.getYahooLeagueTeams(leagueId);
+					CACHE_YAHOO_TEAMS = yahooTeams;
+				} else {
+					yahooTeams = CACHE_YAHOO_TEAMS;
+				}
+				JsonObject teamsObj = new JsonParser().parse(yahooTeams).getAsJsonObject();
+				JsonArray teams =	teamsObj.get("teams").getAsJsonArray();
+				Long teamId = null;
+				boolean breakInd = false;
+				for (JsonElement team : teams) {
+					JsonObject teamObj = ((JsonObject) team).getAsJsonObject();
+					teamId = teamObj.get("team_id").getAsLong();
+					String yahooPlayers = null;
+					if (CACHE_YAHOO_PLAYERS.size() > 0) {
+						if (CACHE_YAHOO_PLAYERS.containsKey(teamId)) {
+							yahooPlayers = CACHE_YAHOO_PLAYERS.get(teamId);
+						} else {
+							yahooPlayers = lSvc.getYahooLeagueTeamPlayers(leagueId,teamId);
+							CACHE_YAHOO_PLAYERS.put(teamId, yahooPlayers);
+						}
+					} else {
+						yahooPlayers = lSvc.getYahooLeagueTeamPlayers(leagueId,teamId);
+						CACHE_YAHOO_PLAYERS.put(teamId, yahooPlayers);
+					}
+					JsonObject playersObj = new JsonParser().parse(yahooPlayers).getAsJsonObject();
+					JsonArray players = playersObj.get("players").getAsJsonArray();
+					Long fetchedPlayerId = null;
+					for (JsonElement player : players) {
+						JsonObject playerObj = ((JsonObject) player).getAsJsonObject();
+						fetchedPlayerId = playerObj.get("player_id").getAsLong();
+						if (fetchedPlayerId.equals(playerId)) {
+							breakInd = true;
+							break;
+						}
+					}
+					if (breakInd) {
+						break;
+					}
+				}
+				if (Objects.nonNull(teamId)) {
+					result = sltSvc.getSCADLeagueTeamByYahooLeagueAndTeam(leagueId, teamId);
+				}
+
+			} catch (AuthorizationFailedException e) {
+				LOG.error(e.getMessage());
+			} catch (RuntimeException e) {
+				LOG.error(e.getMessage());
+			}
+			
+		}
+		
+		return result;
+		
 	}
 
 }
