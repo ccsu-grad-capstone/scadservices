@@ -44,6 +44,7 @@ public class SCADLeagueDto extends AuditedDto {
 	private String ownerGuid;
 	private List<SCADLeagueTeamDto> scadLeagueTeams;
 	private List<SCADLeaguePlayerDto> scadLeaguePlayers;
+	private Boolean isCurrentlyLoggedInUserACommissioner = false;
 
 	@Override
 	public Long getId() {
@@ -303,6 +304,14 @@ public class SCADLeagueDto extends AuditedDto {
 		this.scadLeaguePlayers = scadLeaguePlayersDto;
 	}
 
+	public Boolean getIsCurrentlyLoggedInUserACommissioner() {
+		return isCurrentlyLoggedInUserACommissioner;
+	}
+
+	public void setIsCurrentlyLoggedInUserACommissioner(Boolean userACommissioner) {
+		isCurrentlyLoggedInUserACommissioner = userACommissioner;
+	}
+
 	@Override
 	public String toString() {
 		return "SCADLeagueDto [yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId + ", leagueName=" + yahooLeagueName
@@ -314,7 +323,7 @@ public class SCADLeagueDto extends AuditedDto {
 				+ ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin + ", qbMax=" + qbMax
 				+ ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax + ", teMin=" + teMin
 				+ ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin + ", defMax=" + defMax
-				+ ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid + "]";
+				+ ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid + "isCurrentlyLoggedInUserACommissioner=" + isCurrentlyLoggedInUserACommissioner + "]";
 	}
 	
 }
