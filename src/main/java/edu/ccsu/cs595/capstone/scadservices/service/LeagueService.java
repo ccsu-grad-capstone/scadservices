@@ -301,11 +301,25 @@ public class LeagueService {
 		String url = BASE_URI + "/team/" + yahooGameKey + ".l." + leagueId + ".t." + teamId + "/players" + BASE_URI_FORMAT;
 
 		String result = null;
+		JsonObject jsonObj;
+		String rawYahooData = yahoo.getYahooData(url, userId, "teamPlayers");
 		try {
-			String rawYahooData = yahoo.getYahooData(url, userId, "teamPlayers");
 			if (Objects.nonNull(rawYahooData)) {
-				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+				jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = formatTeamAndPlayersData(jsonObj);
+			}
+		} catch (EmptyPlayersArrayException exe) {
+			LOG.error(exe.getMessage() + " Retrieving data from previous year...");
+			url = BASE_URI + "/team/" + exe.getPreviousYearGameKey() + ".l." + exe.getPreviousYearLeagueId() + ".t." + teamId + "/players" + BASE_URI_FORMAT;
+			rawYahooData = yahoo.getYahooData(url, userId, "teamPlayers");
+			try {
+				if (Objects.nonNull(rawYahooData)) {
+					jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+					result = formatTeamAndPlayersData(jsonObj);
+				}
+			} catch (Exception exe2) {
+				// No players from previous year either.
+				LOG.error("Tried to find players from previous year, but could not find them!");
 			}
 		} catch (Exception e) {
 			LOG.error("Error getting teamPlayers for userGuid={}, leagueId={}, teamId={}, - {}", userId, leagueId, teamId, e.getMessage());
@@ -672,12 +686,30 @@ public class LeagueService {
 
 	}
 	
-	private String formatTeamAndPlayersData(JsonObject rawYahooObj) {
+	private String formatTeamAndPlayersData(JsonObject rawYahooObj) throws EmptyPlayersArrayException {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
 				JsonArray team = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray();
-				JsonObject players = team.get(1).getAsJsonObject().get("players").getAsJsonObject();
+				JsonElement playersLocation = team.get(1).getAsJsonObject().get("players");
+				if (playersLocation.isJsonArray() && ((JsonArray) playersLocation).size() == 0) {
+					String[] temp = team.get(0).getAsJsonArray().get(0).getAsJsonObject().get("team_key").getAsString().split("[.]");
+					String gameKey = temp[0];
+					String leagueId = temp[2];
+					String url = BASE_URI + "/league/" + gameKey + ".l." + leagueId + BASE_URI_FORMAT;
+					JsonObject leagueInfo = new JsonParser().parse(yahoo.getYahooData(url, "formatter", "league")).getAsJsonObject();
+					String renew = leagueInfo.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(0).getAsJsonObject().get("renew").getAsString();
+					if (!renew.isEmpty()) {
+						temp = renew.split("_");
+						Long previousYearGameKey = Long.parseLong(temp[0]);
+						Long previousYearLeagueId = Long.parseLong(temp[1]);
+						EmptyPlayersArrayException exe = new EmptyPlayersArrayException();
+						exe.setPreviousYearGameKey(previousYearGameKey);
+						exe.setPreviousYearLeagueId(previousYearLeagueId);
+						throw exe;
+					}
+				}
+				JsonObject players = playersLocation.getAsJsonObject();
 				JsonArray newPlayers = new JsonArray();
 				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 					JsonObject newPlayer = new JsonObject();
@@ -693,6 +725,8 @@ public class LeagueService {
 					newPlayers.add(newPlayer);
 				}
 				result = "{\"players\":" + newPlayers.toString() + "}";
+			} catch (EmptyPlayersArrayException ex) {
+				throw ex;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
