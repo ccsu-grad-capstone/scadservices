@@ -53,8 +53,8 @@ public class YahooClientBuilder {
 		put("commissionerLeagues", "user_commissioner_leagues.json");
 	}};
 
-	//private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
-	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/390?format=json";
+	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/nfl?format=json";
+//	private static final String YAHOORESTURI_GAMEINFO = "https://fantasysports.yahooapis.com/fantasy/v2/game/390?format=json";
 	
 	public String getYahooUserGuid() {
 		
@@ -114,7 +114,7 @@ public class YahooClientBuilder {
 		return gameId;
 		
 	}
-	
+
 	private int getYahooGameSeason() throws AuthorizationFailedException, RuntimeException {
 		
 		int gameSeason = 0;

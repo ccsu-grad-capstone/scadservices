@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import edu.ccsu.cs595.capstone.scadservices.exception.EmptyPlayersArrayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -251,6 +252,20 @@ public class LeagueService {
 				yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = this.formatLeagueMyTeamMyPlayers(yahooLeagueObj);
 			}
+		} catch (EmptyPlayersArrayException exe) {
+			LOG.error(exe.getMessage() + " Retrieving data from previous year...");
+			url = BASE_URI + "/users;use_login=1/games;game_keys=" + exe.getPreviousYearGameKey() + "/leagues;league_keys=" + exe.getPreviousYearGameKey() + ".l." + exe.getPreviousYearLeagueId() + "/teams;team_key=" + exe.getPreviousYearGameKey() + ".l." + exe.getPreviousYearLeagueId() + ".t." + teamId + "/players" + BASE_URI_FORMAT;
+			rawYahooData = yahoo.getYahooData(url, userGuid, "myPlayers");
+			try {
+				if (Objects.nonNull(rawYahooData)) {
+					yahooLeagueObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+					result = this.formatLeagueMyTeamMyPlayers(yahooLeagueObj);
+				}
+			} catch (Exception exe2) {
+				// No players from previous year either.
+				LOG.error("Tried to find players from previous year, but could not find them!");
+			}
+
 		} catch (Exception ex) {
 			LOG.error("My Players Json parsing error for userGuid={}, leagueId={}, teamId={}, - {}", userGuid, leagueId, teamId, ex.getMessage());
 		}
@@ -282,7 +297,7 @@ public class LeagueService {
 
 	// Helper methods
 
-	private String formatLeaguesData(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+	private String formatLeaguesData(JsonObject leaguesObj) throws RuntimeException {
 
 		String result = null;
 
@@ -317,7 +332,7 @@ public class LeagueService {
 
 	}
 
-	private String formatLeagueData(JsonObject leagueObj) throws AuthorizationFailedException, RuntimeException {
+	private String formatLeagueData(JsonObject leagueObj) throws RuntimeException {
 
 		String result = null;
 
@@ -456,7 +471,7 @@ public class LeagueService {
 		return result;
 	}
 
-	private String formatLeaguesDataAsCommissioner(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+	private String formatLeaguesDataAsCommissioner(JsonObject leaguesObj) throws RuntimeException {
 
 		String result = null;
 
@@ -540,7 +555,7 @@ public class LeagueService {
 		return result;
 	}
 	
-	private String formatLeagueMyTeam(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+	private String formatLeagueMyTeam(JsonObject leaguesObj) throws RuntimeException {
 
 		String result = null;
 
@@ -569,14 +584,28 @@ public class LeagueService {
 
 	}
 
-	private String formatLeagueMyTeamMyPlayers(JsonObject leaguesObj) throws AuthorizationFailedException, RuntimeException {
+	private String formatLeagueMyTeamMyPlayers(JsonObject leaguesObj) throws EmptyPlayersArrayException, RuntimeException {
 
 		String result = null;
 
 		if (Objects.nonNull(leaguesObj)) {
 			try {
-				JsonObject teams = leaguesObj.get("fantasy_content").getAsJsonObject().get("users").getAsJsonObject().get("0").getAsJsonObject().get("user").getAsJsonArray().get(1).getAsJsonObject().get("games").getAsJsonObject().get("0").getAsJsonObject().get("game").getAsJsonArray().get(1).getAsJsonObject().get("leagues").getAsJsonObject().get("0").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
-				JsonObject players = teams.get("0").getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("players").getAsJsonObject();
+				JsonArray league = leaguesObj.get("fantasy_content").getAsJsonObject().get("users").getAsJsonObject().get("0").getAsJsonObject().get("user").getAsJsonArray().get(1).getAsJsonObject().get("games").getAsJsonObject().get("0").getAsJsonObject().get("game").getAsJsonArray().get(1).getAsJsonObject().get("leagues").getAsJsonObject().get("0").getAsJsonObject().get("league").getAsJsonArray();
+				JsonObject teams = league.get(1).getAsJsonObject().get("teams").getAsJsonObject();
+				JsonElement playersLocation = teams.get("0").getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("players");
+				if (playersLocation.isJsonArray() && ((JsonArray) playersLocation).size() == 0) {
+					String renew = league.get(0).getAsJsonObject().get("renew").getAsString();
+					if (!renew.isEmpty()) {
+						String[] temp = renew.split("_");
+						Long previousYearGameKey = Long.parseLong(temp[0]);
+						Long previousYearLeagueId = Long.parseLong(temp[1]);
+						EmptyPlayersArrayException exe = new EmptyPlayersArrayException();
+						exe.setPreviousYearGameKey(previousYearGameKey);
+						exe.setPreviousYearLeagueId(previousYearLeagueId);
+						throw exe;
+					}
+				}
+				JsonObject players = playersLocation.getAsJsonObject();
 				JsonArray newPlayers = new JsonArray();
 				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 					JsonObject newPlayer = new JsonObject();
@@ -592,10 +621,11 @@ public class LeagueService {
 					newPlayers.add(newPlayer);
 				}
 				result = newPlayers.toString();
-				} catch (Exception ex) {
-					throw new RuntimeException(ex.getMessage());
-				}
-
+			} catch (EmptyPlayersArrayException exe) {
+				throw exe;
+			} catch (Exception ex) {
+				throw new RuntimeException(ex.getMessage());
+			}
 		}
 
 		return result;
