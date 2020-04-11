@@ -168,11 +168,30 @@ public class LeagueService {
 		url += BASE_URI_FORMAT;
 
 		String result = null;
+		JsonObject jsonObj;
+		String rawYahooData = yahoo.getYahooData(url, userId, "roster");
 		try {
-			String rawYahooData = yahoo.getYahooData(url, userId, "roster");
 			if (Objects.nonNull(rawYahooData)) {
-				JsonObject jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+				jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
 				result = formatTeamAndRosterData(jsonObj);
+			}
+		} catch (EmptyPlayersArrayException exe) {
+			LOG.error(exe.getMessage() + " Retrieving data from previous year...");
+			url = BASE_URI + "/team/" + exe.getPreviousYearGameKey() + ".l." + exe.getPreviousYearLeagueId() + ".t." + teamId + "/roster";
+			if (week != null) {
+				url += ";week=" + week;
+			}
+			url += BASE_URI_FORMAT;
+
+			rawYahooData = yahoo.getYahooData(url, userId, "roster");
+			try {
+				if (Objects.nonNull(rawYahooData)) {
+					jsonObj = new JsonParser().parse(rawYahooData).getAsJsonObject();
+					result = formatTeamAndRosterData(jsonObj);
+				}
+			} catch (Exception exe2) {
+				// No players from previous year either.
+				LOG.error("Tried to find players from previous year, but could not find them!");
 			}
 		} catch (Exception e) {
 			LOG.error("Error getting rosters for userGuid={}, leagueId={}, teamId={}, week={}, - {}", userId, leagueId, teamId, week, e.getMessage());
@@ -508,12 +527,31 @@ public class LeagueService {
 
 	}
 
-	private String formatTeamAndRosterData(JsonObject rawYahooObj) {
+	private String formatTeamAndRosterData(JsonObject rawYahooObj) throws EmptyPlayersArrayException {
 		String result = null;
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
 				JsonArray team = rawYahooObj.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray();
 				JsonObject roster = team.get(1).getAsJsonObject().get("roster").getAsJsonObject();
+
+				JsonElement playersLocation = roster.get("0").getAsJsonObject().get("players");
+				if (playersLocation.isJsonArray() && ((JsonArray) playersLocation).size() == 0) { // Players array is blank
+					String[] temp = team.get(0).getAsJsonArray().get(0).getAsJsonObject().get("team_key").getAsString().split("[.]");
+					String gameKey = temp[0];
+					String leagueId = temp[2];
+					String url = BASE_URI + "/league/" + gameKey + ".l." + leagueId + BASE_URI_FORMAT;
+					JsonObject leagueInfo = new JsonParser().parse(yahoo.getYahooData(url, "formatter", "league")).getAsJsonObject();
+					String renew = leagueInfo.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(0).getAsJsonObject().get("renew").getAsString();
+					if (!renew.isEmpty()) {
+						temp = renew.split("_");
+						Long previousYearGameKey = Long.parseLong(temp[0]);
+						Long previousYearLeagueId = Long.parseLong(temp[1]);
+						EmptyPlayersArrayException exe = new EmptyPlayersArrayException();
+						exe.setPreviousYearGameKey(previousYearGameKey);
+						exe.setPreviousYearLeagueId(previousYearLeagueId);
+						throw exe;
+					}
+				}
 
 				//Format the roster
 				JsonObject newRoster = new JsonObject();
@@ -548,6 +586,8 @@ public class LeagueService {
 				}
 				newTeam.add("roster", newRoster);
 				result = "{\"team\":" + newTeam.toString() + "}";
+			} catch (EmptyPlayersArrayException exe) {
+				throw exe;
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
