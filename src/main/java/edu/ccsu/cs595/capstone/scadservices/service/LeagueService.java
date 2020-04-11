@@ -459,10 +459,30 @@ public class LeagueService {
 		if (Objects.nonNull(rawYahooObj)) {
 			try {
 				JsonArray newPlayers = new JsonArray();
-				JsonObject teams = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray().get(1).getAsJsonObject().get("teams").getAsJsonObject();
+				JsonArray league = rawYahooObj.get("fantasy_content").getAsJsonObject().get("league").getAsJsonArray();
+				String renew = league.get(0).getAsJsonObject().get("renew").getAsString();
+				String previousYearGameKey = "";
+				String previousYearLeagueId = "";
+				if (!renew.isEmpty()) {
+					String[] temp = renew.split("_");
+					previousYearGameKey = temp[0];
+					previousYearLeagueId = temp[1];
+				}
+				JsonObject teams = league.get(1).getAsJsonObject().get("teams").getAsJsonObject();
 				for (Integer j = 0; j < 12; j++) {
-					JsonObject roster = teams.get(j.toString()).getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("roster").getAsJsonObject();
-					JsonObject players = roster.get("0").getAsJsonObject().get("players").getAsJsonObject();
+					JsonArray team = teams.get(j.toString()).getAsJsonObject().get("team").getAsJsonArray();
+					JsonObject roster = team.get(1).getAsJsonObject().get("roster").getAsJsonObject();
+					JsonElement playersLocation = roster.get("0").getAsJsonObject().get("players");
+					JsonObject players;
+					if (playersLocation.isJsonArray() && ((JsonArray) playersLocation).size() == 0) { // Players array is blank
+						String teamId = team.get(0).getAsJsonArray().get(1).getAsJsonObject().get("team_id").getAsString();
+						String url = BASE_URI + "/team/" + previousYearGameKey+ ".l." + previousYearLeagueId + ".t." + teamId + "/roster" + BASE_URI_FORMAT;
+						JsonObject payload = new JsonParser().parse(yahoo.getYahooData(url, "formatter", "roster")).getAsJsonObject();
+						players = payload.get("fantasy_content").getAsJsonObject().get("team").getAsJsonArray().get(1).getAsJsonObject().get("roster").getAsJsonObject().get("0").getAsJsonObject().get("players").getAsJsonObject();
+					} else {
+						players = playersLocation.getAsJsonObject();
+					}
+
 					for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 						JsonObject newPlayer = new JsonObject();
 						JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
