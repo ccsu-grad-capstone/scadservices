@@ -7,7 +7,6 @@ import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -218,7 +217,7 @@ public class SCADLeagueService {
 			result.setLeagueSalaryCap(slEntity.getLeagueSalaryCap());
 			result.setSalaryCapExemptionLimit(slEntity.getSalaryCapExemptionLimit());
 			result.setIrReliefPerc(slEntity.getIrReliefPerc());
-			result.setFranchiseTagReliefPerc(slEntity.getFranchiseTagReliefPerc());
+			result.setFranchiseTagDiscount(slEntity.getFranchiseTagDiscount());
 			result.setFranchiseTagSpots(slEntity.getFranchiseTagSpots());
 			result.setTradingDraftPickYears(slEntity.getTradingDraftPickYears());
 			result.setQbMin(slEntity.getQbMin());
@@ -268,7 +267,7 @@ public class SCADLeagueService {
 			result.setLeagueSalaryCap(slDto.getLeagueSalaryCap());
 			result.setSalaryCapExemptionLimit(slDto.getSalaryCapExemptionLimit());
 			result.setIrReliefPerc(slDto.getIrReliefPerc());
-			result.setFranchiseTagReliefPerc(slDto.getFranchiseTagReliefPerc());
+			result.setFranchiseTagDiscount(slDto.getFranchiseTagDiscount());
 			result.setFranchiseTagSpots(slDto.getFranchiseTagSpots());
 			result.setTradingDraftPickYears(slDto.getTradingDraftPickYears());
 			result.setQbMin(slDto.getQbMin());
@@ -319,8 +318,8 @@ public class SCADLeagueService {
 			if (Objects.nonNull(slDto.getIrReliefPerc())) {
 				existingEntity.setIrReliefPerc(slDto.getIrReliefPerc());
 			}
-			if (Objects.nonNull(slDto.getFranchiseTagReliefPerc())) {
-				existingEntity.setFranchiseTagReliefPerc(slDto.getFranchiseTagReliefPerc());
+			if (Objects.nonNull(slDto.getFranchiseTagDiscount())) {
+				existingEntity.setFranchiseTagDiscount(slDto.getFranchiseTagDiscount());
 			}
 			if (Objects.nonNull(slDto.getFranchiseTagSpots())) {
 				existingEntity.setFranchiseTagSpots(slDto.getFranchiseTagSpots());

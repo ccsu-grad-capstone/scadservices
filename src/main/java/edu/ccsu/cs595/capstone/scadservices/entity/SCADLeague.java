@@ -30,7 +30,7 @@ public class SCADLeague extends AuditedEntity {
 	private Long leagueSalaryCap;
 	private Long salaryCapExemptionLimit;
 	private Long irReliefPerc;
-	private Long franchiseTagReliefPerc;
+	private Long franchiseTagDiscount;
 	private Long franchiseTagSpots;
 	private Long tradingDraftPickYears;
 	private Long qbMin;
@@ -160,13 +160,13 @@ public class SCADLeague extends AuditedEntity {
 		this.irReliefPerc = irReliefPerc;
 	}
 
-	@Column(name = "franchise_tag_relief_perc", nullable = false)
-	public Long getFranchiseTagReliefPerc() {
-		return franchiseTagReliefPerc;
+	@Column(name = "franchise_tag_discount", nullable = false)
+	public Long getFranchiseTagDiscount() {
+		return franchiseTagDiscount;
 	}
 
-	public void setFranchiseTagReliefPerc(Long franchiseTagReliefPerc) {
-		this.franchiseTagReliefPerc = franchiseTagReliefPerc;
+	public void setFranchiseTagDiscount(Long franchiseTagDiscount) {
+		this.franchiseTagDiscount = franchiseTagDiscount;
 	}
 
 	@Column(name = "franchise_tag_spots", nullable = false)
@@ -337,7 +337,7 @@ public class SCADLeague extends AuditedEntity {
 		int result = super.hashCode();
 		result = prime * result + ((defMax == null) ? 0 : defMax.hashCode());
 		result = prime * result + ((defMin == null) ? 0 : defMin.hashCode());
-		result = prime * result + ((franchiseTagReliefPerc == null) ? 0 : franchiseTagReliefPerc.hashCode());
+		result = prime * result + ((franchiseTagDiscount == null) ? 0 : franchiseTagDiscount.hashCode());
 		result = prime * result + ((franchiseTagSpots == null) ? 0 : franchiseTagSpots.hashCode());
 		result = prime * result + ((yahooGameId == null) ? 0 : yahooGameId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -386,10 +386,10 @@ public class SCADLeague extends AuditedEntity {
 				return false;
 		} else if (!defMin.equals(other.defMin))
 			return false;
-		if (franchiseTagReliefPerc == null) {
-			if (other.franchiseTagReliefPerc != null)
+		if (franchiseTagDiscount == null) {
+			if (other.franchiseTagDiscount != null)
 				return false;
-		} else if (!franchiseTagReliefPerc.equals(other.franchiseTagReliefPerc))
+		} else if (!franchiseTagDiscount.equals(other.franchiseTagDiscount))
 			return false;
 		if (franchiseTagSpots == null) {
 			if (other.franchiseTagSpots != null)
@@ -530,7 +530,7 @@ public class SCADLeague extends AuditedEntity {
 				+ ", leagueManagers=" + leagueManagers + ", rookieDraftRds=" + rookieDraftRds + ", rookieDraftStrategy="
 				+ rookieDraftStrategy + ", rookieWageScale=" + rookieWageScale + ", teamSalaryCap=" + teamSalaryCap
 				+ ", leagueSalaryCap=" + leagueSalaryCap + ", salaryCapExemptionLimit=" + salaryCapExemptionLimit
-				+ ", irReliefPerc=" + irReliefPerc + ", franchiseTagReliefPerc=" + franchiseTagReliefPerc
+				+ ", irReliefPerc=" + irReliefPerc + ", franchiseTagDiscount=" + franchiseTagDiscount
 				+ ", franchiseTagSpots=" + franchiseTagSpots + ", tradingDraftPickYears=" + tradingDraftPickYears
 				+ ", qbMin=" + qbMin + ", qbMax=" + qbMax + ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin
 				+ ", wrMax=" + wrMax + ", teMin=" + teMin + ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax

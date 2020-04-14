@@ -25,7 +25,7 @@ public class SCADLeagueDto extends AuditedDto {
 	private Long leagueSalaryCap;
 	private Long salaryCapExemptionLimit;
 	private Long irReliefPerc;
-	private Long franchiseTagReliefPerc;
+	private Long franchiseTagDiscount;
 	private Long franchiseTagSpots;
 	private Long tradingDraftPickYears;
 	private Long qbMin;
@@ -152,12 +152,12 @@ public class SCADLeagueDto extends AuditedDto {
 		this.irReliefPerc = irReliefPerc;
 	}
 
-	public Long getFranchiseTagReliefPerc() {
-		return franchiseTagReliefPerc;
+	public Long getFranchiseTagDiscount() {
+		return franchiseTagDiscount;
 	}
 
-	public void setFranchiseTagReliefPerc(Long franchiseTagReliefPerc) {
-		this.franchiseTagReliefPerc = franchiseTagReliefPerc;
+	public void setFranchiseTagDiscount(Long franchiseTagDiscount) {
+		this.franchiseTagDiscount = franchiseTagDiscount;
 	}
 
 	public Long getFranchiseTagSpots() {
@@ -319,7 +319,7 @@ public class SCADLeagueDto extends AuditedDto {
 				+ rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy + ", rookieWageScale="
 				+ rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap=" + leagueSalaryCap
 				+ ", salaryCapExemptionLimit=" + salaryCapExemptionLimit + ", irReliefPerc=" + irReliefPerc
-				+ ", franchiseTagReliefPerc=" + franchiseTagReliefPerc + ", franchiseTagSpots=" + franchiseTagSpots
+				+ ", franchiseTagDiscount=" + franchiseTagDiscount + ", franchiseTagSpots=" + franchiseTagSpots
 				+ ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin + ", qbMax=" + qbMax
 				+ ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax + ", teMin=" + teMin
 				+ ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin + ", defMax=" + defMax

@@ -126,6 +126,21 @@
         <createIndex indexName="indx04_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
             <column name="yahoo_game_id"/>
         </createIndex>        
-   </changeSet>    
+   </changeSet> 
+   
+   <changeSet author="rk" id="scadleague-04">
+   		<renameColumn 	columnDataType="int" 
+   						newColumnName="franchise_tag_discount" 
+   						oldColumnName="franchise_tag_relief_perc"
+   						schemaName="scad_schema"
+   						tableName="scad_league"/>
+   </changeSet>   
+   
+   <changeSet author="rk" id="scadleague-05">
+   		<addNotNullConstraint 	columnDataType="int" 
+   						columnName="franchise_tag_discount" 
+   						schemaName="scad_schema"
+   						tableName="scad_league"/>
+   </changeSet>   
     
 </databaseChangeLog>
