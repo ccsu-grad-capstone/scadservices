@@ -42,6 +42,7 @@ public class SCADLeagueDto extends AuditedDto {
 	private Long defMax;
 	private Boolean isDefault; 
 	private String ownerGuid;
+	private Long renewSCADLeagueId;
 	private List<SCADLeagueTeamDto> scadLeagueTeams;
 	private List<SCADLeaguePlayerDto> scadLeaguePlayers;
 	private Boolean isCurrentlyLoggedInUserACommissioner = false;
@@ -287,20 +288,28 @@ public class SCADLeagueDto extends AuditedDto {
 	public void setOwnerGuid(String ownerGuid) {
 		this.ownerGuid = ownerGuid;
 	}
-	
-	public List<SCADLeagueTeamDto> getScadLeagueTeamsDto() {
+
+	public Long getRenewSCADLeagueId() {
+		return renewSCADLeagueId;
+	}
+
+	public void setRenewSCADLeagueId(Long renewSCADLeagueId) {
+		this.renewSCADLeagueId = renewSCADLeagueId;
+	}
+
+	public List<SCADLeagueTeamDto> getScadLeagueTeams() {
 		return scadLeagueTeams;
 	}
 
-	public void setScadLeagueTeamsDto(List<SCADLeagueTeamDto> scadLeagueTeamsDto) {
+	public void setScadLeagueTeams(List<SCADLeagueTeamDto> scadLeagueTeamsDto) {
 		this.scadLeagueTeams = scadLeagueTeamsDto;
 	}
 
-	public List<SCADLeaguePlayerDto> getScadLeaguePlayersDto() {
+	public List<SCADLeaguePlayerDto> getScadLeaguePlayers() {
 		return scadLeaguePlayers;
 	}
 
-	public void setScadLeaguePlayersDto(List<SCADLeaguePlayerDto> scadLeaguePlayersDto) {
+	public void setScadLeaguePlayers(List<SCADLeaguePlayerDto> scadLeaguePlayersDto) {
 		this.scadLeaguePlayers = scadLeaguePlayersDto;
 	}
 
@@ -314,16 +323,19 @@ public class SCADLeagueDto extends AuditedDto {
 
 	@Override
 	public String toString() {
-		return "SCADLeagueDto [yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId + ", leagueName=" + yahooLeagueName
-				+ ", seasonYear=" + seasonYear + ", leagueManagers=" + leagueManagers + ", rookieDraftRds="
-				+ rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy + ", rookieWageScale="
-				+ rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap=" + leagueSalaryCap
-				+ ", salaryCapExemptionLimit=" + salaryCapExemptionLimit + ", irReliefPerc=" + irReliefPerc
-				+ ", franchiseTagDiscount=" + franchiseTagDiscount + ", franchiseTagSpots=" + franchiseTagSpots
-				+ ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin + ", qbMax=" + qbMax
-				+ ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax + ", teMin=" + teMin
-				+ ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin + ", defMax=" + defMax
-				+ ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid + "isCurrentlyLoggedInUserACommissioner=" + isCurrentlyLoggedInUserACommissioner + "]";
+		return "SCADLeagueDto [id=" + id + ", yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId
+				+ ", yahooLeagueName=" + yahooLeagueName + ", seasonYear=" + seasonYear + ", leagueManagers="
+				+ leagueManagers + ", rookieDraftRds=" + rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy
+				+ ", rookieWageScale=" + rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap="
+				+ leagueSalaryCap + ", salaryCapExemptionLimit=" + salaryCapExemptionLimit + ", irReliefPerc="
+				+ irReliefPerc + ", franchiseTagDiscount=" + franchiseTagDiscount + ", franchiseTagSpots="
+				+ franchiseTagSpots + ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin
+				+ ", qbMax=" + qbMax + ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax
+				+ ", teMin=" + teMin + ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin
+				+ ", defMax=" + defMax + ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid
+				+ ", renewSCADLeagueId=" + renewSCADLeagueId + ", scadLeagueTeams=" + scadLeagueTeams
+				+ ", scadLeaguePlayers=" + scadLeaguePlayers + ", isCurrentlyLoggedInUserACommissioner="
+				+ isCurrentlyLoggedInUserACommissioner + "]";
 	}
 	
 }

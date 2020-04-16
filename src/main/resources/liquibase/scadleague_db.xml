@@ -142,5 +142,13 @@
    						schemaName="scad_schema"
    						tableName="scad_league"/>
    </changeSet>   
+   
+   <changeSet author="rk" id="scadleague-06">
+   		<addColumn 	schemaName="scad_schema" tableName="scad_league">
+   			<column defaultValueNumeric="0" name="renew_scad_league_id" type="int">
+   				<constraints nullable="false"/>
+   			</column>
+   		</addColumn>
+   </changeSet>  
     
 </databaseChangeLog>

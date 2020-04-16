@@ -18,6 +18,7 @@ public class SCADLeagueTeamDto extends AuditedDto {
 	private Boolean isFranchiseTag; 
 	private Long exceptionIn;
 	private Long exceptionOut;
+	private Long renewSCADLeagueTeamId;
 	
 	@Override
 	public Long getId() {
@@ -84,12 +85,21 @@ public class SCADLeagueTeamDto extends AuditedDto {
 	public void setExceptionOut(Long exceptionOut) {
 		this.exceptionOut = exceptionOut;
 	}
+	
+	public Long getRenewSCADLeagueTeamId() {
+		return renewSCADLeagueTeamId;
+	}
+
+	public void setRenewSCADLeagueTeamId(Long renewSCADLeagueTeamId) {
+		this.renewSCADLeagueTeamId = renewSCADLeagueTeamId;
+	}
 
 	@Override
 	public String toString() {
-		return "SCADLeagueTeamDto [yahooLeagueTeamId=" + yahooLeagueTeamId + ", yahooLeagueId=" + yahooLeagueId
-				+ ", scadLeagueId=" + scadLeagueId + ", salary=" + salary + ", isFranchiseTag=" + isFranchiseTag
-				+ ", exceptionIn=" + exceptionIn + ", exceptionOut=" + exceptionOut + "]";
+		return "SCADLeagueTeamDto [id=" + id + ", yahooLeagueTeamId=" + yahooLeagueTeamId + ", yahooLeagueId="
+				+ yahooLeagueId + ", scadLeagueId=" + scadLeagueId + ", salary=" + salary + ", isFranchiseTag="
+				+ isFranchiseTag + ", exceptionIn=" + exceptionIn + ", exceptionOut=" + exceptionOut
+				+ ", renewSCADLeagueTeamId=" + renewSCADLeagueTeamId + "]";
 	}
 
 }

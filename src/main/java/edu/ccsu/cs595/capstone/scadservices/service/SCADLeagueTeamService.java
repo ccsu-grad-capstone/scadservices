@@ -177,6 +177,7 @@ public class SCADLeagueTeamService {
 			result.setCreatedAt(sltEntity.getCreatedAt());
 			result.setModifiedBy(sltEntity.getModifiedBy());
 			result.setModifiedAt(sltEntity.getModifiedAt());
+			result.setRenewSCADLeagueTeamId(sltEntity.getRenewSCADLeagueTeamId());
 			
 			return result;
 
@@ -199,6 +200,7 @@ public class SCADLeagueTeamService {
 			result.setIsFranchiseTag(sltDto.getIsFranchiseTag());
 			result.setExceptionIn(sltDto.getExceptionIn());
 			result.setExceptionOut(sltDto.getExceptionOut());
+			result.setRenewSCADLeagueTeamId(sltDto.getRenewSCADLeagueTeamId());
 			
 			return result;
 

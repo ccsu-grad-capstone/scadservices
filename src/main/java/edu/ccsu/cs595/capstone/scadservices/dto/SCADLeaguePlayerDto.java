@@ -17,7 +17,9 @@ public class SCADLeaguePlayerDto extends AuditedDto {
 	private Long yahooTeamId;
 	private Long scadTeamId;
 	private Long salary;
-	private Boolean isFranchiseTag; 
+	private Boolean isFranchiseTag;
+	private Long renewSCADLeaguePlayerId;
+	private Long previousYearSalary;
 	
 	@Override
 	public Long getId() {
@@ -85,11 +87,29 @@ public class SCADLeaguePlayerDto extends AuditedDto {
 		this.scadTeamId = scadTeamId;
 	}
 
+	public Long getRenewSCADLeaguePlayerId() {
+		return renewSCADLeaguePlayerId;
+	}
+
+	public void setRenewSCADLeaguePlayerId(Long renewSCADLeaguePlayerId) {
+		this.renewSCADLeaguePlayerId = renewSCADLeaguePlayerId;
+	}
+
+	public Long getPreviousYearSalary() {
+		return previousYearSalary;
+	}
+
+	public void setPreviousYearSalary(Long previousYearSalary) {
+		this.previousYearSalary = previousYearSalary;
+	}
+
 	@Override
 	public String toString() {
 		return "SCADLeaguePlayerDto [id=" + id + ", yahooLeaguePlayerId=" + yahooLeaguePlayerId + ", yahooLeagueId="
 				+ yahooLeagueId + ", scadLeagueId=" + scadLeagueId + ", yahooTeamId=" + yahooTeamId + ", scadTeamId="
-				+ scadTeamId + ", salary=" + salary + ", isFranchiseTag=" + isFranchiseTag + "]";
+				+ scadTeamId + ", salary=" + salary + ", isFranchiseTag=" + isFranchiseTag
+				+ ", renewSCADLeaguePlayerId=" + renewSCADLeaguePlayerId + ", previousYearSalary=" + previousYearSalary
+				+ "]";
 	}
 	
 }
