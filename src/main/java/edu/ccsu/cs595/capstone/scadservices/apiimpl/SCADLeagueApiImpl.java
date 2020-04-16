@@ -40,6 +40,25 @@ public class SCADLeagueApiImpl implements SCADLeagueApi {
 		return Response.status(Response.Status.OK).entity(result).build();
 		
 	}
+
+	@Override
+	public Response updateSCADLeagueDefaultIndicator(Long id)
+			throws AuthorizationFailedException, RuntimeException {
+	
+		hHlpr.isHeaderAccessValid(sm);
+		
+		SCADLeagueDto result = slSvc.getSCADLeague(id);
+
+		if (Objects.isNull(result)) {
+
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+		
+		SCADLeagueDto league = slSvc.updateSCADLeagueDefaultIndicator(result);
+
+		return Response.status(Response.Status.OK).entity(league).build();
+			
+	}
 	
 	@Override
 	public Response getUserSCADLeaguesBySeason() throws AuthorizationFailedException, RuntimeException {

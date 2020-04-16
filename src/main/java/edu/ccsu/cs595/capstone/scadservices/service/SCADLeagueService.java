@@ -63,7 +63,32 @@ public class SCADLeagueService {
 		return result;
 
 	}
+	
+	public SCADLeagueDto updateSCADLeagueDefaultIndicator(SCADLeagueDto slDto)
+			throws AuthorizationFailedException, RuntimeException {
 
+		SCADLeagueDto result = this.getDefaultUserSCADLeagueBySeason();
+		result = this.updateSCADLeagueDefaultIndicator(result, false);
+		result = this.updateSCADLeagueDefaultIndicator(slDto, true);
+		return result;
+
+	}
+	
+	private SCADLeagueDto updateSCADLeagueDefaultIndicator(SCADLeagueDto slDto, boolean isDefault)
+			throws AuthorizationFailedException, RuntimeException {
+
+		SCADLeagueDto result = null;
+		SCADLeague existingEntity = slDao.find(slDto.getId());
+		this.dtoToEntityForUpdate(slDto, existingEntity);
+		existingEntity.setIsDefault(isDefault);
+		AuditContext ac = new AuditContext(yahoo.getYahooUserGuid(),yahoo.getYahooUserName());
+		AuditContext.setAuditContext(ac);
+		existingEntity = slDao.upsert(existingEntity);
+		result = this.entityToDto(existingEntity);
+		return result;
+
+	}
+	
 	public SCADLeagueDto getSCADLeagueByYahooLeague(Long leagueId) throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeagueDto result = null;

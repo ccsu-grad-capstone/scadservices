@@ -32,6 +32,14 @@ public interface SCADLeagueApi {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Response getDefaultUserSCADLeagueBySeason() throws AuthorizationFailedException, RuntimeException;
 
+	@PUT
+	@Path(EndpointConstants.LEAGUE + "/default/update/{id}")
+	@ApiOperation(value = "Update a SCAD League default indicator for specified Id", notes = "Update League default indicator in SCAD system", response = SCADLeagueDto.class)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response updateSCADLeagueDefaultIndicator(
+			@ApiParam(value = EndpointConstants.RESOURCE_ID, required = true) @PathParam(value = EndpointConstants.ID) Long id)
+			throws AuthorizationFailedException, RuntimeException;
+
 	@GET
 	@Path(EndpointConstants.LEAGUE + "/all")
 	@ApiOperation(value = "Get user Leagues from SCAD by season", notes = "Returns user Leagues from SCAD by season", response = SCADLeagueListDto.class)
