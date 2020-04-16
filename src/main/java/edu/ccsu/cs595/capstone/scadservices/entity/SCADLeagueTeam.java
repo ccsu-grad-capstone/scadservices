@@ -26,6 +26,7 @@ public class SCADLeagueTeam extends AuditedEntity {
 	private Boolean isFranchiseTag;
 	private Long exceptionIn;
 	private Long exceptionOut;
+	private Long renewSCADLeagueTeamId;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -103,6 +104,15 @@ public class SCADLeagueTeam extends AuditedEntity {
 		this.exceptionOut = exceptionOut;
 	}
 
+	@Column(name = "renew_scad_league_team_id", nullable = false)
+	public Long getRenewSCADLeagueTeamId() {
+		return renewSCADLeagueTeamId;
+	}
+
+	public void setRenewSCADLeagueTeamId(Long renewSCADLeagueTeamId) {
+		this.renewSCADLeagueTeamId = renewSCADLeagueTeamId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -111,10 +121,11 @@ public class SCADLeagueTeam extends AuditedEntity {
 		result = prime * result + ((exceptionOut == null) ? 0 : exceptionOut.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((isFranchiseTag == null) ? 0 : isFranchiseTag.hashCode());
-		result = prime * result + ((yahooLeagueId == null) ? 0 : yahooLeagueId.hashCode());
-		result = prime * result + ((yahooLeagueTeamId == null) ? 0 : yahooLeagueTeamId.hashCode());
+		result = prime * result + ((renewSCADLeagueTeamId == null) ? 0 : renewSCADLeagueTeamId.hashCode());
 		result = prime * result + ((salary == null) ? 0 : salary.hashCode());
 		result = prime * result + ((scadLeagueId == null) ? 0 : scadLeagueId.hashCode());
+		result = prime * result + ((yahooLeagueId == null) ? 0 : yahooLeagueId.hashCode());
+		result = prime * result + ((yahooLeagueTeamId == null) ? 0 : yahooLeagueTeamId.hashCode());
 		return result;
 	}
 
@@ -147,15 +158,10 @@ public class SCADLeagueTeam extends AuditedEntity {
 				return false;
 		} else if (!isFranchiseTag.equals(other.isFranchiseTag))
 			return false;
-		if (yahooLeagueId == null) {
-			if (other.yahooLeagueId != null)
+		if (renewSCADLeagueTeamId == null) {
+			if (other.renewSCADLeagueTeamId != null)
 				return false;
-		} else if (!yahooLeagueId.equals(other.yahooLeagueId))
-			return false;
-		if (yahooLeagueTeamId == null) {
-			if (other.yahooLeagueTeamId != null)
-				return false;
-		} else if (!yahooLeagueTeamId.equals(other.yahooLeagueTeamId))
+		} else if (!renewSCADLeagueTeamId.equals(other.renewSCADLeagueTeamId))
 			return false;
 		if (salary == null) {
 			if (other.salary != null)
@@ -167,14 +173,25 @@ public class SCADLeagueTeam extends AuditedEntity {
 				return false;
 		} else if (!scadLeagueId.equals(other.scadLeagueId))
 			return false;
+		if (yahooLeagueId == null) {
+			if (other.yahooLeagueId != null)
+				return false;
+		} else if (!yahooLeagueId.equals(other.yahooLeagueId))
+			return false;
+		if (yahooLeagueTeamId == null) {
+			if (other.yahooLeagueTeamId != null)
+				return false;
+		} else if (!yahooLeagueTeamId.equals(other.yahooLeagueTeamId))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "SCADLeagueTeam [id=" + id + ", yahooLeagueTeamId=" + yahooLeagueTeamId + ", yahooLeagueId=" + yahooLeagueId
-				+ ", scadLeagueId=" + scadLeagueId + ", salary=" + salary + ", isFranchiseTag=" + isFranchiseTag
-				+ ", exceptionIn=" + exceptionIn + ", exceptionOut=" + exceptionOut + "]";
+		return "SCADLeagueTeam [id=" + id + ", yahooLeagueTeamId=" + yahooLeagueTeamId + ", yahooLeagueId="
+				+ yahooLeagueId + ", scadLeagueId=" + scadLeagueId + ", salary=" + salary + ", isFranchiseTag="
+				+ isFranchiseTag + ", exceptionIn=" + exceptionIn + ", exceptionOut=" + exceptionOut
+				+ ", renewSCADLeagueTeamId=" + renewSCADLeagueTeamId + "]";
 	}
 
 }

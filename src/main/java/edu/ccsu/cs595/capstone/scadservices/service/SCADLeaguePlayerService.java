@@ -248,6 +248,8 @@ public class SCADLeaguePlayerService {
 			result.setCreatedAt(slpEntity.getCreatedAt());
 			result.setModifiedBy(slpEntity.getModifiedBy());
 			result.setModifiedAt(slpEntity.getModifiedAt());
+			result.setRenewSCADLeaguePlayerId(slpEntity.getRenewSCADLeaguePlayerId());
+			result.setPreviousYearSalary(slpEntity.getPreviousYearSalary());
 			this.setPlayerTeamDetails(result);
 			
 			return result;
@@ -269,6 +271,8 @@ public class SCADLeaguePlayerService {
 			result.setScadLeagueId(slpDto.getScadLeagueId());
 			result.setSalary(slpDto.getSalary());
 			result.setIsFranchiseTag(slpDto.getIsFranchiseTag());
+			result.setRenewSCADLeaguePlayerId(slpDto.getRenewSCADLeaguePlayerId());
+			result.setPreviousYearSalary(slpDto.getPreviousYearSalary());
 			
 			return result;
 

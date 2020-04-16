@@ -47,6 +47,7 @@ public class SCADLeague extends AuditedEntity {
 	private Long defMax;
 	private Boolean isDefault;
 	private String ownerGuid;
+	private Long renewSCADLeagueId;
 //	private Set<SCADLeagueTeam> scadLeagueTeams;
 //	private Set<SCADLeaguePlayer> scadLeaguePlayers;
 
@@ -312,24 +313,15 @@ public class SCADLeague extends AuditedEntity {
 	public void setOwnerGuid(String ownerGuid) {
 		this.ownerGuid = ownerGuid;
 	}
+	
+	@Column(name = "renew_scad_league_id", nullable = false)
+	public Long getRenewSCADLeagueId() {
+		return renewSCADLeagueId;
+	}
 
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")    
-//	public Set<SCADLeagueTeam> getScadLeagueTeams() {
-//		return scadLeagueTeams;
-//	}
-//
-//	public void setScadLeagueTeams(Set<SCADLeagueTeam> scadLeagueTeams) {
-//		this.scadLeagueTeams = scadLeagueTeams;
-//	}
-//
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")   
-//	public Set<SCADLeaguePlayer> getScadLeaguePlayers() {
-//		return scadLeaguePlayers;
-//	}
-//
-//	public void setScadLeaguePlayers(Set<SCADLeaguePlayer> scadLeaguePlayers) {
-//		this.scadLeaguePlayers = scadLeaguePlayers;
-//	}
+	public void setRenewSCADLeagueId(Long renewSCADLeagueId) {
+		this.renewSCADLeagueId = renewSCADLeagueId;
+	}
 
 	@Override
 	public int hashCode() {
@@ -339,13 +331,11 @@ public class SCADLeague extends AuditedEntity {
 		result = prime * result + ((defMin == null) ? 0 : defMin.hashCode());
 		result = prime * result + ((franchiseTagDiscount == null) ? 0 : franchiseTagDiscount.hashCode());
 		result = prime * result + ((franchiseTagSpots == null) ? 0 : franchiseTagSpots.hashCode());
-		result = prime * result + ((yahooGameId == null) ? 0 : yahooGameId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((irReliefPerc == null) ? 0 : irReliefPerc.hashCode());
 		result = prime * result + ((isDefault == null) ? 0 : isDefault.hashCode());
 		result = prime * result + ((kMax == null) ? 0 : kMax.hashCode());
 		result = prime * result + ((kMin == null) ? 0 : kMin.hashCode());
-		result = prime * result + ((yahooLeagueId == null) ? 0 : yahooLeagueId.hashCode());
 		result = prime * result + ((leagueManagers == null) ? 0 : leagueManagers.hashCode());
 		result = prime * result + ((leagueSalaryCap == null) ? 0 : leagueSalaryCap.hashCode());
 		result = prime * result + ((ownerGuid == null) ? 0 : ownerGuid.hashCode());
@@ -353,6 +343,7 @@ public class SCADLeague extends AuditedEntity {
 		result = prime * result + ((qbMin == null) ? 0 : qbMin.hashCode());
 		result = prime * result + ((rbMax == null) ? 0 : rbMax.hashCode());
 		result = prime * result + ((rbMin == null) ? 0 : rbMin.hashCode());
+		result = prime * result + ((renewSCADLeagueId == null) ? 0 : renewSCADLeagueId.hashCode());
 		result = prime * result + ((rookieDraftRds == null) ? 0 : rookieDraftRds.hashCode());
 		result = prime * result + ((rookieDraftStrategy == null) ? 0 : rookieDraftStrategy.hashCode());
 		result = prime * result + ((rookieWageScale == null) ? 0 : rookieWageScale.hashCode());
@@ -364,6 +355,8 @@ public class SCADLeague extends AuditedEntity {
 		result = prime * result + ((tradingDraftPickYears == null) ? 0 : tradingDraftPickYears.hashCode());
 		result = prime * result + ((wrMax == null) ? 0 : wrMax.hashCode());
 		result = prime * result + ((wrMin == null) ? 0 : wrMin.hashCode());
+		result = prime * result + ((yahooGameId == null) ? 0 : yahooGameId.hashCode());
+		result = prime * result + ((yahooLeagueId == null) ? 0 : yahooLeagueId.hashCode());
 		return result;
 	}
 
@@ -396,11 +389,6 @@ public class SCADLeague extends AuditedEntity {
 				return false;
 		} else if (!franchiseTagSpots.equals(other.franchiseTagSpots))
 			return false;
-		if (yahooGameId == null) {
-			if (other.yahooGameId != null)
-				return false;
-		} else if (!yahooGameId.equals(other.yahooGameId))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -425,11 +413,6 @@ public class SCADLeague extends AuditedEntity {
 			if (other.kMin != null)
 				return false;
 		} else if (!kMin.equals(other.kMin))
-			return false;
-		if (yahooLeagueId == null) {
-			if (other.yahooLeagueId != null)
-				return false;
-		} else if (!yahooLeagueId.equals(other.yahooLeagueId))
 			return false;
 		if (leagueManagers == null) {
 			if (other.leagueManagers != null)
@@ -465,6 +448,11 @@ public class SCADLeague extends AuditedEntity {
 			if (other.rbMin != null)
 				return false;
 		} else if (!rbMin.equals(other.rbMin))
+			return false;
+		if (renewSCADLeagueId == null) {
+			if (other.renewSCADLeagueId != null)
+				return false;
+		} else if (!renewSCADLeagueId.equals(other.renewSCADLeagueId))
 			return false;
 		if (rookieDraftRds == null) {
 			if (other.rookieDraftRds != null)
@@ -521,21 +509,51 @@ public class SCADLeague extends AuditedEntity {
 				return false;
 		} else if (!wrMin.equals(other.wrMin))
 			return false;
+		if (yahooGameId == null) {
+			if (other.yahooGameId != null)
+				return false;
+		} else if (!yahooGameId.equals(other.yahooGameId))
+			return false;
+		if (yahooLeagueId == null) {
+			if (other.yahooLeagueId != null)
+				return false;
+		} else if (!yahooLeagueId.equals(other.yahooLeagueId))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "SCADLeague [id=" + id + ", yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId + ", seasonYear=" + seasonYear
-				+ ", leagueManagers=" + leagueManagers + ", rookieDraftRds=" + rookieDraftRds + ", rookieDraftStrategy="
-				+ rookieDraftStrategy + ", rookieWageScale=" + rookieWageScale + ", teamSalaryCap=" + teamSalaryCap
-				+ ", leagueSalaryCap=" + leagueSalaryCap + ", salaryCapExemptionLimit=" + salaryCapExemptionLimit
-				+ ", irReliefPerc=" + irReliefPerc + ", franchiseTagDiscount=" + franchiseTagDiscount
-				+ ", franchiseTagSpots=" + franchiseTagSpots + ", tradingDraftPickYears=" + tradingDraftPickYears
-				+ ", qbMin=" + qbMin + ", qbMax=" + qbMax + ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin
-				+ ", wrMax=" + wrMax + ", teMin=" + teMin + ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax
-				+ ", defMin=" + defMin + ", defMax=" + defMax + ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid
+		return "SCADLeague [id=" + id + ", yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId
+				+ ", seasonYear=" + seasonYear + ", leagueManagers=" + leagueManagers + ", rookieDraftRds="
+				+ rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy + ", rookieWageScale="
+				+ rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap=" + leagueSalaryCap
+				+ ", salaryCapExemptionLimit=" + salaryCapExemptionLimit + ", irReliefPerc=" + irReliefPerc
+				+ ", franchiseTagDiscount=" + franchiseTagDiscount + ", franchiseTagSpots=" + franchiseTagSpots
+				+ ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin + ", qbMax=" + qbMax
+				+ ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax + ", teMin=" + teMin
+				+ ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin + ", defMax=" + defMax
+				+ ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid + ", renewSCADLeagueId=" + renewSCADLeagueId
 				+ "]";
 	}
+	
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")    
+//	public Set<SCADLeagueTeam> getScadLeagueTeams() {
+//		return scadLeagueTeams;
+//	}
+//
+//	public void setScadLeagueTeams(Set<SCADLeagueTeam> scadLeagueTeams) {
+//		this.scadLeagueTeams = scadLeagueTeams;
+//	}
+//
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")   
+//	public Set<SCADLeaguePlayer> getScadLeaguePlayers() {
+//		return scadLeaguePlayers;
+//	}
+//
+//	public void setScadLeaguePlayers(Set<SCADLeaguePlayer> scadLeaguePlayers) {
+//		this.scadLeaguePlayers = scadLeaguePlayers;
+//	}
+
 
 }

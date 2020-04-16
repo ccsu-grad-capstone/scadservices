@@ -104,8 +104,8 @@ public class SCADLeagueService {
 			result.setYahooLeagueName(slDto.getYahooLeagueName());
 			List<SCADLeagueTeamDto> ltList = createLeagueTeams(result);
 			List<SCADLeaguePlayerDto> lpList = createLeaguePlayers(result);
-			result.setScadLeagueTeamsDto(ltList);
-			result.setScadLeaguePlayersDto(lpList);
+			result.setScadLeagueTeams(ltList);
+			result.setScadLeaguePlayers(lpList);
 			return result;
 		}
 
@@ -242,6 +242,9 @@ public class SCADLeagueService {
 			if (slEntity.getOwnerGuid().equals(yahoo.getYahooUserGuid())) {
 				result.setIsCurrentlyLoggedInUserACommissioner(true);
 			}
+			
+			result.setRenewSCADLeagueId(slEntity.getRenewSCADLeagueId());
+			
 			return result;
 
 		}
@@ -284,6 +287,7 @@ public class SCADLeagueService {
 			result.setDefMax(slDto.getDefMax());
 			result.setIsDefault(slDto.getIsDefault());
 			result.setOwnerGuid(slDto.getOwnerGuid());
+			result.setRenewSCADLeagueId(slDto.getRenewSCADLeagueId());
 			
 			return result;
 

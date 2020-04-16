@@ -51,6 +51,22 @@
         <createIndex indexName="indx03_slp" schemaName="scad_schema" tableName="scad_league_player" unique="false">
             <column name="yahoo_league_id"/>
         </createIndex> 
-   </changeSet>    
+   </changeSet>
+   
+   <changeSet author="rk" id="scadleagueplayer-04">
+   		<addColumn 	schemaName="scad_schema" tableName="scad_league_player">
+   			<column defaultValueNumeric="0" name="previous_year_salary" type="int">
+   				<constraints nullable="false"/>
+   			</column>
+   		</addColumn>
+   </changeSet>  
+   
+   <changeSet author="rk" id="scadleagueplayer-05">
+   		<addColumn 	schemaName="scad_schema" tableName="scad_league_player">
+   			<column defaultValueNumeric="0" name="renew_scad_league_player_id" type="int">
+   				<constraints nullable="false"/>
+   			</column>
+   		</addColumn>
+   </changeSet>       
     
 </databaseChangeLog>

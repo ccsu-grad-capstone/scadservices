@@ -57,6 +57,14 @@
         <createIndex indexName="indx03_slt" schemaName="scad_schema" tableName="scad_league_team" unique="false">
             <column name="yahoo_league_id"/>
         </createIndex> 
+   </changeSet>  
+   
+   <changeSet author="rk" id="scadleagueteam-04">
+   		<addColumn 	schemaName="scad_schema" tableName="scad_league_team">
+   			<column defaultValueNumeric="0" name="renew_scad_league_team_id" type="int">
+   				<constraints nullable="false"/>
+   			</column>
+   		</addColumn>
    </changeSet>    
     
 </databaseChangeLog>
