@@ -48,6 +48,7 @@ public class SCADLeague extends AuditedEntity {
 	private Boolean isDefault;
 	private String ownerGuid;
 	private Long renewSCADLeagueId;
+	private Long rosterSpotLimit;
 //	private Set<SCADLeagueTeam> scadLeagueTeams;
 //	private Set<SCADLeaguePlayer> scadLeaguePlayers;
 
@@ -322,6 +323,15 @@ public class SCADLeague extends AuditedEntity {
 	public void setRenewSCADLeagueId(Long renewSCADLeagueId) {
 		this.renewSCADLeagueId = renewSCADLeagueId;
 	}
+	
+	@Column(name = "roster_spot_limit", nullable = false)
+	public Long getRosterSpotLimit() {
+		return rosterSpotLimit;
+	}
+
+	public void setRosterSpotLimit(Long rosterSpotLimit) {
+		this.rosterSpotLimit = rosterSpotLimit;
+	}
 
 	@Override
 	public int hashCode() {
@@ -347,6 +357,7 @@ public class SCADLeague extends AuditedEntity {
 		result = prime * result + ((rookieDraftRds == null) ? 0 : rookieDraftRds.hashCode());
 		result = prime * result + ((rookieDraftStrategy == null) ? 0 : rookieDraftStrategy.hashCode());
 		result = prime * result + ((rookieWageScale == null) ? 0 : rookieWageScale.hashCode());
+		result = prime * result + ((rosterSpotLimit == null) ? 0 : rosterSpotLimit.hashCode());
 		result = prime * result + ((salaryCapExemptionLimit == null) ? 0 : salaryCapExemptionLimit.hashCode());
 		result = prime * result + ((seasonYear == null) ? 0 : seasonYear.hashCode());
 		result = prime * result + ((teMax == null) ? 0 : teMax.hashCode());
@@ -469,6 +480,11 @@ public class SCADLeague extends AuditedEntity {
 				return false;
 		} else if (!rookieWageScale.equals(other.rookieWageScale))
 			return false;
+		if (rosterSpotLimit == null) {
+			if (other.rosterSpotLimit != null)
+				return false;
+		} else if (!rosterSpotLimit.equals(other.rosterSpotLimit))
+			return false;
 		if (salaryCapExemptionLimit == null) {
 			if (other.salaryCapExemptionLimit != null)
 				return false;
@@ -534,7 +550,7 @@ public class SCADLeague extends AuditedEntity {
 				+ ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax + ", teMin=" + teMin
 				+ ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin + ", defMax=" + defMax
 				+ ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid + ", renewSCADLeagueId=" + renewSCADLeagueId
-				+ "]";
+				+ ", rosterSpotLimit=" + rosterSpotLimit + "]";
 	}
 	
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "scadLeague")    
@@ -554,6 +570,6 @@ public class SCADLeague extends AuditedEntity {
 //	public void setScadLeaguePlayers(Set<SCADLeaguePlayer> scadLeaguePlayers) {
 //		this.scadLeaguePlayers = scadLeaguePlayers;
 //	}
-
+	
 
 }
