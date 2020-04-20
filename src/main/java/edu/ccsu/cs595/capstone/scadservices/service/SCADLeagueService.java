@@ -269,6 +269,7 @@ public class SCADLeagueService {
 			}
 			
 			result.setRenewSCADLeagueId(slEntity.getRenewSCADLeagueId());
+			result.setRosterSpotLimit(slEntity.getRosterSpotLimit());
 			
 			return result;
 
@@ -313,6 +314,7 @@ public class SCADLeagueService {
 			result.setIsDefault(slDto.getIsDefault());
 			result.setOwnerGuid(slDto.getOwnerGuid());
 			result.setRenewSCADLeagueId(slDto.getRenewSCADLeagueId());
+			result.setRosterSpotLimit(slDto.getRosterSpotLimit());
 			
 			return result;
 

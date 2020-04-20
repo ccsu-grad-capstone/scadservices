@@ -22,6 +22,7 @@ public class ResponseCORSFilter implements ContainerResponseFilter {
 		responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 		responseContext.getHeaders().add("Access-Control-Max-Age", "-1");
 		responseContext.getHeaders().add("Access-Control-Allow-Headers", "*");
+		LOG.info("Setting Response CORS filter");
 	}
 
 }

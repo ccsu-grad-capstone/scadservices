@@ -6,14 +6,11 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import edu.ccsu.cs595.capstone.scadservices.api.DashboardApi;
-import edu.ccsu.cs595.capstone.scadservices.api.LeagueApi;
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
 import edu.ccsu.cs595.capstone.scadservices.security.SCADSecurityManager;
 import edu.ccsu.cs595.capstone.scadservices.service.DashboardService;
-import edu.ccsu.cs595.capstone.scadservices.service.LeagueService;
 import edu.ccsu.cs595.capstone.scadservices.util.HeaderHelper;
 
-@SuppressWarnings("static-access")
 public class DashboardApiImpl implements DashboardApi {
 
 	@Inject

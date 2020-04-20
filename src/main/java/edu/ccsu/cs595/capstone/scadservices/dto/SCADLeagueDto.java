@@ -43,6 +43,7 @@ public class SCADLeagueDto extends AuditedDto {
 	private Boolean isDefault; 
 	private String ownerGuid;
 	private Long renewSCADLeagueId;
+	private Long rosterSpotLimit;
 	private List<SCADLeagueTeamDto> scadLeagueTeams;
 	private List<SCADLeaguePlayerDto> scadLeaguePlayers;
 	private Boolean isCurrentlyLoggedInUserACommissioner = false;
@@ -296,6 +297,14 @@ public class SCADLeagueDto extends AuditedDto {
 	public void setRenewSCADLeagueId(Long renewSCADLeagueId) {
 		this.renewSCADLeagueId = renewSCADLeagueId;
 	}
+	
+	public Long getRosterSpotLimit() {
+		return rosterSpotLimit;
+	}
+
+	public void setRosterSpotLimit(Long rosterSpotLimit) {
+		this.rosterSpotLimit = rosterSpotLimit;
+	}
 
 	public List<SCADLeagueTeamDto> getScadLeagueTeams() {
 		return scadLeagueTeams;
@@ -323,19 +332,17 @@ public class SCADLeagueDto extends AuditedDto {
 
 	@Override
 	public String toString() {
-		return "SCADLeagueDto [id=" + id + ", yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId
-				+ ", yahooLeagueName=" + yahooLeagueName + ", seasonYear=" + seasonYear + ", leagueManagers="
-				+ leagueManagers + ", rookieDraftRds=" + rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy
-				+ ", rookieWageScale=" + rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap="
-				+ leagueSalaryCap + ", salaryCapExemptionLimit=" + salaryCapExemptionLimit + ", irReliefPerc="
-				+ irReliefPerc + ", franchiseTagDiscount=" + franchiseTagDiscount + ", franchiseTagSpots="
-				+ franchiseTagSpots + ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin
-				+ ", qbMax=" + qbMax + ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax
-				+ ", teMin=" + teMin + ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin
-				+ ", defMax=" + defMax + ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid
-				+ ", renewSCADLeagueId=" + renewSCADLeagueId + ", scadLeagueTeams=" + scadLeagueTeams
-				+ ", scadLeaguePlayers=" + scadLeaguePlayers + ", isCurrentlyLoggedInUserACommissioner="
-				+ isCurrentlyLoggedInUserACommissioner + "]";
+		return "SCADLeague [id=" + id + ", yahooGameId=" + yahooGameId + ", yahooLeagueId=" + yahooLeagueId
+				+ ", seasonYear=" + seasonYear + ", leagueManagers=" + leagueManagers + ", rookieDraftRds="
+				+ rookieDraftRds + ", rookieDraftStrategy=" + rookieDraftStrategy + ", rookieWageScale="
+				+ rookieWageScale + ", teamSalaryCap=" + teamSalaryCap + ", leagueSalaryCap=" + leagueSalaryCap
+				+ ", salaryCapExemptionLimit=" + salaryCapExemptionLimit + ", irReliefPerc=" + irReliefPerc
+				+ ", franchiseTagDiscount=" + franchiseTagDiscount + ", franchiseTagSpots=" + franchiseTagSpots
+				+ ", tradingDraftPickYears=" + tradingDraftPickYears + ", qbMin=" + qbMin + ", qbMax=" + qbMax
+				+ ", rbMin=" + rbMin + ", rbMax=" + rbMax + ", wrMin=" + wrMin + ", wrMax=" + wrMax + ", teMin=" + teMin
+				+ ", teMax=" + teMax + ", kMin=" + kMin + ", kMax=" + kMax + ", defMin=" + defMin + ", defMax=" + defMax
+				+ ", isDefault=" + isDefault + ", ownerGuid=" + ownerGuid + ", renewSCADLeagueId=" + renewSCADLeagueId
+				+ ", rosterSpotLimit=" + rosterSpotLimit + "]";
 	}
 	
 }

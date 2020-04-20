@@ -131,6 +131,7 @@ public class SCADLeagueTeamService {
 		AuditContext ac = new AuditContext(yahoo.getYahooUserGuid(),yahoo.getYahooUserName());
 		AuditContext.setAuditContext(ac);
 		newEntity = sltDao.upsert(newEntity);
+		LOG.info("SCADLeagueTeam created successfully for leagueId={}, SCADLeagueId={}, the new SCADLeagueTeamId={}", sltDto.getYahooLeagueId(), sltDto.getScadLeagueId(), newEntity.getId());
 		result = this.entityToDto(newEntity);
 		return result;
 

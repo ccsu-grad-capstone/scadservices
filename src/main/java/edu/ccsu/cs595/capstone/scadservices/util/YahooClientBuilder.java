@@ -1,13 +1,11 @@
 package edu.ccsu.cs595.capstone.scadservices.util;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
+import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -159,11 +157,15 @@ public class YahooClientBuilder {
 			try {
 				Response response = builder.get();
 				result = response.readEntity(String.class);
+				if (response.getStatus() == 401) {
+					throw new NotAuthorizedException(result);
+				}
 				client.close();
-			} catch (Exception ex) {
+			} catch (NotAuthorizedException ex) {
+				client.close();
 				success = false;
 				LOG.error("Yahoo getting {} request failed for user={}, url={} - {}", type, user, url, ex.getMessage());
-				throw new RuntimeException(ex.getMessage());
+				throw new AuthorizationFailedException(ex.getMessage());
 			}
 		}
 		e = System.currentTimeMillis();
@@ -180,14 +182,16 @@ public class YahooClientBuilder {
 					}
 				} catch (Exception ex) {
 					LOG.error("Yahoo getting {} request failed (exception) for user={}, url={} - {}. Falling back to dummy data.", type, user, url, ex.getMessage());
-					try {
-						result = new String(Files.readAllBytes(Paths.get(YAHOO_DUMMY_DATA_ROOT + dummyData.get(type))));
-					} catch (IOException exe){
-						LOG.info("SCAD had a problem getting dummy data for {}", type);
-					}
+					throw new RuntimeException(ex.getMessage());
+//					try {
+//						result = new String(Files.readAllBytes(Paths.get(YAHOO_DUMMY_DATA_ROOT + dummyData.get(type))));
+//					} catch (IOException exe){
+//						LOG.info("SCAD had a problem getting dummy data for {}", type);
+//					}
 				}
 			} else {
 				LOG.error("Yahoo getting {} request failed for user={}, url={}", type, user, url);
+				throw new RuntimeException(result);
 			}
 		}
 		
