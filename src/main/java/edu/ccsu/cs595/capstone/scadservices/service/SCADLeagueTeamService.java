@@ -201,7 +201,11 @@ public class SCADLeagueTeamService {
 			result.setIsFranchiseTag(sltDto.getIsFranchiseTag());
 			result.setExceptionIn(sltDto.getExceptionIn());
 			result.setExceptionOut(sltDto.getExceptionOut());
-			result.setRenewSCADLeagueTeamId(sltDto.getRenewSCADLeagueTeamId());
+			if (Objects.isNull(sltDto.getRenewSCADLeagueTeamId())) {
+				result.setRenewSCADLeagueTeamId(0L);
+			} else {
+				result.setRenewSCADLeagueTeamId(sltDto.getRenewSCADLeagueTeamId());
+			}
 			
 			return result;
 
