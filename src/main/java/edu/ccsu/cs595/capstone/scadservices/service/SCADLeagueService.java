@@ -56,7 +56,18 @@ public class SCADLeagueService {
 	public SCADLeagueDto getDefaultUserSCADLeagueBySeason() throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeagueDto result = null;
-		Long yahooGameId = yahoo.getYahooGame();
+		Long yahooGameId = yahoo.getCurrentYahooGame();
+		String userGuid = yahoo.getYahooUserGuid();
+		SCADLeague slEntity = slDao.getDefaultUserSCADLeagueBySeason(yahooGameId, userGuid);
+		result = this.entityToDto(slEntity);
+		return result;
+
+	}
+	
+	public SCADLeagueDto getDefaultUserSCADLeagueByPriorSeason() throws AuthorizationFailedException, RuntimeException {
+
+		SCADLeagueDto result = null;
+		Long yahooGameId = yahoo.getPriorYahooGame();
 		String userGuid = yahoo.getYahooUserGuid();
 		SCADLeague slEntity = slDao.getDefaultUserSCADLeagueBySeason(yahooGameId, userGuid);
 		result = this.entityToDto(slEntity);
@@ -101,7 +112,21 @@ public class SCADLeagueService {
 	public SCADLeagueListDto getUserSCADLeaguesBySeason() throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeagueListDto list = new SCADLeagueListDto();
-		Long yahooGameId = yahoo.getYahooGame();
+		Long yahooGameId = yahoo.getCurrentYahooGame();
+		String userGuid = yahoo.getYahooUserGuid();
+		List<SCADLeague> slEntityList = slDao.getUserSCADLeaguesBySeason(yahooGameId, userGuid);
+		for (SCADLeague slEntity : slEntityList) {
+			SCADLeagueDto result = this.entityToDto(slEntity);
+			list.getScadLeagues().add(result);
+		}
+		return list;
+
+	}
+	
+	public SCADLeagueListDto getUserSCADLeaguesByPriorSeason() throws AuthorizationFailedException, RuntimeException {
+
+		SCADLeagueListDto list = new SCADLeagueListDto();
+		Long yahooGameId = yahoo.getPriorYahooGame();
 		String userGuid = yahoo.getYahooUserGuid();
 		List<SCADLeague> slEntityList = slDao.getUserSCADLeaguesBySeason(yahooGameId, userGuid);
 		for (SCADLeague slEntity : slEntityList) {
@@ -139,8 +164,8 @@ public class SCADLeagueService {
 	
 	private void addYahooLeagueData(SCADLeagueDto slDto) throws AuthorizationFailedException, RuntimeException {
 		
-		slDto.setYahooGameId(yahoo.getYahooGame());
-		slDto.setSeasonYear(yahoo.getSeasonYear());
+		slDto.setYahooGameId(yahoo.getCurrentYahooGame());
+		slDto.setSeasonYear(yahoo.getCurrentSeason());
 		slDto.setOwnerGuid(yahoo.getYahooUserGuid());
 		SCADLeagueDto dl = this.getDefaultUserSCADLeagueBySeason();
 		if (Objects.isNull(dl)) {
@@ -313,7 +338,11 @@ public class SCADLeagueService {
 			result.setDefMax(slDto.getDefMax());
 			result.setIsDefault(slDto.getIsDefault());
 			result.setOwnerGuid(slDto.getOwnerGuid());
-			result.setRenewSCADLeagueId(slDto.getRenewSCADLeagueId());
+			if (Objects.isNull(slDto.getRenewSCADLeagueId())) {
+				result.setRenewSCADLeagueId(0L);
+			} else {
+				result.setRenewSCADLeagueId(slDto.getRenewSCADLeagueId());
+			}
 			result.setRosterSpotLimit(slDto.getRosterSpotLimit());
 			
 			return result;

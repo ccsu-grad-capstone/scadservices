@@ -51,7 +51,7 @@ public class DashboardService {
 		
 		SCADLeagueDto defaultSCADLeague = slSvc.getDefaultUserSCADLeagueBySeason();
 		if (Objects.nonNull(defaultSCADLeague)) {
-			LOG.info("SCAD League default found for userGuid={}, season={} and SCADLeagueId={}", yahoo.getYahooUserGuid(), yahoo.getSeasonYear(), defaultSCADLeague.getId());
+			LOG.info("SCAD League default found for userGuid={}, season={} and SCADLeagueId={}", yahoo.getYahooUserGuid(), yahoo.getCurrentSeason(), defaultSCADLeague.getId());
 			dbDetailsKey = "\"League\"";
 			String yahooLeagueStrg = lSvc.getYahooLeague(defaultSCADLeague.getYahooLeagueId());
 			String yahooMyTeamStrg = lSvc.getYahooLeagueMyTeam(defaultSCADLeague.getYahooLeagueId());
@@ -81,7 +81,8 @@ public class DashboardService {
 			}			
 			dbDetailsBody = ", \"yahooLeague\":" + yahooLeagueStrg + ", \"yahooMyTeam\":" + yahooMyTeamStrg + ", \"yahooMyPlayers\":" + yahooMyPlayersStrg + ", \"scadLeague\":" + scadLeagueStrg + ", \"scadMyTeam\":" + scadMyTeamStrg + ", \"scadMyPlayers\":" + scadMyPlayersStrg;			
 		} else {
-			LOG.info("SCAD League default not found for userGuid={}, season={}", yahoo.getYahooUserGuid(), yahoo.getSeasonYear());
+			
+			LOG.info("SCAD League default not found for userGuid={}, season={}", yahoo.getYahooUserGuid(), yahoo.getCurrentSeason());
 			dbDetailsKey = "\"Register\"";
 			String userLeaguesStrg = lSvc.getUserLeaguesAsCommissionerBySeason();
 			JsonObject userLeaguesObj = new JsonParser().parse(userLeaguesStrg).getAsJsonObject();
