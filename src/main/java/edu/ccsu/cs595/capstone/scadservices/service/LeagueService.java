@@ -491,7 +491,8 @@ public class LeagueService {
 
 					for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 						JsonObject newPlayer = new JsonObject();
-						JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+						JsonArray playerArray = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray();
+						JsonArray player = playerArray.get(0).getAsJsonArray();
 						for (JsonElement x : player) {
 							// Filter out blank JSON arrays
 							if (x.isJsonObject()) {
@@ -500,6 +501,21 @@ public class LeagueService {
 								}
 							}
 						}
+
+						if (playerArray.size() > 1) {
+							JsonObject newSelectedPosition = new JsonObject();
+
+							JsonArray selectedPosition = playerArray.get(1).getAsJsonObject().get("selected_position").getAsJsonArray();
+							for (JsonElement x : selectedPosition) {
+								if (x.isJsonObject()) {
+									for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+										newSelectedPosition.add(entry.getKey(), entry.getValue());
+									}
+								}
+							}
+							newPlayer.add("selected_position", newSelectedPosition);
+						}
+
 						newPlayers.add(newPlayer);
 					}
 				}
@@ -608,7 +624,8 @@ public class LeagueService {
 				JsonArray newPlayers = new JsonArray();
 				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 					JsonObject newPlayer = new JsonObject();
-					JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+					JsonArray playerArray = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray();
+					JsonArray player = playerArray.get(0).getAsJsonArray();
 					for (JsonElement x : player) {
 						// Filter out blank JSON arrays
 						if (x.isJsonObject()) {
@@ -617,6 +634,21 @@ public class LeagueService {
 							}
 						}
 					}
+
+					if (playerArray.size() > 1) {
+						JsonObject newSelectedPosition = new JsonObject();
+
+						JsonArray selectedPosition = playerArray.get(1).getAsJsonObject().get("selected_position").getAsJsonArray();
+						for (JsonElement x : selectedPosition) {
+							if (x.isJsonObject()) {
+								for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+									newSelectedPosition.add(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						newPlayer.add("selected_position", newSelectedPosition);
+					}
+
 					newPlayers.add(newPlayer);
 				}
 				newRoster.add("players", newPlayers);
@@ -695,7 +727,8 @@ public class LeagueService {
 				JsonArray newPlayers = new JsonArray();
 				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 					JsonObject newPlayer = new JsonObject();
-					JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+					JsonArray playerArray = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray();
+					JsonArray player = playerArray.get(0).getAsJsonArray();
 					for (JsonElement x : player) {
 						// Filter out blank JSON arrays
 						if (x.isJsonObject()) {
@@ -704,6 +737,21 @@ public class LeagueService {
 							}
 						}
 					}
+
+					if (playerArray.size() > 1) {
+						JsonObject newSelectedPosition = new JsonObject();
+
+						JsonArray selectedPosition = playerArray.get(1).getAsJsonObject().get("selected_position").getAsJsonArray();
+						for (JsonElement x : selectedPosition) {
+							if (x.isJsonObject()) {
+								for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+									newSelectedPosition.add(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						newPlayer.add("selected_position", newSelectedPosition);
+					}
+
 					newPlayers.add(newPlayer);
 				}
 				result = newPlayers.toString();
@@ -745,7 +793,8 @@ public class LeagueService {
 				JsonArray newPlayers = new JsonArray();
 				for (Integer i = 0; i < players.get("count").getAsInt(); i++) {
 					JsonObject newPlayer = new JsonObject();
-					JsonArray player = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray().get(0).getAsJsonArray();
+					JsonArray playerArray = players.get(i.toString()).getAsJsonObject().get("player").getAsJsonArray();
+					JsonArray player = playerArray.get(0).getAsJsonArray();
 					for (JsonElement x : player) {
 						// Filter out blank JSON arrays
 						if (x.isJsonObject()) {
@@ -754,6 +803,20 @@ public class LeagueService {
 							}
 						}
 					}
+
+					if (playerArray.size() > 1) {
+						JsonObject newSelectedPosition = new JsonObject();
+						JsonArray selectedPosition = playerArray.get(1).getAsJsonObject().get("selected_position").getAsJsonArray();
+						for (JsonElement x : selectedPosition) {
+							if (x.isJsonObject()) {
+								for (Map.Entry<String, JsonElement> entry : ((JsonObject) x).entrySet()) {
+									newSelectedPosition.add(entry.getKey(), entry.getValue());
+								}
+							}
+						}
+						newPlayer.add("selected_position", newSelectedPosition);
+					}
+
 					newPlayers.add(newPlayer);
 				}
 				result = "{\"players\":" + newPlayers.toString() + "}";
