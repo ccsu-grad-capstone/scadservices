@@ -160,6 +160,26 @@ public class SCADLeagueTeamService {
 
 	}
 
+	public void renewSCADLeagueTeams(Long renewSCADLeagueId, Long newSCADLeagueId, Long yahooLeagueId) throws AuthorizationFailedException, RuntimeException {
+		
+		SCADLeagueTeamListDto teams = this.getSCADLeagueTeamsBySCADLeague(renewSCADLeagueId);
+		for (SCADLeagueTeamDto team : teams.getScadLeagueTeams()) {
+			SCADLeagueTeamDto newTeam = new SCADLeagueTeamDto();
+			newTeam.setYahooLeagueTeamId(team.getYahooLeagueTeamId());
+			newTeam.setYahooLeagueId(yahooLeagueId);
+			newTeam.setScadLeagueId(newSCADLeagueId);
+			newTeam.setSalary(team.getSalary());
+			newTeam.setIsFranchiseTag(team.getIsFranchiseTag());
+			newTeam.setExceptionIn(team.getExceptionIn());
+			newTeam.setExceptionOut(team.getExceptionOut());
+			newTeam.setRenewSCADLeagueTeamId(team.getId());
+			newTeam = this.createSCADLeagueTeam(newTeam);
+		}
+		
+		
+	}
+	
+
 	private SCADLeagueTeamDto entityToDto(SCADLeagueTeam sltEntity) {
 
 		if (Objects.nonNull(sltEntity)) {

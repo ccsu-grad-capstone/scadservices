@@ -33,6 +33,8 @@ public class SCADLeaguePlayerService {
 	private static final Logger LOG = LoggerFactory.getLogger(SCADLeaguePlayerService.class);
 	private static String CACHE_YAHOO_TEAMS = null;
 	private Map<Long, String> CACHE_YAHOO_PLAYERS = new LinkedHashMap<>();
+	private static final String TEAMYES = "Yes";	
+	private static final String TEAMNO = "No";	
 
 	@Inject
 	SCADLeaguePlayerDao slpDao;
@@ -53,7 +55,7 @@ public class SCADLeaguePlayerService {
 
 		SCADLeaguePlayerDto result = null;
 		SCADLeaguePlayer slpEntity = slpDao.find(id);
-		result = this.entityToDto(slpEntity);
+		result = this.entityToDto(slpEntity,TEAMYES);
 		return result;
 
 	}
@@ -62,7 +64,7 @@ public class SCADLeaguePlayerService {
 
 		SCADLeaguePlayerDto result = null;
 		SCADLeaguePlayer slpEntity = slpDao.getSCADLeaguePlayerByYahooLeagueAndPlayer(leagueId, playerId);
-		result = this.entityToDto(slpEntity);
+		result = this.entityToDto(slpEntity,TEAMYES);
 		return result;
 
 	}
@@ -90,7 +92,7 @@ public class SCADLeaguePlayerService {
 
 		SCADLeaguePlayerDto result = null;
 		SCADLeaguePlayer slpEntity = slpDao.getSCADLeaguePlayerBySCADLeagueAndPlayer(scadLeagueId, id);
-		result = this.entityToDto(slpEntity);
+		result = this.entityToDto(slpEntity,TEAMYES);
 		return result;
 
 	}
@@ -100,7 +102,7 @@ public class SCADLeaguePlayerService {
 		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
 		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersByYahooLeague(leagueId);
 		for (SCADLeaguePlayer slpEntity : slpEntityList) {
-			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
+			SCADLeaguePlayerDto result = this.entityToDto(slpEntity,TEAMYES);
 			list.getScadLeaguePlayers().add(result);
 		}
 		return list;
@@ -112,7 +114,19 @@ public class SCADLeaguePlayerService {
 		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
 		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersBySCADLeague(scadLeagueId);
 		for (SCADLeaguePlayer slpEntity : slpEntityList) {
-			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
+			SCADLeaguePlayerDto result = this.entityToDto(slpEntity,TEAMYES);
+			list.getScadLeaguePlayers().add(result);
+		}
+		return list;
+
+	}
+	
+	public SCADLeaguePlayerListDto getSCADLeaguePlayersBySCADLeagueWithoutTeam(Long scadLeagueId) throws AuthorizationFailedException, RuntimeException {
+
+		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
+		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersBySCADLeague(scadLeagueId);
+		for (SCADLeaguePlayer slpEntity : slpEntityList) {
+			SCADLeaguePlayerDto result = this.entityToDto(slpEntity, TEAMNO);
 			list.getScadLeaguePlayers().add(result);
 		}
 		return list;
@@ -178,7 +192,7 @@ public class SCADLeaguePlayerService {
 		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
 		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersBySCADLeagueAndYahooPlayersIds(scadLeagueId, playerIds);
 		for (SCADLeaguePlayer slpEntity : slpEntityList) {
-			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
+			SCADLeaguePlayerDto result = this.entityToDto(slpEntity,TEAMYES);
 			list.getScadLeaguePlayers().add(result);
 		}
 		return list;
@@ -190,14 +204,21 @@ public class SCADLeaguePlayerService {
 		SCADLeaguePlayerListDto list = new SCADLeaguePlayerListDto();
 		List<SCADLeaguePlayer> slpEntityList = slpDao.getSCADLeaguePlayersByYahooLeagueAndPlayersIds(leagueId, playerIds);
 		for (SCADLeaguePlayer slpEntity : slpEntityList) {
-			SCADLeaguePlayerDto result = this.entityToDto(slpEntity);
+			SCADLeaguePlayerDto result = this.entityToDto(slpEntity,TEAMYES);
 			list.getScadLeaguePlayers().add(result);
 		}
 		return list;
 		
 	}
-
+	
 	public SCADLeaguePlayerDto createSCADLeaguePlayer(SCADLeaguePlayerDto slpDto) throws AuthorizationFailedException, RuntimeException {
+
+		SCADLeaguePlayerDto result = this.createSCADLeaguePlayer(slpDto, TEAMYES);
+		return result;
+
+	}
+
+	private SCADLeaguePlayerDto createSCADLeaguePlayer(SCADLeaguePlayerDto slpDto, String teamInd) throws AuthorizationFailedException, RuntimeException {
 
 		SCADLeaguePlayerDto result = null;
 		SCADLeaguePlayer newEntity = this.dtoToEntity(slpDto);
@@ -205,7 +226,7 @@ public class SCADLeaguePlayerService {
 		AuditContext.setAuditContext(ac);
 		newEntity = slpDao.upsert(newEntity);
 		LOG.info("SCADLeaguePlayer created successfully for leagueId={}, SCADLeagueId={}, the new SCADLeaguePlayerId={}", slpDto.getYahooLeagueId(), slpDto.getScadLeagueId(), newEntity.getId());
-		result = this.entityToDto(newEntity);
+		result = this.entityToDto(newEntity,teamInd);
 		return result;
 
 	}
@@ -219,7 +240,7 @@ public class SCADLeaguePlayerService {
 		AuditContext ac = new AuditContext(yahoo.getYahooUserGuid(),yahoo.getYahooUserName());
 		AuditContext.setAuditContext(ac);
 		existingEntity = slpDao.upsert(existingEntity);
-		result = this.entityToDto(existingEntity);
+		result = this.entityToDto(existingEntity,TEAMYES);
 		return result;
 
 	}
@@ -232,8 +253,25 @@ public class SCADLeaguePlayerService {
 		slpDao.delete(deleteEntity);
 
 	}
+	
+	public void renewSCADLeaguePlayers(Long renewSCADLeagueId, Long newSCADLeagueId, Long yahooLeagueId) throws AuthorizationFailedException, RuntimeException {
+		
+		SCADLeaguePlayerListDto players = this.getSCADLeaguePlayersBySCADLeagueWithoutTeam(renewSCADLeagueId);
+		for (SCADLeaguePlayerDto player : players.getScadLeaguePlayers()) {
+			SCADLeaguePlayerDto newPlayer = new SCADLeaguePlayerDto();
+			newPlayer.setYahooLeaguePlayerId(player.getYahooLeaguePlayerId());
+			newPlayer.setYahooLeagueId(yahooLeagueId);
+			newPlayer.setScadLeagueId(newSCADLeagueId);
+			newPlayer.setSalary(player.getSalary());
+			newPlayer.setIsFranchiseTag(player.getIsFranchiseTag());
+			newPlayer.setRenewSCADLeaguePlayerId(player.getId());
+			newPlayer.setPreviousYearSalary(player.getSalary());
+			newPlayer = this.createSCADLeaguePlayer(newPlayer, TEAMNO);
+		}
+		
+	}	
 
-	private SCADLeaguePlayerDto entityToDto(SCADLeaguePlayer slpEntity) {
+	private SCADLeaguePlayerDto entityToDto(SCADLeaguePlayer slpEntity, String teamInd) {
 
 		if (Objects.nonNull(slpEntity)) {
 			
@@ -251,8 +289,9 @@ public class SCADLeaguePlayerService {
 			result.setModifiedAt(slpEntity.getModifiedAt());
 			result.setRenewSCADLeaguePlayerId(slpEntity.getRenewSCADLeaguePlayerId());
 			result.setPreviousYearSalary(slpEntity.getPreviousYearSalary());
-			this.setPlayerTeamDetails(result);
-			
+			if (TEAMYES.equals(teamInd)) {
+				this.setPlayerTeamDetails(result);
+			}
 			return result;
 
 		}
