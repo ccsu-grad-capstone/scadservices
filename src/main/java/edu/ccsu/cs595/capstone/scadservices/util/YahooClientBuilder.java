@@ -38,11 +38,11 @@ public class YahooClientBuilder {
 
 	private String userGuid = null;
 	private String userName = null;
-	
-	private static final String NFL="390";
-	//private static final String NFL="nfl";
-	private static final String NFLSEASON=";seasons=";
-	private static final String GAMEURI = "https://fantasysports.yahooapis.com/fantasy/v2/game/";
+
+	private static final String NFL = "nfl";
+	//private static final String NFL = "390";
+	private static final String CURRENTSEASONGAMEURI = "https://fantasysports.yahooapis.com/fantasy/v2/game/";
+	private static final String PRIORSEASONGAMEURI = "https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl;seasons=";
 	private static final String URIFORMAT = "?format=json";
 
 	@SuppressWarnings("unused")
@@ -87,21 +87,21 @@ public class YahooClientBuilder {
 	
 	public Long getCurrentYahooGame() throws AuthorizationFailedException, RuntimeException {
 		
-		return Long.valueOf(this.getYahooGameId(NFL));
+		return Long.valueOf(this.getCurrentSeasonYahooGameId(NFL));
 		
 	}
 	
 	public Long getCurrentSeason() throws AuthorizationFailedException, RuntimeException {
 		
-		return Long.valueOf(this.getYahooGameSeason(NFL));
+		return Long.valueOf(this.getCurrentYahooGameSeason(NFL));
 		
 	}	
 
 	public Long getPriorYahooGame() throws AuthorizationFailedException, RuntimeException {
 		
 		Long cs = this.getCurrentSeason();
-		String pathParam = NFL+NFLSEASON+(cs-1);
-		return Long.valueOf(this.getYahooGameId(pathParam));
+		String pathParam = String.valueOf(cs-1);
+		return Long.valueOf(this.getPriorSeasonYahooGameId(pathParam));
 		
 	}
 	
@@ -110,16 +110,22 @@ public class YahooClientBuilder {
 		Long cs = this.getCurrentSeason();
 		return (cs-1);
 		
-	}	
+	}
 	
-	private int getYahooGameId(String pathParam) throws AuthorizationFailedException, RuntimeException {
+	public Long getSeason(String gameKey) throws AuthorizationFailedException, RuntimeException {
+		
+		return Long.valueOf(this.getYahooSeason(gameKey));
+		
+	}
+	
+	private int getCurrentSeasonYahooGameId(String pathParam) throws AuthorizationFailedException, RuntimeException {
 		
 		int gameId = 0;
 		String game = "game";
 		String gameStrg = null;
 		JsonObject gameObj = null;
 		String userGuid = this.getYahooUserGuid();
-		gameStrg = callYahooApis(GAMEURI+pathParam+URIFORMAT, userGuid, game);
+		gameStrg = callYahooApis(CURRENTSEASONGAMEURI+pathParam+URIFORMAT, userGuid, game);
 		try {
 			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
 			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("game_id");
@@ -132,14 +138,54 @@ public class YahooClientBuilder {
 		
 	}
 
-	private int getYahooGameSeason(String pathParam) throws AuthorizationFailedException, RuntimeException {
+	private int getCurrentYahooGameSeason(String pathParam) throws AuthorizationFailedException, RuntimeException {
 		
 		int gameSeason = 0;
 		String game = "game";
 		String gameStrg = null;
 		JsonObject gameObj = null;
 		String userGuid = this.getYahooUserGuid();
-		gameStrg = callYahooApis(GAMEURI+pathParam+URIFORMAT, userGuid, game);
+		gameStrg = callYahooApis(CURRENTSEASONGAMEURI+pathParam+URIFORMAT, userGuid, game);
+		try {
+			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
+			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("season");
+			gameSeason = element.getAsInt();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+
+		return gameSeason;
+		
+	}
+	
+	private int getPriorSeasonYahooGameId(String pathParam) throws AuthorizationFailedException, RuntimeException {
+		
+		int gameId = 0;
+		String game = "game";
+		String gameStrg = null;
+		JsonObject gameObj = null;
+		String userGuid = this.getYahooUserGuid();
+		gameStrg = callYahooApis(PRIORSEASONGAMEURI+pathParam+URIFORMAT, userGuid, game);
+		try {
+			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
+			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("games").getAsJsonObject().get("0").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("game_id");
+			gameId = element.getAsInt();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+
+		return gameId;
+		
+	}
+	
+	private int getYahooSeason(String pathParam) throws AuthorizationFailedException, RuntimeException {
+		
+		int gameSeason = 0;
+		String game = "game";
+		String gameStrg = null;
+		JsonObject gameObj = null;
+		String userGuid = this.getYahooUserGuid();
+		gameStrg = callYahooApis(CURRENTSEASONGAMEURI+pathParam+URIFORMAT, userGuid, game);
 		try {
 			gameObj = new JsonParser().parse(gameStrg).getAsJsonObject();
 			JsonElement element = gameObj.get("fantasy_content").getAsJsonObject().get("game").getAsJsonArray().get(0).getAsJsonObject().get("season");

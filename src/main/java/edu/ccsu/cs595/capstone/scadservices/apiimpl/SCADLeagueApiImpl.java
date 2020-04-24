@@ -180,6 +180,8 @@ public class SCADLeagueApiImpl implements SCADLeagueApi {
 		} else {
 			if (Objects.isNull(proposed.getYahooLeagueId())) {
 				missingParam = "Yahoo League Id";
+			} else if (Objects.isNull(proposed.getYahooGameId())) {
+				missingParam = "Yahoo Game Key";
 			}
 		}
 
