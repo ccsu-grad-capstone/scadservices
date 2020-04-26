@@ -168,10 +168,10 @@ public class SCADLeagueTeamService {
 			newTeam.setYahooLeagueTeamId(team.getYahooLeagueTeamId());
 			newTeam.setYahooLeagueId(yahooLeagueId);
 			newTeam.setScadLeagueId(newSCADLeagueId);
-			newTeam.setSalary(team.getSalary());
-			newTeam.setIsFranchiseTag(team.getIsFranchiseTag());
-			newTeam.setExceptionIn(team.getExceptionIn());
-			newTeam.setExceptionOut(team.getExceptionOut());
+			newTeam.setSalary(0L);
+			newTeam.setIsFranchiseTag(false);
+			newTeam.setExceptionIn(0L);
+			newTeam.setExceptionOut(0L);
 			newTeam.setRenewSCADLeagueTeamId(team.getId());
 			newTeam = this.createSCADLeagueTeam(newTeam);
 		}
