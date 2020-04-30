@@ -1,0 +1,77 @@
+{
+    "fantasy_content": {
+        "xml:lang": "en-US",
+        "yahoo:uri": "/fantasy/v2/users;use_login=1/games;game_keys=390/leagues;league_keys=390.l.22351",
+        "users": {
+            "0": {
+                "user": [
+                    {
+                        "guid": "2OMLCT3C2A42Z3FCGWJZCIDYLU"
+                    },
+                    {
+                        "games": {
+                            "0": {
+                                "game": [
+                                    {
+                                        "game_key": "390",
+                                        "game_id": "390",
+                                        "name": "Football",
+                                        "code": "nfl",
+                                        "type": "full",
+                                        "url": "https://football.fantasysports.yahoo.com/archive/nfl/2019",
+                                        "season": "2019",
+                                        "is_registration_over": 1,
+                                        "is_game_over": 1,
+                                        "is_offseason": 1
+                                    },
+                                    {
+                                        "leagues": {
+                                            "0": {
+                                                "league": [
+                                                    {
+                                                        "league_key": "390.l.22351",
+                                                        "league_id": "22351",
+                                                        "name": "Salary Cap Dynasty 2019",
+                                                        "url": "https://football.fantasysports.yahoo.com/archive/nfl/2019/22351",
+                                                        "logo_url": false,
+                                                        "draft_status": "postdraft",
+                                                        "num_teams": 12,
+                                                        "edit_key": "16",
+                                                        "weekly_deadline": "",
+                                                        "league_update_timestamp": "1577871056",
+                                                        "scoring_type": "head",
+                                                        "league_type": "private",
+                                                        "renew": "380_34068",
+                                                        "renewed": "",
+                                                        "iris_group_chat_id": "EWFTYULT45AEXPDOCQXVOC55XQ",
+                                                        "allow_add_to_dl_extra_pos": 0,
+                                                        "is_pro_league": "0",
+                                                        "is_cash_league": "0",
+                                                        "current_week": "16",
+                                                        "start_week": "1",
+                                                        "start_date": "2019-09-05",
+                                                        "end_week": "16",
+                                                        "end_date": "2019-12-23",
+                                                        "is_finished": 1,
+                                                        "game_code": "nfl",
+                                                        "season": "2019"
+                                                    }
+                                                ]
+                                            },
+                                            "count": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "count": 1
+                        }
+                    }
+                ]
+            },
+            "count": 1
+        },
+        "time": "60.23907661438ms",
+        "copyright": "Data provided by Yahoo! and STATS, LLC",
+        "refresh_rate": "60"
+    }
+}

@@ -1,0 +1,74 @@
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl?format=json -- all seasons
+
+https://fantasysports.yahooapis.com/fantasy/v2/game/390?format=json -- Game 2019 season
+
+https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=390/leagues?format=json -- User leagues  (13143, 22351, 59673, 332376)
+
+https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=390/leagues;league_keys=390.l.13143?format=json --specific user league
+
+https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=390/teams?format=json --user all teams
+
+https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=390/leagues;league_keys=390.l.13143/teams?format=json --user league team
+
+https://fantasysports.yahooapis.com/fantasy/v2/users;use_login=1/games;game_keys=390/leagues;league_keys=390.l.13143/teams;team_keys=390.l.13143.t.3?format=json --user specific team
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;league_keys=390.l.13143/teams?format=json -- All teams for a specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;league_keys=390.l.13143/teams/players?format=json -- League all teams and players
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_keys=390/leagues;league_keys=390.l.22351/teams/players?format=json  -- League all teams and players
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143? -- specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams;team_keys=390.l.13143.t.1/players?format=json
+
+https://fantasysports.yahooapis.com/fantasy/v2/teams;team_keys=390.l.13143.t.1/players?format=json
+
+-----------------------
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams/players?format=json -- all teams and players for a specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.13143/teams?format=json -- all teams for a specific league
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.22351/players;player_keys=390.l.22351.p.8780?format=json 
+
+
+
+-------------
+
+
+https://fantasysports.yahooapis.com/fantasy/v2/leagues;league_keys=390.l.22351/teams/players;player_keys=390.p.8780?format=json -- League, player and all teams
+
+https://fantasysports.yahooapis.com/fantasy/v2/league/390.l.22351/players;player_keys=390.p.8780/metadata?format=json --League and players details
+
+https://fantasysports.yahooapis.com/fantasy/v2/players;player_keys=390.p.8780/metadata?format=json -- Just player details
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;seasons=2019,2018?format=json -- seasons
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl;seasons=2019,2018?format=json -- nfl seasons
+
+https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=nfl;seasons=2019,2018,2017,2016?format=json
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=359/leagues?format=json -- 2016
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=371/leagues?format=json -- 2017
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=380/leagues?format=json -- 2018
+
+https://fantasysports.yahooapis.com/fantasy/v2//users;use_login=1/games;game_keys=390/leagues?format=json -- 2019
+
+-----------------------
+
+http://localhost:8080/scadservices/api/yahoo/league/22351/teams
+
+http://localhost:8080/scadservices/api/yahoo/league/22351/team/1/players
+
+
+
+

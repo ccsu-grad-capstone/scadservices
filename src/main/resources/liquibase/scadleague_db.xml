@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+ 	<changeSet author="rk" id="scadleague-01">
+        <createTable remarks="Entity which defines the SCAD league settings" schemaName="scad_schema" tableName="scad_league">
+            <column name="scad_league_id" autoIncrement="true" remarks="Unique Identifier key" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="yahoo_game_id" remarks="Yahoo Game Id" type="int">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="yahoo_league_id" remarks="Yahoo League Id" type="int">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="season_year" type="int">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="league_managers" type="int">
+                <constraints nullable="false"/>
+            </column>   
+            <column name="rookie_draft_rds" type="int">
+                <constraints nullable="false"/>
+            </column>                       
+            <column name="rookie_draft_strategy" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="rookie_wage_scale" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="team_salary_cap" type="int">
+                <constraints nullable="false"/>
+            </column>  
+            <column name="league_salary_cap" type="int">
+                <constraints nullable="false"/>
+            </column>  
+             <column name="salary_cap_exemption_limit" type="int">
+                <constraints nullable="false"/>
+            </column>  
+              <column name="ir_relief_perc" type="int">
+                <constraints nullable="false"/>
+            </column>                       
+              <column name="franchise_tag_relief_perc" type="int">
+                <constraints nullable="false"/>
+            </column>            
+              <column name="franchise_tag_spots" type="int">
+                <constraints nullable="false"/>
+            </column>  
+             <column name="trading_draft_pick_years" type="int">
+                <constraints nullable="false"/>
+            </column>      
+            <column name="qb_min" type="int">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="qb_max" type="int">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="rb_min" type="int">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="rb_max" type="int">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="wr_min" type="int">
+                <constraints nullable="false"/>
+            </column>              
+            <column name="wr_max" type="int">
+                <constraints nullable="false"/>
+            </column>  
+            <column name="te_min" type="int">
+                <constraints nullable="false"/>
+            </column>  
+            <column name="te_max" type="int">
+                <constraints nullable="false"/>
+            </column>      
+             <column name="k_min" type="int">
+                <constraints nullable="false"/>
+            </column>  
+            <column name="k_max" type="int">
+                <constraints nullable="false"/>
+            </column>                                
+            <column name="def_min" type="int">
+                <constraints nullable="false"/>
+            </column>  
+            <column name="def_max" type="int">
+                <constraints nullable="false"/>
+            </column> 
+            <column defaultValueNumeric="0" name="default_ind" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_guid" remarks="Yahoo user id" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" remarks="Date And Time When Record was created" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" remarks="User Id of person who created record" type="char(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_time" remarks="Date And Time When Record was modified" type="timestamp"/>
+            <column name="modified_by" remarks="User Id of person who modified record" type="char(36)"/>
+            <column defaultValueNumeric="0" name="vsn" remarks="Version Number used by Hibernate" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+  	<changeSet author="rk" id="scadleague-02">
+        <addUniqueConstraint columnNames="yahoo_game_id, yahoo_league_id" constraintName="uniq_ygylid_01" schemaName="scad_schema" tableName="scad_league"/>
+    </changeSet>
+    
+  	<changeSet author="rk" id="scadleague-03">
+        <createIndex indexName="indx01_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
+            <column name="yahoo_league_id"/>
+        </createIndex>
+        <createIndex indexName="indx02_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
+            <column name="owner_guid"/>
+        </createIndex> 
+        <createIndex indexName="indx03_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
+            <column name="season_year"/>
+        </createIndex> 
+        <createIndex indexName="indx04_sl" schemaName="scad_schema" tableName="scad_league" unique="false">
+            <column name="yahoo_game_id"/>
+        </createIndex>        
+   </changeSet> 
+   
+   <changeSet author="rk" id="scadleague-04">
+   		<renameColumn 	columnDataType="int" 
+   						newColumnName="franchise_tag_discount" 
+   						oldColumnName="franchise_tag_relief_perc"
+   						schemaName="scad_schema"
+   						tableName="scad_league"/>
+   </changeSet>   
+   
+   <changeSet author="rk" id="scadleague-05">
+   		<addNotNullConstraint 	columnDataType="int" 
+   						columnName="franchise_tag_discount" 
+   						schemaName="scad_schema"
+   						tableName="scad_league"/>
+   </changeSet>   
+   
+   <changeSet author="rk" id="scadleague-06">
+   		<addColumn 	schemaName="scad_schema" tableName="scad_league">
+   			<column defaultValueNumeric="0" name="renew_scad_league_id" type="int">
+   				<constraints nullable="false"/>
+   			</column>
+   		</addColumn>
+   </changeSet>  
+   
+   <changeSet author="rk" id="scadleague-07">
+   		<addColumn 	schemaName="scad_schema" tableName="scad_league">
+   			<column defaultValueNumeric="0" name="roster_spot_limit" type="int">
+   				<constraints nullable="false"/>
+   			</column>
+   		</addColumn>
+   </changeSet> 
+    
+</databaseChangeLog>
