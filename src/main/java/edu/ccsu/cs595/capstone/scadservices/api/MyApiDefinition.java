@@ -6,7 +6,7 @@ import io.swagger.annotations.SwaggerDefinition;
 
 @SwaggerDefinition (
 info = @Info (
-        title = "Salary Cap Dynasty Fantasy Football (SCAD) Service",
+        title = "Salary Cap and Dynasty Fantasy Football (SCAD) Services",
         version = "1.0.0",
         description = "Contact Details:",
         contact = @Contact (
