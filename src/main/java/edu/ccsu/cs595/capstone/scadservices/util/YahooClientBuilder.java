@@ -38,6 +38,7 @@ public class YahooClientBuilder {
 
 	private String userGuid = null;
 	private String userName = null;
+	private String userEmail = null;
 
 	private static final String NFL = "nfl";
 	//private static final String NFL = "390";
@@ -81,6 +82,19 @@ public class YahooClientBuilder {
 			return userName;
 		} else {
 			return userName;
+		}
+
+	}
+	
+	public String getYahooUserEmail() {
+		
+		if (userEmail == null) {
+			Response response = userApi.getUserInfo();
+			UserDto userDto = response.readEntity(UserDto.class);
+			userEmail = userDto.getEmail();
+			return userEmail;
+		} else {
+			return userEmail;
 		}
 
 	}
