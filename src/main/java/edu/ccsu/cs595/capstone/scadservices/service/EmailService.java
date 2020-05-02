@@ -1,5 +1,7 @@
 package edu.ccsu.cs595.capstone.scadservices.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
@@ -22,6 +24,7 @@ public class EmailService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
 	private static final String FAKEMGRS = "rameshkappera@my.ccsu.edu;pmurray@my.ccsu.edu;lauzonryd@my.ccsu.edu";
+	//private static final String FAKEMGRS = "rameshkappera@my.ccsu.edu";
 
 	@Inject
 	LeagueService lSvc;
@@ -134,8 +137,14 @@ public class EmailService {
 				scadMail.setLeagueName(ylNm);
 				scadMail.setSender(yahoo.getYahooUserEmail());
 				scadMail.setRecipient(mgrEmails);
-				scadMail.setSubject("Rigistration Request for " + ylNm + " (" + leagueId + ")");
-				scadMail.setText("Test email (Some text here)");
+				String subject = ylNm + " (" + leagueId + ")" + " has been registered with SCAD";
+				scadMail.setSubject(subject);
+				String text = "The commissioner for " + ylNm + " (" + leagueId + ")" + " has registered your Yahoo Fantasy Football league with SCAD.\n\n";
+				text = text + "Click the link below to log in and get started!\n\n\n" ;
+				text = text + "https://scad-ui.firebaseapp.com\n\n\n";
+				//text = text + "<a href='https://scad-ui.firebaseapp.com'>SCAD-UI</a>\n\n\n";
+				text = text + getDateSent() + "\n\n";
+				scadMail.setText(text);
 				
 		}
 		
@@ -185,13 +194,28 @@ public class EmailService {
 				scadMail.setLeagueName(ylNm);
 				scadMail.setSender(yahoo.getYahooUserEmail());
 				scadMail.setRecipient(commEmail);
-				scadMail.setSubject("Rigistration Request for " + ylNm + " (" + leagueId + ")");
-				scadMail.setText("Test email (Some text here)");
+				String subject = "SCAD League Registration Request";
+				scadMail.setSubject(subject);
+				String text = "A member of " + ylNm + " (" + leagueId + ")" + " is interested in registering your Yahoo Fantasy Football league with SCAD.\n\n";
+				text = text + "Click the link below for more information.\n\n\n" ;
+				text = text + "https://scad-ui.firebaseapp.com\n\n\n";
+				//text = text + "<a href='https://scad-ui.firebaseapp.com'>SCAD-UI</a>\n\n\n";
+				text = text + getDateSent() + "\n\n";
+				scadMail.setText(text);
 				
 		}
 		
 		return scadMail;
 		
+		
+	}
+	
+	private String getDateSent() {
+		
+		LocalDateTime localDateTime = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a");
+		String formattedString = localDateTime.format(formatter);
+		return ("Date Sent: " + formattedString);
 		
 	}
 	
