@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import edu.ccsu.cs595.capstone.scadservices.util.EmailAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import edu.ccsu.cs595.capstone.scadservices.exception.AuthorizationFailedException;
-import edu.ccsu.cs595.capstone.scadservices.util.EmailAdapter;
 import edu.ccsu.cs595.capstone.scadservices.util.SCADMail;
 import edu.ccsu.cs595.capstone.scadservices.util.YahooClientBuilder;
 
